@@ -1,0 +1,15 @@
+<body>
+<div class="jumbotron">
+  <h1 class="title">Picture Navigator 1.7</h1>
+
+  <p class="lead">
+    Search Pictures!
+  </p>
+
+  <form>
+    <input ng-model="query" id="query" type="text" placeholder="e.g. Beach, River, Cat..." required>
+    <input ng-disabled="!query" id="search" type="button" value="Search" ng-click="search(model.query)">
+  </form>
+</div>
+</body>
+
