@@ -71,9 +71,11 @@ angular.module('PicNavigatorApp.controllers', []).
 
     var httpRequest = function (clusterId, callback) {
       var deferred = $q.defer();
-      $http.get('http://www.palm-search.com/service/view/image/subcluster/?&clusterId=' + clusterId).
+      $http.get('http://www.palm-search.com/service/view/image/subcluster/?&clusterId=' + clusterId,
+        {headers: {'Access-Control-Allow-Headers': 'x-requested-with'}}).
         success(function (data) {
-          $http.get('http://www.palm-search.com/service/view/cluster/?&clusterId=' + data.clusterID).
+          $http.get('http://www.palm-search.com/service/view/cluster/?&clusterId=' + data.clusterID,
+            {headers: {'Access-Control-Allow-Headers': 'x-requested-with'}}).
             success(function (data, status, headers) {
             }).then(function (data) {
               $scope.clusterHeadUrls = dataService.getClusterHeadUrls(data.data);
