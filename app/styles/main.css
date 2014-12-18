@@ -5,6 +5,7 @@
 body {
   background-color: #333333;
   text-align: center;
+  line-height: 1.1 !important;
 }
 h2 {
   color: white;
@@ -20,9 +21,10 @@ h3 {
   font-family: 'Dancing Script', cursive;
   font-size: xx-large;
 }
-button {
+.mybutton {
   color: #cccccc !important;
-  margin: 0.5%;
+  /*margin: 0.5%;*/
+  padding: 0 !important;
   width: 150px;
   height: 80%;
   background-color: #333333 !important;
@@ -34,6 +36,10 @@ button {
   text-align: center;
   font-family: 'Dancing Script', cursive;
   font-size: x-large;
+}
+.over {
+  background-color: #ffffff;
+  opacity: 0.3;
 }
 .frame {
   margin: 0;
@@ -90,6 +96,24 @@ button {
   color: inherit;
   background-color: #eee;
 }
+.masonry-item {
+  /*width: 220px;*/
+  margin: 0.5%;
+  width: 209px;
+  height: 209px;
+  /*vertical-align: middle;*/
+  border: 0;
+  float: left;
+  background-size: cover;
+}
+.masonry-item:hover {
+  /*border: 3px;*/
+  border-color: #1494D9;
+  -webkit-box-shadow: 0px 0px 74px 15px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 74px 15px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 74px 15px rgba(0, 0, 0, 0.75);
+}
+
 
 .overlay {
   background-color: rgba(1, 1, 1, 0.3);
@@ -103,18 +127,17 @@ button {
 }
 
 .wrapper {
+  opacity: 0.99;
   display: inline-block;
   position: relative;
-  /*z-index: 20;*/
-  /*margin: 1.5%;*/
-  width: 550px;
-  height: 550px;
+  width: 650px;
+  height: 650px;
   border: 2px solid darkslategray;
   float-offset: 10px;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
-  margin: 0px auto;
+  margin: 5px auto;
   overflow: hidden;
 }
 
@@ -133,8 +156,8 @@ button {
   padding: 0;
   top: 0;
   left: 0;
-  opacity: 1;
-  overflow: hidden;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
   transition: opacity 1.5s, width 1.5s, height 1.5s, top 1.5s, left 1.5s;
 }
 
@@ -143,6 +166,7 @@ button {
   z-index: 10;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .mycontainer.myhidden {
@@ -151,7 +175,15 @@ button {
   height: 100px;
   opacity: 0;
   z-index: 5;
+  overflow: hidden;
   pointer-events: none;
+}
+.mycontainer.result {
+  z-index: -20;
+  opacity: 0;
+  position: absolute;
+  background-color: #080808;
+  overflow-y:auto;
 }
 
 .container.preview {
@@ -162,13 +194,13 @@ button {
 }
 
 .box {
-  width: 30%;
-  height: 30%;
-  margin: 1%;
-  margin-top: 2%;
-  margin-left: 2%;
+  width: 32%;
+  height: 32%;
+  /*margin: 1%;*/
+  margin-top: 1%;
+  margin-left: 1%;
   overflow: hidden;
-  border: 2px solid white;
+  border: 3px solid black;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
@@ -197,7 +229,7 @@ button {
   width: 33.33%;
   overflow: hidden;
   height: 33.33%;
-  /*border: 1px solid #ffffff;*/
+  border: 1px solid #000000 !important;
   border-radius: 0;
   border: none;
   box-shadow: none;
@@ -239,4 +271,25 @@ button {
   -o-transition: none !important;
   -ms-transition: none !important;
   transition: none !important;
+}
+
+.animate-enter,
+.animate-leave
+{
+  -webkit-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+  -moz-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+  -ms-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+  -o-transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+  transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+}
+
+.animate-enter {
+  left: 100%;
+}
+.animate-enter.animate-enter-active {
+  left: 0;
+}
+
+.animate-leave {
+  left: 0;
 }

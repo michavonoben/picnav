@@ -15,7 +15,8 @@ angular.module('PicNavigatorApp', [
   'ngResource',
   'ngRoute',
   'ngSanitize',
-  'ngTouch'
+  'ngTouch',
+  'wu.masonry'
 ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -33,6 +34,7 @@ angular.module('PicNavigatorApp', [
   })
   .factory('picService', function () {
     var data;
+    var imageData;
     var items = [];
     var pics = {};
 
@@ -40,8 +42,16 @@ angular.module('PicNavigatorApp', [
       data = d;
     };
 
+    pics.setImageData = function (d) {
+      imageData = d;
+    };
+
     pics.getData = function () {
       return data;
+    };
+
+    pics.getImageData = function () {
+      return imageData;
     };
 
     pics.addItem = function (item) {
@@ -106,6 +116,18 @@ angular.module('PicNavigatorApp', [
         clusterIds.push(cluster['ID']);
       });
       return clusterIds;
+    };
+
+    service.getImages = function (data) {
+      var baseURL = data['baseURL'];
+      var images = [];
+      console.log(data);
+      data['images'].forEach(function (img) {
+        images.push({src: baseURL + img['url'],
+        id: img['imageId']});
+      });
+      console.log(images);
+      return images;
     };
     return service;
   });

@@ -17,12 +17,17 @@ angular.module('PicNavigatorApp')
 
     $scope.search = function () {
       // single query first to create ajax session id
-      $http.get('http://www.palm-search.com/service/view/image/terms/?&terms=' + $scope.query).
+      $http.get('http://www.palm-search.com/service/view/image/terms/?&terms=' + $scope.query,
+        {headers:
+        //{'Access-Control-Request-Headers': 'x-requested-with'}}).
+        {'Access-Control-Allow-Headers': 'x-requested-with'}}).
         success(function (data) {
-          //picService.setImageData(data);
+          picService.setImageData(data);
           // fire cluster query
           $http.get('http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B' + $scope.query + '%2C%3B%3B',
-            {headers: {'Access-Control-Allow-Headers': 'x-requested-with'}}).
+            {headers:
+            ////{'Access-Control-Request-Headers': 'x-requested-with'}}).,
+            {'Access-Control-Allow-Headers': 'x-requested-with'}}).
             success(function (data) {
               $location.path('/picnav');
               picService.setData(data);

@@ -1,31 +1,39 @@
 'use strict';
 
 angular.module('PicNavigatorApp.controllers', []).
+  controller('navigationController', function ($scope) {
+  }).
   controller('initialController', function ($scope, $http, $q, picService, dataService) {
     var data = picService.getData();
+    var setData = function (data) {
+      $scope.clusterHeadUrls = dataService.getClusterHeadUrls(data);
+      $scope.representativeUrls = dataService.getClusterPreviewUrls(data);
+      $scope.representativeIds = dataService.getClusterPreviewIds(data);
+      $scope.clusterIds = dataService.getClusterIds(data);
+    };
+    // first time only:
+    $scope.resultPics = dataService.getImages(picService.getImageData());
     // push first dataSet to history
     $scope.prestineData = data;
     $scope.dataHistory = [];
     $scope.prestinePreview = [];
     $scope.indexHistory = [];
-
-    $scope.clusterHeadUrls = dataService.getClusterHeadUrls(data);
-    $scope.representativeUrls = dataService.getClusterPreviewUrls(data);
-    $scope.representativeIds = dataService.getClusterPreviewIds(data);
-    $scope.clusterIds = dataService.getClusterIds(data);
-
     $scope.picListA = [];
     $scope.picListB = [];
     $scope.picListView = [];
 
     $scope.title = null;
+    $scope.currentView = 'CLUSTER';
     $scope.movingBack = false;
     $scope.showHelp = true;
+    $scope.resultPage = false;
 
     $scope.wrapperHeight = 550;
     $scope.wrapperWidth = 550;
 
     var index, col, row;
+
+    setData(data);
 
     var fillContainer = function () {
       var deferred = $q.defer();
@@ -69,20 +77,18 @@ angular.module('PicNavigatorApp.controllers', []).
       $('.overlay').css('z-index', -20);
     };
 
-    var httpRequest = function (clusterId, callback) {
+    var httpRequest = function (clusterId, isSingle, callback) {
+      var single = 'http://www.palm-search.com/service/view/image/reference/?&imageId=';
+      var cluster = 'http://www.palm-search.com/service/view/image/subcluster/?&clusterId=';
       var deferred = $q.defer();
-      $http.get('http://www.palm-search.com/service/view/image/subcluster/?&clusterId=' + clusterId,
+      $http.get(isSingle ? single + clusterId : cluster + clusterId,
         {headers: {'Access-Control-Allow-Headers': 'x-requested-with'}}).
         success(function (data) {
-          $http.get('http://www.palm-search.com/service/view/cluster/?&clusterId=' + data.clusterID,
-            {headers: {'Access-Control-Allow-Headers': 'x-requested-with'}}).
+          $scope.resultPics = dataService.getImages(data);
+          $http.get('http://www.palm-search.com/service/view/cluster/?&clusterId=' + data.clusterID).
             success(function (data, status, headers) {
             }).then(function (data) {
-              $scope.clusterHeadUrls = dataService.getClusterHeadUrls(data.data);
-              $scope.representativeUrls = dataService.getClusterPreviewUrls(data.data);
-              $scope.representativeIds = dataService.getClusterPreviewIds(data.data);
-              $scope.clusterIds = dataService.getClusterIds(data.data);
-              $scope.prestineData = data.data;
+              setData(data.data);
               callback();
             });
         }).
@@ -152,9 +158,9 @@ angular.module('PicNavigatorApp.controllers', []).
       }
     };
 
-    $scope.updatePicList = function (clusterId, index) {
+    $scope.updatePicList = function (clusterId, isSingle, index) {
       overlayScreenOn().
-        then(httpRequest(clusterId, function () {
+        then(httpRequest(clusterId, isSingle, function () {
           fillContainer().
             then(transition(index).
               then(overlayScreenOff()));
@@ -197,10 +203,9 @@ angular.module('PicNavigatorApp.controllers', []).
             then(overlayScreenOff())));
     };
   }).
-  controller('picBoxController', function ($scope, $timeout) {
+  controller('picBoxController', function ($scope) {
     $scope.preview = false;
     $scope.picBoxMouseEnter = function (index) {
-      //$timeout( function() {
       $scope.preview = true;
       var col = Math.floor(index / 3);
       var row = index % 3;
@@ -208,10 +213,10 @@ angular.module('PicNavigatorApp.controllers', []).
       $('.mycontainer.myhidden')
         .addClass('notransition')
         .css({
-          top: col * $scope.wrapperHeight / 3 + 'px',
-          left: row * $scope.wrapperHeight / 3 + 'px',
-          width: $scope.wrapperWidth / 3 + 'px',
-          height: $scope.wrapperHeight / 3 + 'px'
+          top: col * $scope.wrapperHeight / 2.5 + 'px',
+          left: row * $scope.wrapperHeight / 2.5 + 'px',
+          width: $scope.wrapperWidth / 2.5 + 'px',
+          height: $scope.wrapperHeight / 2.5 + 'px'
         });
     };
     $scope.picBoxMouseLeave = function () {
@@ -228,13 +233,30 @@ angular.module('PicNavigatorApp.controllers', []).
       $scope.preview = false;
       $scope.movingBack = false;
 
-      $scope.updatePicList($scope.clusterIds[index], index);
+      $scope.updatePicList($scope.clusterIds[index], false, index);
       $scope.refreshPreview(index);
+    };
+    $scope.singlePicClicked = function(id, index) {
+      $scope.indexHistory.push(index);
+      $scope.dataHistory.push($scope.prestineData);
+
+      $scope.preview = false;
+      $scope.movingBack = false;
+
+      $scope.updatePicList(id, true, index);
+      $scope.refreshPreview(index);
+    };
+
+    $scope.resultPicMouseEnter = function () {
+      $scope.preview = true;
+    };
+
+    $scope.resultPicMouseLeave = function () {
+      $scope.preview = false;
     };
   }).
   controller('historyController', function ($scope) {
     $scope.newSearch = function() {
-      console.log('NEW');
       window.location.href = '/'
     };
     $scope.back = function () {
@@ -249,7 +271,14 @@ angular.module('PicNavigatorApp.controllers', []).
       }
     };
   }).
-  controller('currentViewController', function ($scope) {
+  controller('viewController', function ($scope) {
+    var transitionTime = 200;
+    $scope.getToggleTitle = function () {
+      return $scope.currentView === 'CLUSTER' ? 'Result View' : 'Cluster View';
+    };
+    $scope.getToggleClass = function () {
+      return $scope.currentView === 'CLUSTER' ? 'glyphicon glyphicon-th-large' : 'glyphicon glyphicon-th';
+    };
     $scope.showTooltip = false;
     $scope.picSelected = function (url) {
       //local       http://141.45.146.52/jpg160/00/12/74/62/160_F_12746292_T6hzDiFsVMwcMfOUqsP3b18eb5HyTRVm.jpg
@@ -264,5 +293,36 @@ angular.module('PicNavigatorApp.controllers', []).
     };
     $scope.picTooltipOff = function () {
       $scope.showTooltip = false;
+    };
+    $scope.toggleView = function () {
+      if ($scope.currentView === 'CLUSTER') {
+        // goto results
+        $(function () {
+          $('.mycontainer.active').animate({
+            /*
+             TODO: some fancy transition with clusters for view switch?
+             */
+          }, {duration: transitionTime, queue: false});
+          $("#resultPage").animate({
+            opacity: 1,
+            zIndex: 20
+          }, {duration: transitionTime, queue: false});
+          $scope.currentView = 'RESULTS'
+        });
+      } else {
+        // goto cluster
+        $(function () {
+          $('.mycontainer.active').animate({
+            /*
+             TODO: some fancy transition with clusters for view switch?
+             */
+          }, {duration: transitionTime, queue: false});
+          $("#resultPage").animate({
+            opacity: 0,
+            zIndex: -20
+          }, {duration: transitionTime, queue: false});
+          $scope.currentView = 'CLUSTER'
+        });
+      }
     };
   });
