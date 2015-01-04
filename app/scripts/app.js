@@ -121,12 +121,16 @@ angular.module('PicNavigatorApp', [
     service.getImages = function (data) {
       var baseURL = data['baseURL'];
       var images = [];
-      console.log(data);
+      //console.log(data);
       data['images'].forEach(function (img) {
+        //local       http://141.45.146.52/jpg160/00/12/74/62/160_F_12746292_T6hzDiFsVMwcMfOUqsP3b18eb5HyTRVm.jpg
+        //fotoliaUrl  http://t1.ftcdn.net/jpg/00/18/47/57/400_F_18475763_ORbnj9aujO1GrtO7VgNPzejFZv8mMbwb.jpg
+        var originalSrc = 'http://t1.ftcdn.net/jpg/' + img['url'].replace('jpg160', 'jpg').replace('160', '400');
         images.push({src: baseURL + img['url'],
-        id: img['imageId']});
-      });
-      console.log(images);
+        id: img['imageId'],
+        originSrc: originalSrc
+      })});
+      //console.log(images);
       return images;
     };
     return service;
