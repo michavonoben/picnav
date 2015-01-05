@@ -8,6 +8,7 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.picListA = [];
     $scope.picListB = [];
     $scope.picListView = [];
+    $scope.previewPic = 'http://t1.ftcdn.net/jpg/00/30/55/64/400_F_30556406_NSDfireROIkmxzfdagUG6EtH2G0DP3Vc.jpg';
 
     $scope.title = null;
     $scope.currentView = 'CLUSTER';
@@ -321,29 +322,35 @@ angular.module('PicNavigatorApp.controllers', []).
         then(dataUpdate());
     };
 
-    $scope.singlePicClicked = function (id, index) {
+    $scope.singlePicClicked = function (pic) {
+      //local       http://141.45.146.52/jpg160/00/12/74/62/160_F_12746292_T6hzDiFsVMwcMfOUqsP3b18eb5HyTRVm.jpg
+      //fotoliaUrl  http://t1.ftcdn.net/jpg/00/18/47/57/400_F_18475763_ORbnj9aujO1GrtO7VgNPzejFZv8mMbwb.jpg
+      //$scope.previewPic = pic.originSrc;
       //$scope.indexHistory.push(index);
       //$scope.dataHistory.push($scope.prestineData);
       //
       //$scope.preview = false;
       //$scope.movingBack = false;
-      $scope.httpRequest(id, true, true, $scope.refreshPreview(index));
+      //$scope.httpRequest(id, true, true, $scope.refreshPreview(index));
       //$scope.clusterSearch(id, true, index);
       //$scope.refreshPreview(index);
     };
 
-    $scope.currentPreview = '';
-
-    $scope.getPreviewPicUrl = function () {
-      //console.log($scope.currentPreview);
-      return $scope.currentPreview;
-    };
+    // @THOMAS - previewPic changes correctly, but not in picnav.html
+    $scope.$watch('previewPic', function(newVal, oldVal) {
+      $scope.previewPic = newVal;
+      $scope.apply();
+      console.log('change!')
+    });
 
     $scope.resultPicMouseEnter = function (pic) {
-      //console.log(pic);
-      $scope.currentPreview = pic.originSrc;
+      $scope.previewPic = pic.originSrc;
+      console.log($scope.previewPic);
       $scope.preview = true;
+      //$scope.$apply();
     };
+
+    // @THOMAS_END
 
     $scope.resultPicMouseLeave = function () {
       $scope.preview = false;
@@ -377,8 +384,6 @@ angular.module('PicNavigatorApp.controllers', []).
     };
     //$scope.showTooltip = false;
     $scope.picSelected = function (url) {
-      //local       http://141.45.146.52/jpg160/00/12/74/62/160_F_12746292_T6hzDiFsVMwcMfOUqsP3b18eb5HyTRVm.jpg
-      //fotoliaUrl  http://t1.ftcdn.net/jpg/00/18/47/57/400_F_18475763_ORbnj9aujO1GrtO7VgNPzejFZv8mMbwb.jpg
       if (window.confirm('Go to original image Url and leave this page?')) {
         window.location.href = url.replace('jpg160', 'jpg').replace('160', '400').replace('http://141.45.146.52/', 'http://t1.ftcdn.net/');
       }
