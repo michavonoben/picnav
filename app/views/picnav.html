@@ -1,4 +1,4 @@
-<body class="body" ng-app="PicNavigatorApp" ng-controller="navigationController">
+<body class="body" ng-app="PicNavigatorApp">
 <script src="bower_components/masonry/masonry.js"></script>
 <!--<script src="bower_components/masonry/masonry.js"></script>-->
 <link href='http://fonts.googleapis.com/css?family=Dancing+Script' rel='stylesheet' type='text/css'>
@@ -14,6 +14,7 @@
       <div id="conA" class="mycontainer active">
         <div class="box"
              ng-repeat="pic in picListA"
+             ng-show="pic.id != 'undefined'"
              ng-mouseenter="picBoxMouseEnter($index)"
              ng-mouseleave="picBoxMouseLeave($index)"
              ng-controller="picBoxController">
@@ -24,11 +25,13 @@
           <div class="over results"
                ng-if="preview"
                ng-click="goToResults($index)">
-            <span class="glyphicon glyphicon-th-list"></span> Show results</div>
+            <span class="glyphicon glyphicon-th-list"></span> Show results
+          </div>
           <div class="over search"
                ng-if="preview"
                ng-click="continueClusterSearch($index)">
-            <span class="glyphicon glyphicon-th"></span> Find similar</div>
+            <span class="glyphicon glyphicon-th"></span> Find similar
+          </div>
           <div class="box cluster">
             <img ng-src="{{pic.srcs.previewSrcs[0]}}" class="box mini">
             <img ng-src="{{pic.srcs.previewSrcs[1]}}" class="box mini">
@@ -46,17 +49,20 @@
       <div id="conB" class="mycontainer myhidden">
         <div class="box"
              ng-repeat="pic in picListB"
+             ng-show="pic.id != 'undefined'"
              ng-mouseenter="picBoxMouseEnter($index)"
              ng-mouseleave="picBoxMouseLeave($index)"
              ng-controller="picBoxController">
           <div class="over results"
                ng-if="preview"
                ng-click="goToResults($index)">
-            <span class="glyphicon glyphicon-th-list"></span> Show results</div>
+            <span class="glyphicon glyphicon-th-list"></span> Show results
+          </div>
           <div class="over search"
                ng-if="preview"
                ng-click="continueClusterSearch($index)">
-            <span class="glyphicon glyphicon-th"></span> Find similar</div>
+            <span class="glyphicon glyphicon-th"></span> Find similar
+          </div>
           <div class="box cluster">
             <img ng-src="{{pic.srcs.previewSrcs[0]}}" class="box mini">
             <img ng-src="{{pic.srcs.previewSrcs[1]}}" class="box mini">
@@ -71,29 +77,39 @@
         </div>
       </div>
 
-        <div id="resultPage" class="mycontainer result">
-         <!--<div masonry style="width: 650px; height: 650px">-->
-            <div class="masonry-item"
-                 ng-repeat="pic in resultPics"
-                 ng-controller="picBoxController"
-                 ng-click="singlePicClicked(pic.id, $index)"
-                 ng-mouseenter="resultPicMouseEnter()"
-                 ng-mouseleave="resultPicMouseLeave()"
-                 style="background-image: url({{pic.src}})">
-              <img class="imgTooltip" ng-if="preview" src="{{pic.originSrc}}"></div>
-              <!--<div class="masonry-item over" style="z-index: 30"-->
-
-                   <!--ng-click="singlePicClicked(img.id, $index)"><span class="glyphicon glyphicon-search"></span>-->
-              <!--</div>-->
-            </div>
-         <!--</div>-->
+      <div id="resultPage" class="mycontainer result">
+        <!--<div masonry style="width: 650px; height: 650px">-->
+        <div class="masonry-item"
+             ng-repeat="pic in resultPics"
+             ng-controller="picBoxController"
+             ng-click="singlePicClicked(pic.id, $index)"
+             ng-mouseenter="resultPicMouseEnter(pic)"
+             ng-mouseleave="resultPicMouseLeave()"
+             style="background-image: url({{pic.src}})">
+          <img class="imgTooltip" ng-if="preview" src="{{pic.originSrc}}">
         </div>
-    <button type="submit" class="btn btn-default" ng-controller="historyController" ng-click="newSearch()"><span class="glyphicon glyphicon-search"></span> New</button>
-    <button type="submit" class="btn btn-default" ng-controller="historyController" ng-click="back()"><span class="glyphicon glyphicon-backward"></span> Back</button>
-    <button id="viewBtn" type="submit" class="btn btn-default" ng-controller="viewController" ng-click="toggleView()"><span class={{getToggleClass()}}></span> {{getToggleTitle()}}</button>
+        <!--<div class="previewPic" ng-controller="picBoxController">-->
+          <!--<img ng-src="{{getPreviewPicUrl()}}">-->
+        <!--</div>-->
+        <!--<div class="masonry-item over" style="z-index: 30"-->
+
+        <!--ng-click="singlePicClicked(img.id, $index)"><span class="glyphicon glyphicon-search"></span>-->
+        <!--</div>-->
+      </div>
+      <!--</div>-->
     </div>
+    <button type="submit" class="btn btn-default" ng-controller="historyController" ng-click="newSearch()"><span
+      class="glyphicon glyphicon-search"></span> New
+    </button>
+    <button ng-disabled="backDisabled()" type="submit" class="btn btn-default" ng-controller="historyController"
+            ng-click="back()"><span class="glyphicon glyphicon-backward"></span> Back
+    </button>
+    <button id="viewBtn" type="submit" class="btn btn-default" ng-controller="viewController" ng-click="toggleView()">
+      <span class={{getToggleClass()}}></span> {{getToggleTitle()}}
+    </button>
   </div>
-  </div>
+</div>
+</div>
 <div class="footer">HTW Berlin 2015 - Requests to palm-search.com</div>
 </body>
 

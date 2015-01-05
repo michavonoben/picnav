@@ -8,7 +8,7 @@
 
   <form>
     <input ng-model="query" id="query" type="text" placeholder="e.g. Beach, River, Cat..." required>
-    <input ng-disabled="!query" id="search" type="button" value="Search" ng-click="search(model.query)">
+    <button type="submit" ng-disabled="!query" id="search" ng-click="search(model.query)">Search</button>
   </form>
 </div>
 </body>
