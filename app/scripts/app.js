@@ -16,7 +16,8 @@ angular.module('PicNavigatorApp', [
   'ngRoute',
   'ngSanitize',
   'ngTouch',
-  'wu.masonry'
+  'wu.masonry',
+  'ngTagsInput'
 ])
   .config(function ($routeProvider) {
     $routeProvider

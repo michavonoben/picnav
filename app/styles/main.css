@@ -20,8 +20,29 @@ h3 {
   font-family: 'Dancing Script', cursive;
   font-size: xx-large;
 }
+.searchTitle {
+  padding: 30px;
+  padding-left: 14%;
+  padding-right: 14%;
+  margin: 15%;
+  margin-top: 5%;
+  color: inherit;
+  background-color: #eee;
+}
+.searchBar{
+  /*left: 50%;*/
+  /*width: 50%;*/
+  /*float: left;*/
+}
 .btn {
  width: 32%;
+}
+.title {
+  margin: 20px;
+  color: #080808;
+  /*margin: 3%;*/
+  font: small-caps 24px Helvetica;
+  /*font-family: Helvetica;*/
 }
 .mybutton {
   color: #cccccc !important;
@@ -31,13 +52,6 @@ h3 {
   height: 80%;
   background-color: #DCDCDC !important;
   text-align: center;
-}
-.title {
-  margin: 20px;
-  color: #080808;
-  /*text-align: center;*/
-  font-family: 'Dancing Script', cursive;
-  font-size: x-large;
 }
 .frame {
   margin: 0;
@@ -85,15 +99,6 @@ h3 {
   top: 50%;
   left: 50%;
   /*transform: translate(-50%, -50%);*/
-}
-.jumbotron {
-  padding: 30px;
-  margin-bottom: 30px;
-  margin-top: 60px;
-  margin-left: 10px;
-  margin-right: 10px;
-  color: inherit;
-  background-color: #eee;
 }
 .masonry-item {
   /* width: 220px; */
@@ -312,6 +317,7 @@ h3 {
   /*background-color: darkslategray;*/
 }
 .header {
+  margin-top: 12px;
   height: 30px;
   /*background-color: darkslategray;*/
   text-align: center;

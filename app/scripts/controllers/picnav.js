@@ -32,7 +32,7 @@ angular.module('PicNavigatorApp.controllers', []).
       clusterRequest: "http://www.palm-search.com/service/view/cluster/?&clusterId=",
       singleRequest: "http://www.palm-search.com/service/view/image/reference/?&imageId=",
       subClusterRequest: "http://www.palm-search.com/service/view/image/subcluster/?&clusterId=",
-      allowCORSHeader: {headers: {'Access-Control-Allow-Headers': 'x-requested-with'}}
+      allowCORSHeader: {headers: {'Access-Control-Request-Headers': 'x-requested-with'}}
     };
     var col, row;
     // first time only:
@@ -208,10 +208,6 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     $scope.stepBack = function () {
-      //$scope.picListView = [];
-      ////$scope.showHelp = true;
-
-
       var dataUpdate = function (oldData) {
         var deferred = $q.defer();
         $scope.clusterHeadUrls = dataService.getClusterHeadUrls(oldData);
@@ -287,15 +283,6 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.continueClusterSearch = function (index) {
-      ////console.log('Search, ', index)
-      ///*
-      // Start new search with picture id?
-      // */
-      //// push pristine copies to history
-      //$scope.indexHistory.push(index);
-      //$scope.dataHistory.push($scope.prestineData);
-      //
-      //$scope.preview = false;
       $scope.movingBack = false;
       $scope.clusterSearch($scope.clusterIds[index], false, index);
     };
@@ -308,8 +295,6 @@ angular.module('PicNavigatorApp.controllers', []).
      */
     $scope.goToResults = function (index) {
       var dataUpdate = function () {
-        //$scope.indexHistory.push(index);
-        //$scope.dataHistory.push($scope.prestineData);
         $scope.preview = false;
         $scope.movingBack = false;
         $scope.httpRequest($scope.clusterIds[index], false, false, function() {
@@ -337,15 +322,15 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     // @THOMAS - previewPic changes correctly, but not in picnav.html
-    $scope.$watch('previewPic', function(newVal, oldVal) {
-      $scope.previewPic = newVal;
-      $scope.apply();
-      console.log('change!')
-    });
+    //$scope.$watch('previewPic', function(newVal, oldVal) {
+    //  $scope.previewPic = newVal;
+    //  $scope.apply();
+    //  console.log('change!')
+    //});
 
     $scope.resultPicMouseEnter = function (pic) {
       $scope.previewPic = pic.originSrc;
-      console.log($scope.previewPic);
+      //console.log($scope.previewPic);
       $scope.preview = true;
       //$scope.$apply();
     };
