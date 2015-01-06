@@ -26,15 +26,12 @@ angular.module('PicNavigatorApp')
 
     $scope.search = function () {
       // single query first to create ajax session id
-      console.log($scope.query);
       var fullTermQuery = '';
       var fullCLusterQuery = '';
       for (var i=0; i<$scope.query.length; i++) {
-        console.log($scope.query[i]['text']);
         fullTermQuery += '&terms=' + $scope.query[i]['text'];
         fullCLusterQuery += $scope.query[i]['text'] + '%2C'
       }
-      console.log(fullTermQuery);
       $http.get('http://www.palm-search.com/service/view/image/terms/?' + fullTermQuery, headers
       //$http.get('http://www.palm-search.com/service/view/image/terms/?&terms=' + $scope.query, headers
         //{headers:
@@ -45,7 +42,6 @@ angular.module('PicNavigatorApp')
         //}}
       ).
         success(function (data) {
-          console.log(data);
           picService.setImageData(data);
           // fire cluster query
           //         http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B   dog  %2C  tree   %2C%3B%3B

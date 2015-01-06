@@ -3,18 +3,11 @@
 angular.module('PicNavigatorApp.controllers', []).
   controller('initialController', function ($scope, $http, $q, picService, dataService) {
     $scope.dataHistory = [];
-    //$scope.prestinePreview = [];
-    //$scope.indexHistory = [];
-    $scope.picListA = [];
-    $scope.picListB = [];
-    $scope.picListView = [];
-    $scope.previewPic = 'http://t1.ftcdn.net/jpg/00/30/55/64/400_F_30556406_NSDfireROIkmxzfdagUG6EtH2G0DP3Vc.jpg';
+    $scope.picList = [];
+    $scope.previewPic = null;
 
-    $scope.title = null;
     $scope.currentView = 'CLUSTER';
     $scope.movingBack = false;
-    $scope.showHelp = true;
-    $scope.resultPage = false;
 
     $scope.wrapperHeight = 550;
     $scope.wrapperWidth = 550;
@@ -38,33 +31,18 @@ angular.module('PicNavigatorApp.controllers', []).
     // first time only:
     $scope.resultPics = dataService.getImages(picService.getImageData());
     // push first dataSet to history
-    //$scope.prestineData = data;
     setData(data);
 
     var fillContainer = function () {
       var deferred = $q.defer();
-      if ($scope.title === 'A') {
-        $scope.title = 'B';
-        for (var i = 0; i < 9; i++) {
-          $scope.picListB[i] = {
-            srcs: {
-              main: $scope.clusterHeadUrls[i],
-              previewSrcs: $scope.representativeUrls[i]
-            },
-            id: $scope.clusterIds[i]
-          };
-        }
-      } else {
-        $scope.title = 'A';
-        for (var j = 0; j < 9; j++) {
-          $scope.picListA[j] = {
-            srcs: {
-              main: $scope.clusterHeadUrls[j],
-              previewSrcs: $scope.representativeUrls[j]
-            },
-            id: $scope.clusterIds[j]
-          };
-        }
+      for (var i = 0; i < 9; i++) {
+        $scope.picList[i] = {
+          srcs: {
+            main: $scope.clusterHeadUrls[i],
+            previewSrcs: $scope.representativeUrls[i]
+          },
+          id: $scope.clusterIds[i]
+        };
       }
       return deferred.promise;
     };
@@ -97,9 +75,11 @@ angular.module('PicNavigatorApp.controllers', []).
         $(function () {
           $("#resultPage").animate({
             opacity: 1,
-            zIndex: 20,
-            scrollTop: 0
+            zIndex: 20
           }, {duration: transitionTime, queue: false});
+          $("#scrollResults").animate({
+            scrollTop: 0
+          }, {duration: 0, queue: false});
           $scope.currentView = 'RESULTS'
         });
       } else {
@@ -132,6 +112,7 @@ angular.module('PicNavigatorApp.controllers', []).
               success(function (data, status, headers) {
               }).then(function (data) {
                 setData(data.data);
+                fillContainer();
                 callback();
               });
           } else {
@@ -148,44 +129,30 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      * @returns {promise}
      */
-    var clusterSearchTransition = function (index) {
+    var clusterSearchTransition = function (index, animation) {
       var deferred = $q.defer();
       var activeContainer = $('.mycontainer.active');
       var hiddenContainer = $('.mycontainer.myhidden');
       col = Math.floor(index / 3);
       row = index % 3;
-
       hiddenContainer.removeClass('notransition');
       activeContainer.removeClass('active').addClass('myhidden');
-      // shift the container ...
-      activeContainer.css({
-        top: -col * $scope.wrapperWidth + 'px',
-        left: -row * $scope.wrapperHeight + 'px'
-      });
-      // and resize it
-      activeContainer.css({
-        width: $scope.wrapperWidth * 3 + 'px',
-        height: $scope.wrapperHeight * 3 + 'px'
-      });
-
-      activeContainer.addClass('notransition');
-      activeContainer.animate({
-        width: $scope.wrapperWidth / 3 + 'px',
-        height: $scope.wrapperHeight / 3 + 'px',
-        top: 0,
-        left: 0
-      }, 1000);
-      activeContainer.removeClass('notransition');
-      // resize hidden container
+      if (animation) {
+        hiddenContainer.animate({
+          top: '-=' + col * 20 + 'px',
+          left: '-=' + row * 20 + 'px',
+          width: '+=5%',
+          height: '+=5%'
+        }, {duration: 1100, queue: true});
+      }
       hiddenContainer.animate({
         top: 0,
         left: 0,
         width: '100%',
         height: '100%'
-      }, 1200);
+      }, {duration: 600, queue: true});
       // and activate it
       hiddenContainer.removeClass('myhidden').addClass('active');
-      //previewContainer.removeClass('myhidden');
       return deferred.promise;
     };
 
@@ -202,7 +169,7 @@ angular.module('PicNavigatorApp.controllers', []).
       $scope.overlayScreenOn().
         then($scope.httpRequest(clusterId, isSingle, true, function () {
           fillContainer().
-            then(clusterSearchTransition(index).
+            then(clusterSearchTransition(index, true).
               then($scope.overlayScreenOff()));
         }));
     };
@@ -229,8 +196,7 @@ angular.module('PicNavigatorApp.controllers', []).
             width: $scope.wrapperWidth / 3 + 'px',
             height: $scope.wrapperHeight / 3 + 'px'
           });
-        // perform clusterSearchTransition from mid
-        clusterSearchTransition(4);
+        clusterSearchTransition(4, false);
         return deferred.promise;
       };
 
@@ -244,6 +210,9 @@ angular.module('PicNavigatorApp.controllers', []).
   }).
   controller('picBoxController', function ($scope) {
     $scope.preview = false;
+    $scope.hideBox = function (pic) {
+      return pic.id === undefined;
+    };
     /**
      * this is necessary so that the hidden container is in the right position for
      * the animation when the cluster search continues
@@ -264,17 +233,6 @@ angular.module('PicNavigatorApp.controllers', []).
         });
     };
     $scope.picBoxMouseLeave = function () {
-      //console.log('left!');
-      //$(function () {
-      //  //$(event.target).css({zIndex: "-=50"});
-      //  $(event.target).animate({
-      //    //top: "-=20"
-      //  }, {duration: 200, queue: false});
-      //  $(event.target).find('.box.cluster').animate({
-      //    //top: "-=40",
-      //    //height: "+=20%"
-      //  }, {duration: 200, queue: false})
-      //});
       $scope.preview = false;
     };
 
@@ -307,35 +265,25 @@ angular.module('PicNavigatorApp.controllers', []).
         then(dataUpdate());
     };
 
-    $scope.singlePicClicked = function (pic) {
-      //local       http://141.45.146.52/jpg160/00/12/74/62/160_F_12746292_T6hzDiFsVMwcMfOUqsP3b18eb5HyTRVm.jpg
-      //fotoliaUrl  http://t1.ftcdn.net/jpg/00/18/47/57/400_F_18475763_ORbnj9aujO1GrtO7VgNPzejFZv8mMbwb.jpg
-      //$scope.previewPic = pic.originSrc;
-      //$scope.indexHistory.push(index);
-      //$scope.dataHistory.push($scope.prestineData);
-      //
+    $scope.singlePicClicked = function (id) {
       //$scope.preview = false;
       //$scope.movingBack = false;
-      //$scope.httpRequest(id, true, true, $scope.refreshPreview(index));
-      //$scope.clusterSearch(id, true, index);
-      //$scope.refreshPreview(index);
+      $scope.overlayScreenOn();
+      $scope.httpRequest(id, true, true, function() {
+        $scope.overlayScreenOff();
+        $scope.toggleView();
+      });
     };
 
-    // @THOMAS - previewPic changes correctly, but not in picnav.html
-    //$scope.$watch('previewPic', function(newVal, oldVal) {
-    //  $scope.previewPic = newVal;
-    //  $scope.apply();
-    //  console.log('change!')
-    //});
+    $scope.picSelected = function (id) {
+      if (window.confirm('Go to original image Url and leave this page?')) {
+        window.location.href = 'http://www.fotolia.com/id/' + id;
+      }
+    };
 
     $scope.resultPicMouseEnter = function (pic) {
-      $scope.previewPic = pic.originSrc;
-      //console.log($scope.previewPic);
-      $scope.preview = true;
-      //$scope.$apply();
+      $scope.previewPic = pic;
     };
-
-    // @THOMAS_END
 
     $scope.resultPicMouseLeave = function () {
       $scope.preview = false;
@@ -365,18 +313,6 @@ angular.module('PicNavigatorApp.controllers', []).
       return $scope.currentView === 'CLUSTER' ? 'Result View' : 'Cluster View';
     };
     $scope.getToggleClass = function () {
-      return $scope.currentView === 'CLUSTER' ? 'glyphicon glyphicon-th-list' : 'glyphicon glyphicon-th';
+      return $scope.currentView === 'CLUSTER' ? 'glyphicon glyphicon-eye-open' : 'glyphicon glyphicon-th';
     };
-    //$scope.showTooltip = false;
-    $scope.picSelected = function (url) {
-      if (window.confirm('Go to original image Url and leave this page?')) {
-        window.location.href = url.replace('jpg160', 'jpg').replace('160', '400').replace('http://141.45.146.52/', 'http://t1.ftcdn.net/');
-      }
-    };
-    //$scope.picTooltipOn = function () {
-    //  $scope.showTooltip = true;
-    //};
-    //$scope.picTooltipOff = function () {
-    //  $scope.showTooltip = false;
-    //};
   });

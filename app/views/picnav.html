@@ -1,6 +1,5 @@
 <body class="body" ng-app="PicNavigatorApp">
 <script src="bower_components/masonry/masonry.js"></script>
-<!--<script src="bower_components/masonry/masonry.js"></script>-->
 <link href='http://fonts.googleapis.com/css?family=Dancing+Script' rel='stylesheet' type='text/css'>
 <div class="header">
   <span class="title">Picture Navigator 1.8</span>
@@ -13,19 +12,15 @@
     <div class="wrapper">
       <div id="conA" class="mycontainer active">
         <div class="box"
-             ng-repeat="pic in picListA"
-             ng-show="pic.id != 'undefined'"
+             ng-repeat="pic in picList"
+             ng-hide="hideBox(pic)"
              ng-mouseenter="picBoxMouseEnter($index)"
              ng-mouseleave="picBoxMouseLeave($index)"
              ng-controller="picBoxController">
-          <!--ng-click="continueClusterSearch($index)"-->
-          <!--style="background-image: url({{pic.srcs.main}})"-->
-          <!--clusterID="{{//pic.id}}">-->
-          <!--<div class="over" style="z-index: 30" ng-if="preview" ng-click="continueClusterSearch($index)"><span class="glyphicon glyphicon-search"></span>A</div>-->
           <div class="over results"
                ng-if="preview"
                ng-click="goToResults($index)">
-            <span class="glyphicon glyphicon-th-list"></span> Show results
+            <span class="glyphicon glyphicon-eye-open"></span> Show results
           </div>
           <div class="over search"
                ng-if="preview"
@@ -48,15 +43,15 @@
 
       <div id="conB" class="mycontainer myhidden">
         <div class="box"
-             ng-repeat="pic in picListB"
-             ng-show="pic.id != 'undefined'"
+             ng-repeat="pic in picList"
+             ng-hide="hideBox(pic)"
              ng-mouseenter="picBoxMouseEnter($index)"
              ng-mouseleave="picBoxMouseLeave($index)"
              ng-controller="picBoxController">
           <div class="over results"
                ng-if="preview"
                ng-click="goToResults($index)">
-            <span class="glyphicon glyphicon-th-list"></span> Show results
+            <span class="glyphicon glyphicon-eye-open"></span> Show results
           </div>
           <div class="over search"
                ng-if="preview"
@@ -77,25 +72,21 @@
         </div>
       </div>
 
-      <div id="resultPage" class="mycontainer result">
-        <div id="scrollResults" class="masonry-item"
-                ng-repeat="pic in resultPics"
-                ng-controller="picBoxController"
-                ng-click="singlePicClicked(pic)"
-                ng-mouseenter="resultPicMouseEnter(pic)"
-                ng-mouseleave="resultPicMouseLeave()"
-                style="background-image: url({{pic.src}})">
-          <img class="imgTooltip" ng-if="preview" src="{{pic.originSrc}}">
+      <div id="resultPage" class="mycontainer result" ng-controller="picBoxController">
+        <div id="scrollResults">
+          <div class="picInResults"
+               ng-repeat="pic in resultPics"
+               ng-mouseenter="resultPicMouseEnter(pic)"
+               ng-mouseleave="resultPicMouseLeave()"
+               style="background-image: url({{pic.src}})"></div>
         </div>
-        <!-- @THOMAS: Preview Pic Src won't update on change ... (ps: ignore styling for this part) -->
-        <!--<div id="previewResults" class="previewPic" ng-controller="picBoxController">-->
-
-          <!--<span>{{previewPic}}</span>-->
-          <!--<img ng-src="{{previewPic}}">-->
-          <!--&lt;!&ndash; @THOMAS_END &ndash;&gt;-->
-          <!--&lt;!&ndash;<button class="btn btn-default">A</button>&ndash;&gt;-->
-          <!--&lt;!&ndash;<button class="btn btn-default">B</button>&ndash;&gt;-->
-        <!--</div>-->
+        <div id="previewResults">
+          <img class="previewPic" ng-src="{{previewPic.originSrc}}">
+          <div class="previewButtons">
+            <button class="btn btn-default" ng-click="picSelected(previewPic.id)"><span class="glyphicon glyphicon-picture"></span> Original Source</button>
+            <button class="btn btn-default" ng-click="singlePicClicked(previewPic.id)"><span class="glyphicon glyphicon-search"></span> Find more</button>
+          </div>
+        </div>
       </div>
 
     </div>
