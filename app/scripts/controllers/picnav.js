@@ -339,7 +339,6 @@ angular.module('PicNavigatorApp.controllers', []).
     // @THOMAS - previewPic changes correctly, but not in picnav.html
     $scope.$watch('previewPic', function(newVal, oldVal) {
       $scope.previewPic = newVal;
-      $scope.apply();
       console.log('change!')
     });
 

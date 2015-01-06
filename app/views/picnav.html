@@ -77,10 +77,9 @@
         </div>
       </div>
 
-      <div id="resultPage" class="mycontainer result">
+      <div id="resultPage" class="mycontainer result" ng-controller="picBoxController">
         <div id="scrollResults" class="masonry-item"
                 ng-repeat="pic in resultPics"
-                ng-controller="picBoxController"
                 ng-click="singlePicClicked(pic)"
                 ng-mouseenter="resultPicMouseEnter(pic)"
                 ng-mouseleave="resultPicMouseLeave()"
@@ -88,7 +87,7 @@
           <img class="imgTooltip" ng-if="preview" src="{{pic.originSrc}}">
         </div>
         <!-- @THOMAS: Preview Pic Src won't update on change ... (ps: ignore styling for this part) -->
-        <div id="previewResults" class="previewPic" ng-controller="picBoxController">
+        <div id="previewResults" class="previewPic">
 
           <span>{{previewPic}}</span>
           <img ng-src="{{previewPic}}">
@@ -99,6 +98,8 @@
       </div>
 
     </div>
+
+
     <button type="submit" class="btn btn-default" ng-controller="historyController" ng-click="newSearch()"><span class="glyphicon glyphicon-search"></span> New</button>
     <button ng-disabled="backDisabled()" type="submit" class="btn btn-default" ng-controller="historyController" ng-click="back()"><span class="glyphicon glyphicon-backward"></span> Back</button>
     <button id="viewBtn" type="submit" class="btn btn-default" ng-controller="viewController" ng-click="toggleView()"><span class={{getToggleClass()}}></span> {{getToggleTitle()}}</button>
