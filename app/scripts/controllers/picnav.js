@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('PicNavigatorApp.controllers', []).
-  controller('initialController', function ($scope, $http, $q, picService, dataService) {
+  controller('initialController', function ($scope, $http, $q, picService, dataService, httpService) {
     $scope.dataHistory = [];
     $scope.picList = [];
     $scope.previewPic = null;
@@ -13,25 +13,29 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.wrapperWidth = 550;
 
     var data = picService.getData();
-    var setData = function (data) {
+
+    var setData = function (data, callback) {
       // save current data for history
       $scope.dataHistory.push(data)
       $scope.clusterHeadUrls = dataService.getClusterHeadUrls(data);
       $scope.representativeUrls = dataService.getClusterPreviewUrls(data);
       $scope.representativeIds = dataService.getClusterPreviewIds(data);
       $scope.clusterIds = dataService.getClusterIds(data);
+      if (callback) {
+        callback();
+      }
     };
+
     var urls = {
       clusterRequest: "http://www.palm-search.com/service/view/cluster/?&clusterId=",
       singleRequest: "http://www.palm-search.com/service/view/image/reference/?&imageId=",
       subClusterRequest: "http://www.palm-search.com/service/view/image/subcluster/?&clusterId=",
       allowCORSHeader: {headers: {'Access-Control-Request-Headers': 'x-requested-with'}}
     };
+
     var col, row;
     // first time only:
     $scope.resultPics = dataService.getImages(picService.getImageData());
-    // push first dataSet to history
-    setData(data);
 
     var fillContainer = function () {
       var deferred = $q.defer();
@@ -44,10 +48,16 @@ angular.module('PicNavigatorApp.controllers', []).
           id: $scope.clusterIds[i]
         };
       }
+      if (!$scope.$$phase) {
+        // apply changes
+        $scope.$apply();
+      }
+
       return deferred.promise;
     };
 
     // initial filling of picList
+    setData(data);
     fillContainer();
 
     $scope.overlayScreenOn = function () {
@@ -92,6 +102,13 @@ angular.module('PicNavigatorApp.controllers', []).
           $scope.currentView = 'CLUSTER'
         });
       }
+      $scope.previewPic = $scope.resultPics[0];
+      $scope.$broadcast('previewChanged', $scope.previewPic);
+
+      if (!$scope.$$phase) {
+        // apply changes
+        $scope.$apply();
+      }
     };
 
     /**
@@ -103,25 +120,40 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param updateClusters
      * @param callback
      */
+
     $scope.httpRequest = function (clusterId, isSingle, updateClusters, callback) {
-      $http.get(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, urls.allowCORSHeader).
-        success(function (data) {
+      //http using service
+        httpService.makeCorsRequest(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, function(data){
           $scope.resultPics = dataService.getImages(data);
-          if (updateClusters) {
-            $http.get(urls.clusterRequest + data.clusterID).
-              success(function (data, status, headers) {
-              }).then(function (data) {
-                setData(data.data);
-                fillContainer();
-                callback();
+          if(updateClusters) {
+            httpService.makeCorsRequest(urls.clusterRequest + data.clusterID, function(data) {
+              setData(data, function() {
+                fillContainer()
               });
-          } else {
-            callback();
+            });
           }
-        }).
-        error(function (data, status, headers) {
-          console.log(status, headers);
+          callback();
         });
+      // old version:
+
+      //$http.get(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, urls.allowCORSHeader).
+      //  success(function (data) {
+      //    $scope.resultPics = dataService.getImages(data);
+      //    if (updateClusters) {
+      //      $http.get(urls.clusterRequest + data.clusterID).
+      //        success(function (data, status, headers) {
+      //        }).then(function (data) {
+      //          setData(data.data);
+      //          fillContainer();
+      //          callback();
+      //        });
+      //    } else {
+      //      callback();
+      //    }
+      //  }).
+      //  error(function (data, status, headers) {
+      //    console.log(status, headers);
+      //  });
     };
 
     /**
@@ -165,12 +197,10 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.clusterSearch = function (clusterId, isSingle, index) {
-      //console.log('Updating with', clusterId, isSingle, index);
       $scope.overlayScreenOn().
         then($scope.httpRequest(clusterId, isSingle, true, function () {
-          fillContainer().
-            then(clusterSearchTransition(index, true).
-              then($scope.overlayScreenOff()));
+          clusterSearchTransition(index, true).
+            then($scope.overlayScreenOff());
         }));
     };
 
@@ -213,6 +243,7 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.hideBox = function (pic) {
       return pic.id === undefined;
     };
+
     /**
      * this is necessary so that the hidden container is in the right position for
      * the animation when the cluster search continues
@@ -255,7 +286,7 @@ angular.module('PicNavigatorApp.controllers', []).
       var dataUpdate = function () {
         $scope.preview = false;
         $scope.movingBack = false;
-        $scope.httpRequest($scope.clusterIds[index], false, false, function() {
+        $scope.httpRequest($scope.clusterIds[index], false, false, function () {
           $scope.overlayScreenOff();
           $scope.toggleView();
         });
@@ -266,10 +297,9 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     $scope.singlePicClicked = function (id) {
-      //$scope.preview = false;
-      //$scope.movingBack = false;
+      $scope.movingBack = false;
       $scope.overlayScreenOn();
-      $scope.httpRequest(id, true, true, function() {
+      $scope.httpRequest(id, true, true, function () {
         $scope.overlayScreenOff();
         $scope.toggleView();
       });
@@ -288,6 +318,10 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.resultPicMouseLeave = function () {
       $scope.preview = false;
     };
+
+    $scope.$on('previewChanged', function (newPic) {
+      $scope.previewPic = newPic.targetScope.previewPic;
+    });
   }).
   controller('historyController', function ($scope) {
     $scope.newSearch = function () {

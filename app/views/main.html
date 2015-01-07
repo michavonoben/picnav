@@ -1,9 +1,11 @@
 <body>
 <div class="searchTitle">
-  <h1 class="title">Picture Navigator 1.8</h1>
+  <h1 class="title">picture navigatør</h1>
+
   <p>
     Enter a term. Hit space to add multiple words to your search.
   </p>
+
   <form>
     <tags-input ng-model="query"
                 add-on-space="true"
@@ -11,9 +13,10 @@
                 allow-leftover-text="false"
                 add-on-comma="true"
                 class="searchBar"
-                id="query" type="text" placeholder="e.g. beach, river, cat..." required></tags-input>
-    <button type="submit" class="btn btn-default" ng-disabled="!query" id="search" ng-click="search(model.query)">Search</button>
-    </form>
+                id="query" type="text" placeholder="e.g. beach,  mountain swiss" required></tags-input>
+    <button type="submit" class="btn btn-default" ng-disabled="!query" id="search" ng-click="search(query)">Search
+    </button>
+  </form>
   <div class="footer">HTW Berlin 2015 - Requests to palm-search.com</div>
 </div>
 </body>
