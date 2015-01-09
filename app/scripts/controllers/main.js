@@ -35,15 +35,18 @@ angular.module('PicNavigatorApp')
         });
       };
 
+      // 1. terms request
       httpService.makeCorsRequest('http://www.palm-search.com/service/view/image/terms/?' + fullTermQuery,
         function (data) {
           picService.setImageData(data);
+          // 2. cluster request
+          httpService.makeCorsRequest('http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B' + fullCLusterQuery + '%3B%3B',
+            function (data) {
+              picService.setData(data);
+              locationChange();
+            });
         });
-      httpService.makeCorsRequest('http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B' + fullCLusterQuery + '%3B%3B',
-        function (data) {
-          picService.setData(data);
-          locationChange();
-        });
+
 
       // old version:
 

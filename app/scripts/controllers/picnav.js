@@ -167,15 +167,25 @@ angular.module('PicNavigatorApp.controllers', []).
       var hiddenContainer = $('.mycontainer.myhidden');
       col = Math.floor(index / 3);
       row = index % 3;
-      hiddenContainer.removeClass('notransition');
+      activeContainer.css({
+        opacity: 0,
+        zIndex: 5
+      });
       activeContainer.removeClass('active').addClass('myhidden');
+
+      hiddenContainer.animate({
+        opacity: 1,
+        zIndex: 10
+      }, {duration: 1000, queue: true});
+      hiddenContainer.removeClass('myhidden').addClass('active');
+
       if (animation) {
         hiddenContainer.animate({
           top: '-=' + col * 20 + 'px',
           left: '-=' + row * 20 + 'px',
           width: '+=5%',
           height: '+=5%'
-        }, {duration: 1100, queue: true});
+        }, {duration: 700, queue: true});
       }
       hiddenContainer.animate({
         top: 0,
@@ -183,8 +193,6 @@ angular.module('PicNavigatorApp.controllers', []).
         width: '100%',
         height: '100%'
       }, {duration: 600, queue: true});
-      // and activate it
-      hiddenContainer.removeClass('myhidden').addClass('active');
       return deferred.promise;
     };
 
@@ -219,10 +227,9 @@ angular.module('PicNavigatorApp.controllers', []).
         var deferred = $q.defer();
         // move hidden container to wrapper mid
         $('.mycontainer.myhidden')
-          .addClass('notransition')
           .css({
-            top: $scope.wrapperHeight / 3 + 'px',
-            left: $scope.wrapperHeight / 3 + 'px',
+            top: $scope.wrapperHeight / 2.4 + 'px',
+            left: $scope.wrapperHeight / 2.4 + 'px',
             width: $scope.wrapperWidth / 3 + 'px',
             height: $scope.wrapperHeight / 3 + 'px'
           });
@@ -255,12 +262,11 @@ angular.module('PicNavigatorApp.controllers', []).
       $scope.preview = true;
       // move the hidden container behind the img with the mouse over it
       $('.mycontainer.myhidden')
-        .addClass('notransition')
         .css({
-          top: col * $scope.wrapperHeight / 2.5 + 'px',
-          left: row * $scope.wrapperHeight / 2.5 + 'px',
-          width: $scope.wrapperWidth / 2.5 + 'px',
-          height: $scope.wrapperHeight / 2.5 + 'px'
+          top: col * $scope.wrapperHeight / 2.4 + 'px',
+          left: row * $scope.wrapperHeight / 2.4 + 'px',
+          width: $scope.wrapperWidth / 3 + 'px',
+          height: $scope.wrapperHeight / 3 + 'px'
         });
     };
     $scope.picBoxMouseLeave = function () {

@@ -183,7 +183,7 @@ angular.module('PicNavigatorApp', [
       // Response handlers.
       xhr.onload = function () {
         if (xhr.responseText.split(':')[0] === 'error') {
-          window.alert('Something went wrong. This is a known issue we\'re working on. Please just hit "search" again.\n\n\n'
+          window.alert('Something went wrong. Please try again.\n\n\n'
           + 'Request url was: ' + url + '\n\n'
           + 'Response: ' + xhr.responseText);
         }

@@ -157,19 +157,18 @@ body {
 }
 
 .mycontainer.active {
-  opacity: 1;
+  /*opacity: 1;*/
   z-index: 10;
-  width: 100%;
-  height: 100%;
+  /*width: 100%;*/
+  /*height: 100%;*/
   overflow: hidden;
 }
 
 .mycontainer.myhidden {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  opacity: 0;
+  /*opacity: 0;*/
   z-index: 5;
+
+  position: absolute;
   overflow: hidden;
   pointer-events: none;
 }
@@ -282,12 +281,4 @@ body {
   height: 30px;
   text-align: center;
   vertical-align: middle;
-}
-
-.notransition {
-  -webkit-transition: none !important;
-  -moz-transition: none !important;
-  -o-transition: none !important;
-  -ms-transition: none !important;
-  transition: none !important;
 }
