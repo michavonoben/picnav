@@ -10,28 +10,28 @@
 angular.module('PicNavigatorApp')
   .controller('MainCtrl', function ($scope, $http, $location, picService, httpService) {
 
-    var headers = {
-      headers: {
-        //'Access-Control-Allow-Headers': 'Content-Type',
-        //'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        //'Access-Control-Request-Headers': 'x-requested-with',
-        'Access-Control-Request-Headers': 'http://mvo.suhail.uberspace.de'
-      }
-    };
+    //var headers = {
+    //  headers: {
+    //    //'Access-Control-Allow-Headers': 'Content-Type',
+    //    //'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    //    //'Access-Control-Request-Headers': 'x-requested-with',
+    //    'Access-Control-Request-Headers': 'http://mvo.suhail.uberspace.de'
+    //  }
+    //};
 
     $scope.search = function () {
       var fullTermQuery = '';
       var fullCLusterQuery = '';
 
       for (var i = 0; i < $scope.query.length; i++) {
-        fullTermQuery += '&terms=' + $scope.query[i]['text'];
-        fullCLusterQuery += $scope.query[i]['text'] + '%2C';
+        fullTermQuery += '&terms=' + $scope.query[i].text;
+        fullCLusterQuery += $scope.query[i].text + '%2C';
       }
 
       //http using service
       var locationChange = function () {
         $scope.$apply(function () {
-          $location.path("/picnav");
+          $location.path('/picnav');
         });
       };
 

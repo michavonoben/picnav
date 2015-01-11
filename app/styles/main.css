@@ -208,15 +208,11 @@ body {
 
 .box:hover {
   /*border: 3px;*/
-  /*border-color: #1494D9;*/
+  /*border-color: #4E5355;*/
   -webkit-box-shadow: 0px 33px 70px 18px rgba(0, 0, 0, 1);
   -moz-box-shadow: 0px 33px 70px 18px rgba(0, 0, 0, 1);
   box-shadow: 0px 33px 70px 18px rgba(0, 0, 0, 1);
   transition: all 0.2s linear;
-}
-
-.box:hover .cluster {
-  /*z-index: 10;*/
 }
 
 .over {

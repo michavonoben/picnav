@@ -1,4 +1,5 @@
 'use strict';
+var $; // so JS lint won't throw error on jQuery
 
 angular.module('PicNavigatorApp.controllers', []).
   controller('initialController', function ($scope, $http, $q, picService, dataService, httpService) {
@@ -12,11 +13,23 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.wrapperHeight = 550;
     $scope.wrapperWidth = 550;
 
+    /**
+     * the following function was taken from:
+     * http://www.markcampbell.me/tutorial/2013/10/08/preventing-navigation-in-an-angularjs-project.html
+     * @author Mark Campell
+     */
+    $scope.$on('$locationChangeStart', function (event) {
+      if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
+        event.preventDefault(); // This prevents the navigation from happening
+      }
+    });
+    // end @author Mark Campell
+
     var data = picService.getData();
 
     var setData = function (data, callback) {
       // save current data for history
-      $scope.dataHistory.push(data)
+      $scope.dataHistory.push(data);
       $scope.clusterHeadUrls = dataService.getClusterHeadUrls(data);
       $scope.representativeUrls = dataService.getClusterPreviewUrls(data);
       $scope.representativeIds = dataService.getClusterPreviewIds(data);
@@ -27,9 +40,9 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     var urls = {
-      clusterRequest: "http://www.palm-search.com/service/view/cluster/?&clusterId=",
-      singleRequest: "http://www.palm-search.com/service/view/image/reference/?&imageId=",
-      subClusterRequest: "http://www.palm-search.com/service/view/image/subcluster/?&clusterId=",
+      clusterRequest: 'http://www.palm-search.com/service/view/cluster/?&clusterId=',
+      singleRequest: 'http://www.palm-search.com/service/view/image/reference/?&imageId=',
+      subClusterRequest: 'http://www.palm-search.com/service/view/image/subcluster/?&clusterId=',
       allowCORSHeader: {headers: {'Access-Control-Request-Headers': 'x-requested-with'}}
     };
 
@@ -83,23 +96,23 @@ angular.module('PicNavigatorApp.controllers', []).
       if ($scope.currentView === 'CLUSTER') {
         // goto results
         $(function () {
-          $("#resultPage").animate({
+          $('#resultPage').animate({
             opacity: 1,
             zIndex: 20
           }, {duration: transitionTime, queue: false});
-          $("#scrollResults").animate({
+          $('#scrollResults').animate({
             scrollTop: 0
           }, {duration: 0, queue: false});
-          $scope.currentView = 'RESULTS'
+          $scope.currentView = 'RESULTS';
         });
       } else {
         // goto cluster
         $(function () {
-          $("#resultPage").animate({
+          $('#resultPage').animate({
             opacity: 0,
             zIndex: -20
           }, {duration: transitionTime, queue: false});
-          $scope.currentView = 'CLUSTER'
+          $scope.currentView = 'CLUSTER';
         });
       }
       $scope.previewPic = $scope.resultPics[0];
@@ -128,7 +141,7 @@ angular.module('PicNavigatorApp.controllers', []).
           if(updateClusters) {
             httpService.makeCorsRequest(urls.clusterRequest + data.clusterID, function(data) {
               setData(data, function() {
-                fillContainer()
+                fillContainer();
               });
             });
           }
@@ -312,7 +325,7 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     $scope.picSelected = function (id) {
-      if (window.confirm('Go to original image Url and leave this page?')) {
+      if (window.confirm('Go to original image Url and leave Picture Navigator?')) {
         window.location.href = 'http://www.fotolia.com/id/' + id;
       }
     };
@@ -331,7 +344,7 @@ angular.module('PicNavigatorApp.controllers', []).
   }).
   controller('historyController', function ($scope) {
     $scope.newSearch = function () {
-      window.location.href = '/'
+      window.location.href = '/';
     };
     $scope.backDisabled = function () {
       return $scope.currentView === 'RESULTS';
