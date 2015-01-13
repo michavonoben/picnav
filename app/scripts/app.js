@@ -146,6 +146,7 @@ angular.module('PicNavigatorApp', [
     var service = {};
     var createCORSRequest = function (method, url) {
       var xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;
       if ('withCredentials' in xhr) {
         // XHR for Chrome/Firefox/Opera/Safari.
         xhr.open(method, url, true);
