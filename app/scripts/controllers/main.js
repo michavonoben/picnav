@@ -18,6 +18,11 @@ angular.module('PicNavigatorApp')
     //    'Access-Control-Request-Headers': 'http://mvo.suhail.uberspace.de'
     //  }
     //};
+    $(document).ready(function () {
+      console.log('foo');
+      console.log($('.tags'));
+      $('.tags').focus();
+    });
 
     $scope.search = function () {
       var fullTermQuery = '';

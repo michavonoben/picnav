@@ -6,6 +6,8 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.dataHistory = [];
     $scope.picList = [];
     $scope.previewPic = null;
+    $scope.resultPreview = false;
+
 
     $scope.currentView = 'CLUSTER';
     $scope.movingBack = false;
@@ -87,6 +89,18 @@ angular.module('PicNavigatorApp.controllers', []).
         opacity: 0
       }, {duration: 200, queue: false});
     };
+    $scope.scaleResultPicOverlay = function () {
+      var img = new Image;
+      img.src = $('#previewResults').css('background-image').replace(/url\(|\)$/ig, "");
+      var bgImgWidth = img.width + 1;
+      var bgImgHeight = img.height + 1;
+      console.log(bgImgWidth, bgImgHeight);
+      $('.bigOver').css({
+        width: bgImgWidth,
+        height: bgImgHeight
+      });
+    };
+
 
     /**
      * toggles the view between cluster-search and resultlist
@@ -104,6 +118,7 @@ angular.module('PicNavigatorApp.controllers', []).
             scrollTop: 0
           }, {duration: 0, queue: false});
           $scope.currentView = 'RESULTS';
+          $scope.inResultView = true;
         });
       } else {
         // goto cluster
@@ -113,15 +128,17 @@ angular.module('PicNavigatorApp.controllers', []).
             zIndex: -20
           }, {duration: transitionTime, queue: false});
           $scope.currentView = 'CLUSTER';
+          $scope.inResultView = false;
         });
       }
       $scope.previewPic = $scope.resultPics[0];
       $scope.$broadcast('previewChanged', $scope.previewPic);
-
       if (!$scope.$$phase) {
         // apply changes
         $scope.$apply();
       }
+      // scale the overlays with new loaded image
+      $scope.scaleResultPicOverlay();
     };
 
     /**
@@ -147,26 +164,6 @@ angular.module('PicNavigatorApp.controllers', []).
           }
           callback();
         });
-      // old version:
-
-      //$http.get(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, urls.allowCORSHeader).
-      //  success(function (data) {
-      //    $scope.resultPics = dataService.getImages(data);
-      //    if (updateClusters) {
-      //      $http.get(urls.clusterRequest + data.clusterID).
-      //        success(function (data, status, headers) {
-      //        }).then(function (data) {
-      //          setData(data.data);
-      //          fillContainer();
-      //          callback();
-      //        });
-      //    } else {
-      //      callback();
-      //    }
-      //  }).
-      //  error(function (data, status, headers) {
-      //    console.log(status, headers);
-      //  });
     };
 
     /**
@@ -276,6 +273,7 @@ angular.module('PicNavigatorApp.controllers', []).
       // move the hidden container behind the img with the mouse over it
       $('.mycontainer.myhidden')
         .css({
+          opacity: 0,
           top: col * $scope.wrapperHeight / 2.4 + 'px',
           left: row * $scope.wrapperHeight / 2.4 + 'px',
           width: $scope.wrapperWidth / 3 + 'px',
@@ -331,11 +329,23 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     $scope.resultPicMouseEnter = function (pic) {
+      console.log(pic);
       $scope.previewPic = pic;
+      $scope.preview = true;
     };
 
     $scope.resultPicMouseLeave = function () {
+      // scale the overlays with new loaded image
+      $scope.scaleResultPicOverlay();
       $scope.preview = false;
+    };
+
+    $scope.resultPreviewMouseEnter = function () {
+      $scope.resultPreview = true;
+    };
+
+    $scope.resultPreviewMouseLeave = function () {
+      $scope.resultPreview = false;
     };
 
     $scope.$on('previewChanged', function (newPic) {
@@ -346,7 +356,8 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.newSearch = function () {
       window.location.href = '/';
     };
-    $scope.backDisabled = function () {
+    $scope.hideBack = function () {
+      console.log('hide back?', $scope.currentView === 'RESULTS');
       return $scope.currentView === 'RESULTS';
     };
     $scope.back = function () {
@@ -362,10 +373,5 @@ angular.module('PicNavigatorApp.controllers', []).
     };
   }).
   controller('viewController', function ($scope) {
-    $scope.getToggleTitle = function () {
-      return $scope.currentView === 'CLUSTER' ? 'Result View' : 'Cluster View';
-    };
-    $scope.getToggleClass = function () {
-      return $scope.currentView === 'CLUSTER' ? 'glyphicon glyphicon-eye-open' : 'glyphicon glyphicon-th';
-    };
+
   });

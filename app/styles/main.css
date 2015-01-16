@@ -20,9 +20,18 @@ body {
 .btn {
   width: 32%;
 }
+.btn.black{
+  margin-left: 1%;
+  width: 16%;
+  color: #ffffff;
+  background-color: #23292B !important;
+  border: none;
+}
+.btn.black:hover {
+  background-color: #383838 !important;
+}
 
 .title {
-  margin: 20px;
   color: #080808;
   font: small-caps 24px Helvetica;
   letter-spacing: 0.5em;
@@ -30,14 +39,22 @@ body {
   padding: 1px;
   padding-left: 13px;
 }
+.title.white {
+  color: #ffffff;
+  border: solid 1px #ffffff;
+}
+.instructionText {
+  color: #f5f5f5;
+  margin: 2%;
+}
 
 .frame {
   margin: 0;
-  padding: 0;
+  padding: 2%;
   /*border: 4px solid darkslategray;*/
-  -webkit-box-shadow: inset 0px 0px 36px 5px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: inset 0px 0px 36px 5px rgba(0, 0, 0, 0.75);
-  box-shadow: inset 0px 0px 36px 5px rgba(0, 0, 0, 0.75);
+  /*-webkit-box-shadow: inset 0px 0px 36px 5px rgba(0, 0, 0, 0.75);*/
+  /*-moz-box-shadow: inset 0px 0px 36px 5px rgba(0, 0, 0, 0.75);*/
+  /*box-shadow: inset 0px 0px 36px 5px rgba(0, 0, 0, 0.75);*/
 }
 
 .navmenu {
@@ -63,8 +80,9 @@ body {
 }
 
 .previewPic {
+  position: absolute;
   margin: 0%;
-  margin-top: 15%;
+  margin-top: 25%;
 }
 
 .previewButtons {
@@ -85,11 +103,14 @@ body {
 }
 
 #previewResults {
-  float: right;
-  width: 66%;
-  height: 100%;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: -10;
+  top: 7%;
+  left: 35%;
+  width: 65%;
+  height: 65%;
+  background-repeat: no-repeat;
+  /* background-position: center; */
 }
 
 .overlay {
@@ -117,6 +138,7 @@ body {
   color: #fff;
   display: inline;
   margin: 0;
+  margin-top: 6%;
   border: 20px solid rgba(1, 1, 1, 0.7);
   background-color: #000000;
 }
@@ -141,8 +163,31 @@ body {
   -moz-border-radius: 10px;
   border-radius: 10px;
   height: 120%;
-  padding-bottom: 9px;
-  margin-top: 7px;
+  margin: 2%;
+}
+.tags {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+.tags .tag-item {
+  color: #d3d3d3;
+  background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%) !important;
+}
+.searchField {
+  left: 2%;
+  top: 7%;
+  width: 96%;
+  height: 91.5%;
+  padding: 13.5%;
+  position: absolute;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  background-color: rgba(0,0,0,0.5);
+}
+.searchBar {
+  margin: 5%;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
 }
 
 .mycontainer {
@@ -218,28 +263,37 @@ body {
 .over {
   height: 50% !important;
   width: 100%;
-  padding-top: 17%;
-  font-size: large;
+  /*padding-top: 12%;*/
+
   position: absolute;
+
   opacity: 1;
   background-color: rgba(0,0,0,0.7);
 }
+.overText {
+  font-size: large;
+  color: #ffffff;
+  position: relative;
+  top: 37%;
+}
 
 .over.results {
-  color: #ffffff;
 
 }
-
 .over.search {
   top: 50%;
-  color: #ffffff;
   /*background-color: rgba(0,0,0,0.4);*/
 }
+
 .over:hover {
   cursor: pointer;
   background-color: rgba(0,0,0,0.9);
   /*background-color: rgba(2,200,255,0.3);*/
 
+}
+.bigOver {
+  position: relative;
+  vertical-align: middle;
 }
 
 .box.mini {
