@@ -121,7 +121,6 @@ angular.module('PicNavigatorApp', [
     service.getImages = function (data) {
       var baseURL = data.baseURL;
       var images = [];
-      //console.log(data);
       data.images.forEach(function (img) {
         //local       http://141.45.146.52/jpg160/00/12/74/62/160_F_12746292_T6hzDiFsVMwcMfOUqsP3b18eb5HyTRVm.jpg
         //fotoliaUrl  http://t1.ftcdn.net/jpg/00/18/47/57/400_F_18475763_ORbnj9aujO1GrtO7VgNPzejFZv8mMbwb.jpg
@@ -132,7 +131,6 @@ angular.module('PicNavigatorApp', [
           originSrc: originalSrc
         });
       });
-      //console.log(images);
       return images;
     };
     return service;

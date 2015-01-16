@@ -94,7 +94,6 @@ angular.module('PicNavigatorApp.controllers', []).
       img.src = $('#previewResults').css('background-image').replace(/url\(|\)$/ig, "");
       var bgImgWidth = img.width + 1;
       var bgImgHeight = img.height + 1;
-      console.log(bgImgWidth, bgImgHeight);
       $('.bigOver').css({
         width: bgImgWidth,
         height: bgImgHeight
@@ -329,7 +328,6 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     $scope.resultPicMouseEnter = function (pic) {
-      console.log(pic);
       $scope.previewPic = pic;
       $scope.preview = true;
     };
@@ -356,10 +354,6 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.newSearch = function () {
       window.location.href = '/';
     };
-    $scope.hideBack = function () {
-      console.log('hide back?', $scope.currentView === 'RESULTS');
-      return $scope.currentView === 'RESULTS';
-    };
     $scope.back = function () {
       if (!$scope.movingBack) {
         $scope.dataHistory.pop();
@@ -369,9 +363,7 @@ angular.module('PicNavigatorApp.controllers', []).
       } else {
         $scope.stepBack();
         $scope.movingBack = true;
+        $('#backBtn').blur();
       }
     };
-  }).
-  controller('viewController', function ($scope) {
-
   });

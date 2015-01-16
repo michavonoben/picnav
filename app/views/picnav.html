@@ -7,18 +7,18 @@
 </div>
 <div class="frame">
   <div class="wrapper column">
-    <div class="header">
-    <button type="submit" class="btn black l" ng-controller="historyController" ng-click="newSearch()"><span
-      class="glyphicon glyphicon-search"></span> New
-    </button>
+    <div class="header" ng-controller="historyController">
+      <button type="submit" class="btn black l" ng-click="newSearch()"><span class="glyphicon glyphicon-search"></span>
+        New
+      </button>
       <span class="title white">picture navigatør</span>
-    <button ng-if="!inResultView" type="submit" class="btn black" ng-controller="historyController"
-            ng-click="back()"><span class="glyphicon glyphicon-backward"></span> Back
-    </button>
-    <button ng-if="inResultView" id="viewBtn" type="submit" class="btn black" ng-controller="viewController" ng-click="toggleView()">
-      <span class="glyphicon glyphicon-th"></span> Cluster
-    </button>
-      </div>
+      <button id="backBtn" ng-if="!inResultView" type="submit" class="btn black" ng-click="back()"><span
+        class="glyphicon glyphicon-backward"></span> Back
+      </button>
+      <button ng-if="inResultView" id="viewBtn" type="submit" class="btn black" ng-click="toggleView()"><span
+        class="glyphicon glyphicon-th"></span> Cluster
+      </button>
+    </div>
     <div class="wrapper">
       <div id="conA" class="mycontainer active">
         <div class="box"
