@@ -20,11 +20,12 @@ angular.module('PicNavigatorApp.controllers', []).
      * http://www.markcampbell.me/tutorial/2013/10/08/preventing-navigation-in-an-angularjs-project.html
      * @author Mark Campell
      */
-    $scope.$on('$locationChangeStart', function (event) {
-      if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
-        event.preventDefault(); // This prevents the navigation from happening
-      }
-    });
+      // TODO
+    //$scope.$on('$locationChangeStart', function (event) {
+    //  if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
+    //    event.preventDefault(); // This prevents the navigation from happening
+    //  }
+    //});
     // end @author Mark Campell
 
     var data = picService.getData();
@@ -54,7 +55,7 @@ angular.module('PicNavigatorApp.controllers', []).
 
     var fillContainer = function () {
       var deferred = $q.defer();
-      for (var i = 0; i < 9; i++) {
+      for (var i = 0; i < 16; i++) {
         $scope.picList[i] = {
           srcs: {
             main: $scope.clusterHeadUrls[i],
@@ -67,7 +68,7 @@ angular.module('PicNavigatorApp.controllers', []).
         // apply changes
         $scope.$apply();
       }
-
+      console.log($scope.picList)
       return deferred.promise;
     };
 
@@ -189,12 +190,12 @@ angular.module('PicNavigatorApp.controllers', []).
       hiddenContainer.removeClass('myhidden').addClass('active');
 
       if (animation) {
-        hiddenContainer.animate({
-          top: '-=' + col * 20 + 'px',
-          left: '-=' + row * 20 + 'px',
-          width: '+=5%',
-          height: '+=5%'
-        }, {duration: 700, queue: true});
+        //hiddenContainer.animate({
+        //  top: '-=' + col * 20 + 'px',
+        //  left: '-=' + row * 20 + 'px',
+        //  width: '+=5%',
+        //  height: '+=5%'
+        //}, {duration: 700, queue: true});
       }
       hiddenContainer.animate({
         top: 0,
@@ -237,10 +238,10 @@ angular.module('PicNavigatorApp.controllers', []).
         // move hidden container to wrapper mid
         $('.mycontainer.myhidden')
           .css({
-            top: $scope.wrapperHeight / 2.4 + 'px',
-            left: $scope.wrapperHeight / 2.4 + 'px',
-            width: $scope.wrapperWidth / 3 + 'px',
-            height: $scope.wrapperHeight / 3 + 'px'
+            top: $scope.wrapperHeight / 4.5 + 'px',
+            left: $scope.wrapperHeight / 4.5 + 'px',
+            width: $scope.wrapperWidth / 4.2 + 'px',
+            height: $scope.wrapperHeight / 4.2 + 'px'
           });
         clusterSearchTransition(4, false);
         return deferred.promise;
@@ -257,7 +258,9 @@ angular.module('PicNavigatorApp.controllers', []).
   controller('picBoxController', function ($scope) {
     $scope.preview = false;
     $scope.hideBox = function (pic) {
-      return pic.id === undefined;
+      // TODO
+      return false;
+      //return pic.id === undefined;
     };
 
     /**
@@ -266,17 +269,17 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.picBoxMouseEnter = function (index) {
-      var col = Math.floor(index / 3);
-      var row = index % 3;
+      var col = Math.floor(index / 4);
+      var row = index % 4;
       $scope.preview = true;
       // move the hidden container behind the img with the mouse over it
       $('.mycontainer.myhidden')
         .css({
           opacity: 0,
-          top: col * $scope.wrapperHeight / 2.4 + 'px',
-          left: row * $scope.wrapperHeight / 2.4 + 'px',
-          width: $scope.wrapperWidth / 3 + 'px',
-          height: $scope.wrapperHeight / 3 + 'px'
+          top: col * $scope.wrapperHeight / 3.3 + 'px',
+          left: row * $scope.wrapperHeight / 3.3 + 'px',
+          width: $scope.wrapperWidth / 4 + 'px',
+          height: $scope.wrapperHeight / 4 + 'px'
         });
     };
     $scope.picBoxMouseLeave = function () {
