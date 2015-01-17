@@ -33,10 +33,9 @@ angular.module('PicNavigatorApp')
         });
       };
 
-      // 1. terms request
+      // 1. terms request for session
       httpService.makeCorsRequest('http://www.palm-search.com/service/view/image/terms/?' + fullTermQuery,
-        function (data) {
-          picService.setImageData(data);
+        function () {
           // 2. cluster request
           httpService.makeCorsRequest('http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B' + fullCLusterQuery + '%3B%3B',
             function (data) {

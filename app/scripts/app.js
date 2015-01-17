@@ -34,7 +34,6 @@ angular.module('PicNavigatorApp', [
   })
   .factory('picService', function () {
     var data;
-    var imageData;
     var items = [];
     var pics = {};
 
@@ -42,16 +41,8 @@ angular.module('PicNavigatorApp', [
       data = d;
     };
 
-    pics.setImageData = function (d) {
-      imageData = d;
-    };
-
     pics.getData = function () {
       return data;
-    };
-
-    pics.getImageData = function () {
-      return imageData;
     };
 
     pics.addItem = function (item) {
@@ -69,17 +60,7 @@ angular.module('PicNavigatorApp', [
   })
   .factory('dataService', function () {
     var service = {};
-
-    service.getClusterHeadUrls = function (data) {
-      var clustersHeadUrls = [];
-      var baseURL = data.baseURL;
-      var i = 0;
-      data.clusterPreviews.forEach(function (cluster) {
-        clustersHeadUrls.push(baseURL + cluster.representatives[0].url);
-        i++;
-      });
-      return clustersHeadUrls;
-    };
+    service.dataHistory = [];
 
     service.getClusterPreviewUrls = function (data) {
       var clusterPreviewUrls = [];
@@ -96,20 +77,6 @@ angular.module('PicNavigatorApp', [
       return clusterPreviewUrls;
     };
 
-    service.getClusterPreviewIds = function (data) {
-      var clusterPreviewIds = [];
-      var x = 0;
-      data.clusterPreviews.forEach(function (cluster) {
-        var groupUrl = [];
-        cluster.representatives.forEach(function (reps) {
-          groupUrl.push(reps.id);
-        });
-        clusterPreviewIds.push(groupUrl);
-        x++;
-      });
-      return clusterPreviewIds;
-    };
-
     service.getClusterIds = function (data) {
       var clusterIds = [];
       data.clusterPreviews.forEach(function (cluster) {
@@ -118,6 +85,7 @@ angular.module('PicNavigatorApp', [
       return clusterIds;
     };
 
+    // get the bigger sized fotolia result pics
     service.getImages = function (data) {
       var baseURL = data.baseURL;
       var images = [];
@@ -132,6 +100,17 @@ angular.module('PicNavigatorApp', [
         });
       });
       return images;
+    };
+
+    service.addDataToHistory = function (data) {
+      service.dataHistory.push(data);
+    };
+
+    service.getPreviousData = function () {
+      if(service.dataHistory.length === 1) {
+        return service.dataHistory[0];
+      }
+      return service.dataHistory.pop();
     };
     return service;
   })
