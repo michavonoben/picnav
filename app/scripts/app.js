@@ -41,17 +41,9 @@ angular.module('PicNavigatorApp', [
     pics.setData = function (d) {
       data = d;
     };
-
-    pics.setImageData = function (d) {
-      imageData = d;
-    };
-
+    
     pics.getData = function () {
       return data;
-    };
-
-    pics.getImageData = function () {
-      return imageData;
     };
 
     pics.addItem = function (item) {

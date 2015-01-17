@@ -50,8 +50,6 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     var col, row;
-    // first time only:
-    $scope.resultPics = dataService.getImages(picService.getImageData());
 
     var fillContainer = function () {
       var deferred = $q.defer();
