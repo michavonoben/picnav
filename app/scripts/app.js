@@ -34,14 +34,13 @@ angular.module('PicNavigatorApp', [
   })
   .factory('picService', function () {
     var data;
-    var imageData;
     var items = [];
     var pics = {};
 
     pics.setData = function (d) {
       data = d;
     };
-    
+
     pics.getData = function () {
       return data;
     };
@@ -61,17 +60,7 @@ angular.module('PicNavigatorApp', [
   })
   .factory('dataService', function () {
     var service = {};
-
-    service.getClusterHeadUrls = function (data) {
-      var clustersHeadUrls = [];
-      var baseURL = data.baseURL;
-      var i = 0;
-      data.clusterPreviews.forEach(function (cluster) {
-        clustersHeadUrls.push(baseURL + cluster.representatives[0].url);
-        i++;
-      });
-      return clustersHeadUrls;
-    };
+    service.dataHistory = [];
 
     service.getClusterPreviewUrls = function (data) {
       var clusterPreviewUrls = [];
@@ -110,6 +99,7 @@ angular.module('PicNavigatorApp', [
       return clusterIds;
     };
 
+    // get the bigger sized fotolia result pics
     service.getImages = function (data) {
       var baseURL = data.baseURL;
       var images = [];
@@ -125,6 +115,16 @@ angular.module('PicNavigatorApp', [
       });
       return images;
     };
+
+    service.addDataToHistory = function (data) {
+        service.dataHistory.push(data);
+      };
+          service.getPreviousData = function () {
+        if(service.dataHistory.length === 1) {
+            return service.dataHistory[0];
+          }
+        return service.dataHistory.pop();
+      };
     return service;
   })
   .factory('httpService', function () {

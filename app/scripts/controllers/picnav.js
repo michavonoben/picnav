@@ -3,14 +3,10 @@ var $; // so JS lint won't throw error on jQuery
 
 angular.module('PicNavigatorApp.controllers', []).
   controller('initialController', function ($scope, $http, $q, picService, dataService, httpService) {
-    $scope.dataHistory = [];
     $scope.picList = [];
     $scope.previewPic = null;
     $scope.resultPreview = false;
-
-
     $scope.currentView = 'CLUSTER';
-    $scope.movingBack = false;
 
     $scope.wrapperHeight = 550;
     $scope.wrapperWidth = 550;
@@ -29,13 +25,10 @@ angular.module('PicNavigatorApp.controllers', []).
     // end @author Mark Campell
 
     var data = picService.getData();
+    dataService.addDataToHistory(data);
 
     var setData = function (data, callback) {
-      // save current data for history
-      $scope.dataHistory.push(data);
-      $scope.clusterHeadUrls = dataService.getClusterHeadUrls(data);
       $scope.representativeUrls = dataService.getClusterPreviewUrls(data);
-      $scope.representativeIds = dataService.getClusterPreviewIds(data);
       $scope.clusterIds = dataService.getClusterIds(data);
       if (callback) {
         callback();
@@ -56,7 +49,6 @@ angular.module('PicNavigatorApp.controllers', []).
       for (var i = 0; i < 16; i++) {
         $scope.picList[i] = {
           srcs: {
-            main: $scope.clusterHeadUrls[i],
             previewSrcs: $scope.representativeUrls[i]
           },
           id: $scope.clusterIds[i]
@@ -152,9 +144,10 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.httpRequest = function (clusterId, isSingle, updateClusters, callback) {
       //http using service
         httpService.makeCorsRequest(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, function(data){
-          $scope.resultPics = dataService.getImages(data);
+          if(!updateClusters) $scope.resultPics = dataService.getImages(data);
           if(updateClusters) {
             httpService.makeCorsRequest(urls.clusterRequest + data.clusterID, function(data) {
+              dataService.addDataToHistory(data);
               setData(data, function() {
                 fillContainer();
               });
@@ -220,12 +213,11 @@ angular.module('PicNavigatorApp.controllers', []).
         }));
     };
 
-    $scope.stepBack = function () {
+    $scope.stepBack = function (oldData) {
+
       var dataUpdate = function (oldData) {
         var deferred = $q.defer();
-        $scope.clusterHeadUrls = dataService.getClusterHeadUrls(oldData);
         $scope.representativeUrls = dataService.getClusterPreviewUrls(oldData);
-        $scope.representativeIds = dataService.getClusterPreviewIds(oldData);
         $scope.clusterIds = dataService.getClusterIds(oldData);
         $scope.resultPics = dataService.getImages(oldData);
         return deferred.promise;
@@ -245,7 +237,6 @@ angular.module('PicNavigatorApp.controllers', []).
         return deferred.promise;
       };
 
-      var oldData = $scope.dataHistory.pop();
       $scope.overlayScreenOn().then(
         dataUpdate(oldData).
           then(fillContainer().
@@ -289,7 +280,6 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.continueClusterSearch = function (index) {
-      $scope.movingBack = false;
       $scope.clusterSearch($scope.clusterIds[index], false, index);
     };
 
@@ -302,7 +292,6 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.goToResults = function (index) {
       var dataUpdate = function () {
         $scope.preview = false;
-        $scope.movingBack = false;
         $scope.httpRequest($scope.clusterIds[index], false, false, function () {
           $scope.overlayScreenOff();
           $scope.toggleView();
@@ -314,7 +303,6 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     $scope.singlePicClicked = function (id) {
-      $scope.movingBack = false;
       $scope.overlayScreenOn();
       $scope.httpRequest(id, true, true, function () {
         $scope.overlayScreenOff();
@@ -351,20 +339,14 @@ angular.module('PicNavigatorApp.controllers', []).
       $scope.previewPic = newPic.targetScope.previewPic;
     });
   }).
-  controller('historyController', function ($scope) {
+  controller('historyController', function ($scope, dataService) {
     $scope.newSearch = function () {
       window.location.href = '/';
     };
     $scope.back = function () {
-      if (!$scope.movingBack) {
-        $scope.dataHistory.pop();
-      }
-      if ($scope.dataHistory.length === 0) {
-        window.alert('Cannot go back any further');
-      } else {
-        $scope.stepBack();
-        $scope.movingBack = true;
-        $('#backBtn').blur();
-      }
+      var oldData = dataService.getPreviousData();
+      //window.alert('Cannot go back any further');
+      $scope.stepBack(oldData);
+      $('#backBtn').blur();
     };
   });
