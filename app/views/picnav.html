@@ -40,10 +40,10 @@
               <span class="glyphicon glyphicon-th"></span> Search further</span>
           </div>
           <div class="box cluster">
-            <img ng-src="{{pic.srcs.previewSrcs[0]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[1]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[2]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[3]}}" class="box mini">
+            <img ng-src="{{pic.srcs.previewSrcs[0]}}" on-error-src="{{pic.errorImg}}" class="box mini">
+            <img ng-src="{{pic.srcs.previewSrcs[1]}}" on-error-src="{{pic.errorImg}}" class="box mini">
+            <img ng-src="{{pic.srcs.previewSrcs[2]}}" on-error-src="{{pic.errorImg}}" class="box mini">
+            <img ng-src="{{pic.srcs.previewSrcs[3]}}" on-error-src="{{pic.errorImg}}" class="box mini">
           </div>
         </div>
       </div>
@@ -57,7 +57,7 @@
              ng-controller="picBoxController">
           <div class="over results"
                ng-if="preview"
-               ng-click="goToResults($index)">
+               ng-click="goToResults(pic)">
             <span class="overText">
               <span class="glyphicon glyphicon-eye-open"></span> Show results</span>
           </div>
@@ -68,10 +68,10 @@
               <span class="glyphicon glyphicon-th"></span> Search further</span>
           </div>
           <div class="box cluster">
-            <img ng-src="{{pic.srcs.previewSrcs[0]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[1]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[2]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[3]}}" class="box mini">
+            <img ng-src="{{pic.srcs.previewSrcs[0]}}" on-error-src="{{pic.errorImg}}" class="box mini">
+            <img ng-src="{{pic.srcs.previewSrcs[1]}}" on-error-src="{{pic.errorImg}}" class="box mini">
+            <img ng-src="{{pic.srcs.previewSrcs[2]}}" on-error-src="{{pic.errorImg}}" class="box mini">
+            <img ng-src="{{pic.srcs.previewSrcs[3]}}" on-error-src="{{pic.errorImg}}" class="box mini">
           </div>
         </div>
       </div>
@@ -115,6 +115,9 @@
 </div>
 </div>
 <div class="footer">HTW Berlin 2015 - Requests to palm-search.com</div>
+<div style="color: #ffffff">Level: {{referenceClusterSpecs.level}} Ref X: {{referenceClusterSpecs.x}} Ref Y:
+  {{referenceClusterSpecs.y}}
+</div>
 </body>
 
 

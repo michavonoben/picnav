@@ -20,13 +20,15 @@ body {
 .btn {
   width: 32%;
 }
-.btn.black{
+
+.btn.black {
   margin-left: 1%;
   width: 16%;
   color: #ffffff;
   background-color: #23292B !important;
   border: none;
 }
+
 .btn.black:hover {
   background-color: #383838 !important;
 }
@@ -39,10 +41,12 @@ body {
   padding: 1px;
   padding-left: 13px;
 }
+
 .title.white {
   color: #ffffff;
   border: solid 1px #ffffff;
 }
+
 .instructionText {
   color: #f5f5f5;
   margin: 2%;
@@ -165,14 +169,17 @@ body {
   height: 120%;
   margin: 2%;
 }
+
 .tags {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
 }
+
 .tags .tag-item {
   color: #d3d3d3;
-  background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%) !important;
+  background: -webkit-linear-gradient(top, #45484d 0%, #000000 100%) !important;
 }
+
 .searchField {
   left: 2%;
   top: 7%;
@@ -182,8 +189,9 @@ body {
   position: absolute;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
+
 .searchBar {
   margin: 5%;
   -webkit-border-radius: 10px;
@@ -268,8 +276,9 @@ body {
   position: absolute;
 
   opacity: 1;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0, 0, 0, 0.7);
 }
+
 .overText {
   font-size: large;
   color: #ffffff;
@@ -280,6 +289,7 @@ body {
 .over.results {
 
 }
+
 .over.search {
   top: 50%;
   /*background-color: rgba(0,0,0,0.4);*/
@@ -287,10 +297,11 @@ body {
 
 .over:hover {
   cursor: pointer;
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgba(0, 0, 0, 0.9);
   /*background-color: rgba(2,200,255,0.3);*/
 
 }
+
 .bigOver {
   position: relative;
   vertical-align: middle;

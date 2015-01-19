@@ -1,12 +1,26 @@
 'use strict';
 var $; // so JS lint won't throw error on jQuery
 
-angular.module('PicNavigatorApp.controllers', []).
+angular.module('PicNavigatorApp.controllers', [])
+  .directive('onErrorSrc', function () {
+    return {
+      link: function (scope, element, attrs) {
+        element.bind('error', function () {
+          if (attrs.src != attrs.onErrorSrc) {
+            attrs.$set('src', attrs.onErrorSrc);
+          }
+        });
+      }
+    }
+  }).
   controller('initialController', function ($scope, $http, $q, picService, dataService, httpService) {
     $scope.picList = [];
     $scope.previewPic = null;
     $scope.resultPreview = false;
     $scope.currentView = 'CLUSTER';
+
+    $scope.referenceClusterSpecs = picService.getData();
+    dataService.addDataToHistory($scope.referenceClusterSpecs);
 
     $scope.wrapperHeight = 550;
     $scope.wrapperWidth = 550;
@@ -16,20 +30,19 @@ angular.module('PicNavigatorApp.controllers', []).
      * http://www.markcampbell.me/tutorial/2013/10/08/preventing-navigation-in-an-angularjs-project.html
      * @author Mark Campell
      */
-      // TODO
-    //$scope.$on('$locationChangeStart', function (event) {
-    //  if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
-    //    event.preventDefault(); // This prevents the navigation from happening
-    //  }
-    //});
+
+    $scope.$on('$locationChangeStart', function (event) {
+      if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
+        event.preventDefault(); // This prevents the navigation from happening
+      }
+    });
     // end @author Mark Campell
 
-    var data = picService.getData();
-    dataService.addDataToHistory(data);
+    //var data = picService.getData();
 
-    var setData = function (data, callback) {
-      $scope.representativeUrls = dataService.getClusterPreviewUrls(data);
-      $scope.clusterIds = dataService.getClusterIds(data);
+    var setData = function (referenceClusterSpecs, callback) {
+      $scope.representativeUrls = dataService.getClusterPreviewUrls(referenceClusterSpecs);
+      $scope.clusterIds = dataService.getClusterIds(referenceClusterSpecs);
       if (callback) {
         callback();
       }
@@ -51,19 +64,19 @@ angular.module('PicNavigatorApp.controllers', []).
           srcs: {
             previewSrcs: $scope.representativeUrls[i]
           },
-          id: $scope.clusterIds[i]
+          id: $scope.clusterIds[i],
+          errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
         };
       }
       if (!$scope.$$phase) {
         // apply changes
         $scope.$apply();
       }
-      console.log($scope.picList)
       return deferred.promise;
     };
 
     // initial filling of picList
-    setData(data);
+    setData($scope.referenceClusterSpecs);
     fillContainer();
 
     $scope.overlayScreenOn = function () {
@@ -141,20 +154,35 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param callback
      */
 
-    $scope.httpRequest = function (clusterId, isSingle, updateClusters, callback) {
-      //http using service
-        httpService.makeCorsRequest(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, function(data){
-          if(!updateClusters) $scope.resultPics = dataService.getImages(data);
-          if(updateClusters) {
-            httpService.makeCorsRequest(urls.clusterRequest + data.clusterID, function(data) {
-              dataService.addDataToHistory(data);
-              setData(data, function() {
-                fillContainer();
-              });
-            });
-          }
-          callback();
-        });
+    $scope.netvisRequest = function (clusterId, isSingle, updateClusters, callback) {
+      if ($scope.referenceClusterSpecs.level === 0) {
+        window.alert('Cannot go further');
+        callback();
+        return;
+      }
+      // shifting
+      dataService.addDataToHistory($scope.referenceClusterSpecs);
+      $scope.referenceClusterSpecs.level = clusterId[0] - 1;
+      $scope.referenceClusterSpecs.x = (clusterId[1] * 2);
+      $scope.referenceClusterSpecs.y = (clusterId[2] * 2);
+      //$scope.resultPics = dataService.getImages();
+      setData($scope.referenceClusterSpecs, function () {
+        fillContainer();
+        callback();
+      });
+      ////http using service
+      //  httpService.makeCorsRequest(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, function(data){
+      //    if(!updateClusters) $scope.resultPics = dataService.getImages(data);
+      //    if(updateClusters) {
+      //      httpService.makeCorsRequest(urls.clusterRequest + data.clusterID, function(data) {
+      //        dataService.addDataToHistory(data);
+      //        setData(data, function() {
+      //          fillContainer();
+      //        });
+      //      });
+      //    }
+      //    callback();
+      //  });
     };
 
     /**
@@ -198,7 +226,7 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     /**
-     * fires httpRequest with clusterID and triggers animation
+     * fires netvisRequest with clusterID and triggers animation
      * updates clusters
      * updates resultPic list
      * @param clusterId
@@ -206,20 +234,21 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.clusterSearch = function (clusterId, isSingle, index) {
+      //console.log(clusterId);
       $scope.overlayScreenOn().
-        then($scope.httpRequest(clusterId, isSingle, true, function () {
+        then($scope.netvisRequest(clusterId, isSingle, true, function () {
           clusterSearchTransition(index, true).
             then($scope.overlayScreenOff());
         }));
     };
 
     $scope.stepBack = function (oldData) {
-
+      $scope.referenceClusterSpecs = oldData;
       var dataUpdate = function (oldData) {
         var deferred = $q.defer();
         $scope.representativeUrls = dataService.getClusterPreviewUrls(oldData);
         $scope.clusterIds = dataService.getClusterIds(oldData);
-        $scope.resultPics = dataService.getImages(oldData);
+        //$scope.resultPics = dataService.getImages(oldData);
         return deferred.promise;
       };
 
@@ -244,7 +273,7 @@ angular.module('PicNavigatorApp.controllers', []).
               then($scope.overlayScreenOff()))));
     };
   }).
-  controller('picBoxController', function ($scope) {
+  controller('picBoxController', function ($scope, dataService) {
     $scope.preview = false;
     $scope.hideBox = function (pic) {
       // TODO
@@ -284,27 +313,27 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     /**
-     * fires a httpRequest to get all 50 result pics for a cluster
+     * fires a netvisRequest to get all 50 result pics for a cluster
      * then switches the view to the result page
      * updates resultPic list
      * @param index
      */
-    $scope.goToResults = function (index) {
-      var dataUpdate = function () {
+    $scope.goToResults = function (pic) {
+
+      $scope.resultPics = dataService.getImages(pic);
+      var dataUpdate = function (callback) {
         $scope.preview = false;
-        $scope.httpRequest($scope.clusterIds[index], false, false, function () {
-          $scope.overlayScreenOff();
-          $scope.toggleView();
-        });
+        $scope.overlayScreenOff();
+        callback();
       };
 
       $scope.overlayScreenOn().
-        then(dataUpdate());
+        then(dataUpdate($scope.toggleView()));
     };
 
     $scope.singlePicClicked = function (id) {
       $scope.overlayScreenOn();
-      $scope.httpRequest(id, true, true, function () {
+      $scope.netvisRequest(id, true, true, function () {
         $scope.overlayScreenOff();
         $scope.toggleView();
       });

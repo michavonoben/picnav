@@ -18,30 +18,41 @@ angular.module('PicNavigatorApp')
     //});
 
     $scope.search = function () {
-      var fullTermQuery = '';
-      var fullCLusterQuery = '';
+      //var locationChange = function () {
+      //  $scope.$apply(function () {
+      //    $location.path('/picnav');
+      //  });
+      //};
 
-      for (var i = 0; i < $scope.query.length; i++) {
-        fullTermQuery += '&terms=' + $scope.query[i].text;
-        fullCLusterQuery += $scope.query[i].text + '%2C';
-      }
-
-      //http using service
-      var locationChange = function () {
-        $scope.$apply(function () {
-          $location.path('/picnav');
-        });
+      var data = {
+        level: 6,
+        x: 6,
+        y: 6
       };
 
-      // 1. terms request
-      httpService.makeCorsRequest('http://www.palm-search.com/service/view/image/terms/?' + fullTermQuery,
-        function () {
-          // 2. cluster request
-          httpService.makeCorsRequest('http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B' + fullCLusterQuery + '%3B%3B',
-            function (data) {
-              picService.setData(data);
-              locationChange();
-            });
-        });
+      picService.setData(data);
+      $location.path('/picnav');
+
+      //var fullTermQuery = '';
+      //var fullCLusterQuery = '';
+      //
+      //for (var i = 0; i < $scope.query.length; i++) {
+      //  fullTermQuery += '&terms=' + $scope.query[i].text;
+      //  fullCLusterQuery += $scope.query[i].text + '%2C';
+      //}
+      //
+      ////http using service
+
+      //
+      //// 1. terms request
+      //httpService.makeCorsRequest('http://www.palm-search.com/service/view/image/terms/?' + fullTermQuery,
+      //  function () {
+      //    // 2. cluster request
+      //    httpService.makeCorsRequest('http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B' + fullCLusterQuery + '%3B%3B',
+      //      function (data) {
+      //        picService.setData(data);
+      //        locationChange();
+      //      });
+      //  });
     };
   });
