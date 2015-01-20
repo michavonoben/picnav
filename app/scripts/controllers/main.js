@@ -18,16 +18,21 @@ angular.module('PicNavigatorApp')
     //});
 
     $scope.search = function () {
+      console.log($scope.quLevel);
+      console.log($scope.quX);
+      console.log($scope.quY);
       //var locationChange = function () {
       //  $scope.$apply(function () {
       //    $location.path('/picnav');
       //  });
       //};
-
+      var level = + $scope.quLevel;
+      var x = + $scope.quX;
+      var y = + $scope.quY;
       var data = {
-        level: 6,
-        x: 6,
-        y: 6
+        level: level,
+        x: x,
+        y: y
       };
 
       picService.setData(data);

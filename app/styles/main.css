@@ -197,6 +197,10 @@ body {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
 }
+.searchBox {
+  margin: 4%;
+  width: 12%;
+}
 
 .mycontainer {
   width: 100%;

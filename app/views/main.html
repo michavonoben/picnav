@@ -10,18 +10,22 @@
       </div>
       <div class="searchField">
         <p class="instructionText">
-          Enter a term. Hit space to add multiple words to your search.
+          Enter numeric values for level [6-0], X and Y position of the picture
+          <!--Enter a term. Hit space to add multiple words to your search.-->
         </p>
 
         <form>
-          <tags-input ng-model="query"
-                      add-on-space="true"
-                      add-on-enter="true"
-                      allow-leftover-text="false"
-                      add-on-comma="true"
-                      class="searchBar"
-                      id="query" type="text" placeholder="e.g. beach,  mountain swiss" required></tags-input>
-          <button type="submit" class="btn btn-default" ng-disabled="!query" id="search" ng-click="search(query)">Search
+          <input type="number" class="searchBox" placeholder="L" ng-model="quLevel">
+          <input type="number" class="searchBox" placeholder="X" ng-model="quX">
+          <input type="number" class="searchBox" placeholder="Y" ng-model="quY"><br>
+          <!--<tags-input ng-model="query"-->
+                      <!--add-on-space="true"-->
+                      <!--add-on-enter="true"-->
+                      <!--allow-leftover-text="false"-->
+                      <!--add-on-comma="true"-->
+                      <!--class="searchBar"-->
+                      <!--id="query" type="text" placeholder="e.g. beach,  mountain swiss" required></tags-input>-->
+          <button type="submit" class="btn btn-default" ng-disabled="!quLevel || !quX || !quY" id="search" ng-click="search(query)">Search
           </button>
         </form>
       </div>
