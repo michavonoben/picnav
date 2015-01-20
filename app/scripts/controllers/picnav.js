@@ -15,9 +15,11 @@ angular.module('PicNavigatorApp.controllers', [])
   }).
   controller('initialController', function ($scope, $http, $q, picService, dataService, httpService) {
     $scope.picList = [];
+    $scope.resultPics = [];
     $scope.previewPic = null;
     $scope.resultPreview = false;
     $scope.currentView = 'CLUSTER';
+    $scope.doubleSteps = true;
 
     $scope.referenceClusterSpecs = picService.getData();
     dataService.addDataToHistory($scope.referenceClusterSpecs);
@@ -108,10 +110,13 @@ angular.module('PicNavigatorApp.controllers', [])
     /**
      * toggles the view between cluster-search and resultlist
      */
-    $scope.toggleView = function () {
+    $scope.toggleView = function (index) {
       var transitionTime = 200;
       if ($scope.currentView === 'CLUSTER') {
         // goto results
+        $scope.resultPics = dataService.getImages($scope.representativeUrls[index]);
+        $scope.previewPic = $scope.resultPics[0];
+        $scope.$broadcast('previewChanged', $scope.previewPic);
         $(function () {
           $('#resultPage').animate({
             opacity: 1,
@@ -123,6 +128,8 @@ angular.module('PicNavigatorApp.controllers', [])
           $scope.currentView = 'RESULTS';
           $scope.inResultView = true;
         });
+        // scale the overlays with new loaded image
+        $scope.scaleResultPicOverlay();
       } else {
         // goto cluster
         $(function () {
@@ -134,14 +141,10 @@ angular.module('PicNavigatorApp.controllers', [])
           $scope.inResultView = false;
         });
       }
-      $scope.previewPic = $scope.resultPics[0];
-      $scope.$broadcast('previewChanged', $scope.previewPic);
       if (!$scope.$$phase) {
         // apply changes
         $scope.$apply();
       }
-      // scale the overlays with new loaded image
-      $scope.scaleResultPicOverlay();
     };
 
     /**
@@ -155,34 +158,28 @@ angular.module('PicNavigatorApp.controllers', [])
      */
 
     $scope.netvisRequest = function (clusterId, isSingle, updateClusters, callback) {
+      //console.log(clusterId);
       if ($scope.referenceClusterSpecs.level === 0) {
         window.alert('Cannot go further');
-        callback();
+        $scope.overlayScreenOff();
         return;
       }
       // shifting
       dataService.addDataToHistory($scope.referenceClusterSpecs);
-      $scope.referenceClusterSpecs.level = clusterId[0] - 1;
-      $scope.referenceClusterSpecs.x = (clusterId[1] * 2);
-      $scope.referenceClusterSpecs.y = (clusterId[2] * 2);
-      //$scope.resultPics = dataService.getImages();
+      if ($scope.doubleSteps) {
+        $scope.referenceClusterSpecs.level = clusterId[0] - 2;
+        $scope.referenceClusterSpecs.x = (clusterId[1] * 4);
+        $scope.referenceClusterSpecs.y = (clusterId[2] * 4);
+      } else {
+        $scope.referenceClusterSpecs.level = clusterId[0] - 1;
+        $scope.referenceClusterSpecs.x = (clusterId[1] * 2);
+        $scope.referenceClusterSpecs.y = (clusterId[2] * 2);
+      }
+
       setData($scope.referenceClusterSpecs, function () {
         fillContainer();
         callback();
       });
-      ////http using service
-      //  httpService.makeCorsRequest(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, function(data){
-      //    if(!updateClusters) $scope.resultPics = dataService.getImages(data);
-      //    if(updateClusters) {
-      //      httpService.makeCorsRequest(urls.clusterRequest + data.clusterID, function(data) {
-      //        dataService.addDataToHistory(data);
-      //        setData(data, function() {
-      //          fillContainer();
-      //        });
-      //      });
-      //    }
-      //    callback();
-      //  });
     };
 
     /**
@@ -318,9 +315,7 @@ angular.module('PicNavigatorApp.controllers', [])
      * updates resultPic list
      * @param index
      */
-    $scope.goToResults = function (pic) {
-
-      $scope.resultPics = dataService.getImages(pic);
+    $scope.goToResults = function (index) {
       var dataUpdate = function (callback) {
         $scope.preview = false;
         $scope.overlayScreenOff();
@@ -328,7 +323,9 @@ angular.module('PicNavigatorApp.controllers', [])
       };
 
       $scope.overlayScreenOn().
-        then(dataUpdate($scope.toggleView()));
+        then(dataUpdate(function() {
+          $scope.toggleView(index)
+        }));
     };
 
     $scope.singlePicClicked = function (id) {
@@ -370,11 +367,14 @@ angular.module('PicNavigatorApp.controllers', [])
   }).
   controller('historyController', function ($scope, dataService) {
     $scope.newSearch = function () {
-      window.location.href = '/';
+      window.location.href = '/imgMap';
     };
     $scope.back = function () {
+      if ($scope.referenceClusterSpecs.level === 6) {
+        window.alert('Cannot go back any further');
+        return;
+      }
       var oldData = dataService.getPreviousData();
-      //window.alert('Cannot go back any further');
       $scope.stepBack(oldData);
       $('#backBtn').blur();
     };

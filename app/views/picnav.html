@@ -57,7 +57,7 @@
              ng-controller="picBoxController">
           <div class="over results"
                ng-if="preview"
-               ng-click="goToResults(pic)">
+               ng-click="goToResults($index)">
             <span class="overText">
               <span class="glyphicon glyphicon-eye-open"></span> Show results</span>
           </div>
@@ -82,10 +82,9 @@
                ng-repeat="pic in resultPics"
                ng-mouseenter="resultPicMouseEnter(pic)"
                ng-mouseleave="resultPicMouseLeave()"
-               style="background-image: url({{pic.src}})"></div>
+               style="background-image: url({{pic.src}})"></div><span>{{pic.src}}</span>
         </div>
         <div id="previewResults"
-
              style="background-image: url({{previewPic.originSrc}})">
           <div>
             <div class="bigOver"
@@ -114,9 +113,9 @@
   </div>
 </div>
 </div>
-<div class="footer">HTW Berlin 2015 - Requests to palm-search.com</div>
-<div style="color: #ffffff">Level: {{referenceClusterSpecs.level}} Ref X: {{referenceClusterSpecs.x}} Ref Y:
-  {{referenceClusterSpecs.y}}
+<div class="footer">HTW Berlin 2015 - Requests to netvis</div>
+<div style="color: #ffffff">Level: {{referenceClusterSpecs.level}}  X: {{referenceClusterSpecs.x}}  Y:
+  {{referenceClusterSpecs.y}} - - Double level steps  <input type="checkbox" ng-model="doubleSteps">
 </div>
 </body>
 

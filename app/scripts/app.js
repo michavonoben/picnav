@@ -29,7 +29,7 @@ angular.module('PicNavigatorApp', [
         controller: 'initialController'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/imgMap'
       });
   })
   .factory('picService', function () {
@@ -63,31 +63,8 @@ angular.module('PicNavigatorApp', [
     service.dataHistory = [];
 
     service.getClusterPreviewUrls = function (referenceClusterSpecs) {
-      // level is 6, 4, 2 or 0
-      // 6 6 6, 4 6 6 --> 4 27 27
       var clusterPreviewUrls = []; // 16
       var corL = referenceClusterSpecs.level;
-      //if (corL < 6) {
-      //  if (corL === 4) {
-      //    console.log('doing it');
-      //    d = 2;
-      //  } else if (corL = 2) {
-      //    d = 3;
-      //  } else if (corL = 0) {
-      //    d = 4;
-      //  }
-      //
-      //  for (var g = 0; g < d; g++) {
-      //    console.log(corX, corY, 'yeah');
-      //    corX = (corX * 2) + 1;
-      //    corY = (corY * 2) + 1;
-      //  }
-      //}
-      //for (corL < 6; corL++;) {
-      //
-      //  corX = corX*2 + 1;
-      //  corY = corY*2 + 1;
-      //}
       var x = referenceClusterSpecs.x;
       var y = referenceClusterSpecs.y;
 
@@ -150,30 +127,18 @@ angular.module('PicNavigatorApp', [
     };
 
     // get the bigger sized fotolia result pics
-    service.getImages = function (pic) {
+    service.getImages = function (urls) {
       var images = [];
-      //for (var i=0; i<4; i++) {
-      //  images.push({
-      //    src: pic.srcs.previewSrcs[i],
-      //    id: 'foo',
-      //    originSrc: pic.srcs.previewSrcs[i]
-      //  });
-      //}
-      //images.push({
-      //  src: ,
-      //  id: img.imageId,
-      //  originSrc: originalSrc
-      //});
-      //data.images.forEach(function (img) {
-      //  //local       http://141.45.146.52/jpg160/00/12/74/62/160_F_12746292_T6hzDiFsVMwcMfOUqsP3b18eb5HyTRVm.jpg
-      //  //fotoliaUrl  http://t1.ftcdn.net/jpg/00/18/47/57/400_F_18475763_ORbnj9aujO1GrtO7VgNPzejFZv8mMbwb.jpg
-      //  var originalSrc = 'http://t1.ftcdn.net/jpg/' + img.url.replace('jpg160', 'jpg').replace('160', '400');
-      //  images.push({
-      //    src: baseURL + img.url,
-      //    id: img.imageId,
-      //    originSrc: originalSrc
-      //  });
-      //});
+      urls.forEach(function(url) {
+        var l = + url.substring(url.indexOf("l") + 1).split('/')[0];
+        var y = + url.substring(url.indexOf("y") + 1).split('/')[0];
+        var x = + url.substring(url.indexOf("x") + 1).split('.')[0];
+        images.push({
+          src: url,
+          id: [l, x, y],
+          originSrc: url
+        });
+      });
       return images;
     };
 
