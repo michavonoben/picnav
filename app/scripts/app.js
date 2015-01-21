@@ -85,30 +85,7 @@ angular.module('PicNavigatorApp', [
       }
       return clusterPreviewUrls;
     };
-
-    service.getClusterPreviewIds = function (data) {
-      var clusterPreviewIds = []; // 16
-      var groupUrl = [];          // 4
-      var x = 0;
-
-      for (var j = 0; j < 16; j++) {
-        for (var i = 0; i < 4; i++) {
-          groupUrl.push('http://141.45.146.52/netvis/netvis1024/data/l6/y6/x' + x + '.jpg');
-        }
-        x++;
-        clusterPreviewIds.push(groupUrl);
-      }
-      //data.clusterPreviews.forEach(function (cluster) {
-      //  var groupUrl = [];
-      //  cluster.representatives.forEach(function (reps) {
-      //    groupUrl.push(reps.id);
-      //  });
-      //  clusterPreviewIds.push(groupUrl);
-      //  x++;
-      //});
-      return clusterPreviewIds;
-    };
-
+    
     service.getClusterIds = function (referenceClusterSpecs) {
       var l = referenceClusterSpecs.level;
       var x = referenceClusterSpecs.x;
