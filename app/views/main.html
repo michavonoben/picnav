@@ -1,32 +1,38 @@
 <body>
 
-<div class="frame">
-  <div class="wrapper column">
-    <div class="wrapper">
-      <div class="header">
 
-        <span class="title white">picture navigatør</span>
-
-      </div>
+  <div class="wrapper">
+    <!--<div class="wrapper column">-->
+      <div class="header"> <span class="title white">picture navigatør</span></div>
+    <div class="wrapper column">
       <div class="searchField">
         <p class="instructionText">
         Enter a term. Hit space to add multiple words to your search.
         </p>
         <form>
-          <tags-input ng-model="query"
-                      add-on-space="true"
-                      add-on-enter="true"
-                      allow-leftover-text="false"
-                      add-on-comma="true"
-                      class="searchBar"
-                      id="query" type="text" placeholder="e.g. beach,  mountain swiss" required></tags-input>
-          <button type="submit" class="btn btn-default" ng-disabled="!query" id="search" ng-click="search(query)">Search
-          </button>
+          <div>
+            <form id="tfnewsearch">
+              <!--<tags-input class="tftextinput" maxlength="120"></tags-input>-->
+              <tags-input class="tftextinput"
+                          id="query" type="text"
+                          ng-model="query"
+                          placeholder="{{query.length < 1 ? 'e.g. beach,  mountain swiss' : ''}}"
+                          add-on-space="true"
+                          add-on-enter="true"
+                          allow-leftover-text="false"
+                          add-on-comma="true" required>
+              </tags-input>
+
+              <input type="submit" ng-disabled="!query" id="search" ng-click="search(query)" value="search" class="tfbutton">
+            </form>
+            <div class="tfclear"></div>
+          </div>
         </form>
       </div>
+      <!--</div>-->
     </div>
   </div>
-</div>
+
 <div class="footer">HTW Berlin 2015 - Requests to palm-search.com | Try <a href="http://mvo.suhail.uberspace.de/imgMap/#/">Netvis Navigator</a></div>
 </body>
 

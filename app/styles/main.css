@@ -32,12 +32,9 @@ body {
 }
 
 .title {
-  color: #080808;
   font: small-caps 24px Helvetica;
   letter-spacing: 0.5em;
-  border: solid 1px #23292B;
-  padding: 1px;
-  padding-left: 13px;
+  padding-left: 1%;
 }
 .title.white {
   color: #ffffff;
@@ -48,20 +45,82 @@ body {
   margin: 2%;
 }
 
-.frame {
-  margin: 0;
-  padding: 2%;
-  /*border: 4px solid darkslategray;*/
-  /*-webkit-box-shadow: inset 0px 0px 36px 5px rgba(0, 0, 0, 0.75);*/
-  /*-moz-box-shadow: inset 0px 0px 36px 5px rgba(0, 0, 0, 0.75);*/
-  /*box-shadow: inset 0px 0px 36px 5px rgba(0, 0, 0, 0.75);*/
-}
-
 .navmenu {
   padding: 40px;
   color: #cccccc;
   width: 80%;
   margin: 0 auto;
+}
+.tags {
+  padding: 0 !important;
+  border-top-left-radius: 5px 5px;
+  border-bottom-left-radius: 5px 5px;
+  border: 0 !important;
+}
+.tags .tag-item {
+  color: #d3d3d3;
+  background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%) !important;
+}
+#tfnewsearch{
+  float:right;
+  padding:20px;
+}
+.tftextinput{
+  position: absolute;
+  width: 54.5%;
+  padding-left: 7.5%;
+  /* margin: 0; */
+  /* padding: 5px 15px; */
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  /* border: 1px solid #0076a3; */
+
+}
+.tfbutton {
+  position: absolute;
+  margin-top: 5px;
+  margin-left: 19%;
+  padding: 4px 15px;
+  cursor: pointer;
+  text-align: center;
+  color: #ffffff;
+  border: solid 1px #333333;
+  background: -webkit-linear-gradient(top, #45484d 0%,#333333 100%);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+}
+.tfbutton:hover {
+  text-decoration: none;
+  background: -webkit-linear-gradient(top, #696968 0%,#484744 100%);
+}
+/* Fixes submit button height problem in Firefox */
+.tfbutton::-moz-focus-inner {
+  border: 0;
+}
+.tfclear{
+  clear:both;
+}
+
+.searchField {
+  left: 3%;
+  top: 3%;
+  width: 94%;
+  height: 94%;
+  padding: 13.5%;
+  position: absolute;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  background-color: rgba(0,0,0,0.5);
+}
+.searchBarWrapper {
+  position: relative;
+}
+.searchBar {
+  position: absolute;
+  margin: 5%;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
 }
 
 .picInResults {
@@ -81,7 +140,7 @@ body {
 
 .previewPic {
   position: absolute;
-  margin: 0%;
+  margin: 0;
   margin-top: 25%;
 }
 
@@ -97,16 +156,13 @@ body {
   float: left;
   width: 34%;
   height: 100%;
-  border: solid 5px transparent;
-  margin-top: 9px;
-  color: white;
 }
 
 #previewResults {
   position: relative;
   z-index: -10;
-  top: 7%;
-  left: 35%;
+  /* top: 1.8%; */
+  left: 34%;
   width: 65%;
   height: 65%;
   background-repeat: no-repeat;
@@ -144,55 +200,32 @@ body {
 }
 
 .wrapper {
-  opacity: 0.99;
-  display: inline-block;
-  position: relative;
-  width: 650px;
-  height: 650px;
-  float-offset: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  overflow: hidden;
+  z-index: -5;
+  width: 100vmin;
+  height: 100vmin;
+  position: absolute;
+  top:0;bottom:0;
+  left:0;right:0;
+  margin: auto;
 }
 
 .wrapper.column {
+  z-index: 0;
   display: inline-block;
   position: relative;
+  width: 90%;
+  height: 90%;
   background-color: #23292B;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-  height: 120%;
-  margin: 2%;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px 0px 10px 10px;
+  border-radius: 0px 0px 10px 10px;
 }
-.tags {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-}
-.tags .tag-item {
-  color: #d3d3d3;
-  background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%) !important;
-}
-.searchField {
-  left: 2%;
-  top: 7%;
-  width: 96%;
-  height: 91.5%;
-  padding: 13.5%;
-  position: absolute;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  background-color: rgba(0,0,0,0.5);
-}
-.searchBar {
-  margin: 5%;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-}
-
 .mycontainer {
-  width: 100%;
-  height: 100%;
+  margin: 1%;
+  width: 97%;
+  height: 97%;
+  /*pointer-events: none;*/
+
   position: absolute;
   padding: 0;
   top: 0;
@@ -202,17 +235,13 @@ body {
 }
 
 .mycontainer.active {
-  /*opacity: 1;*/
-  z-index: 10;
-  /*width: 100%;*/
-  /*height: 100%;*/
+  z-index: 1;
   overflow: hidden;
+
 }
 
 .mycontainer.myhidden {
-  /*opacity: 0;*/
-  z-index: 5;
-
+  z-index: -5;
   position: absolute;
   overflow: hidden;
   pointer-events: none;
@@ -221,14 +250,14 @@ body {
 .mycontainer.result {
   z-index: -20;
   opacity: 0;
-  width: 100%;
-  height: 100%;
+  width: 97%;
+  height: 97%;
   position: absolute;
   background-color: #23292B;
 }
 
 .container.preview {
-  z-index: 30;
+  z-index: 0;
   position: absolute;
   width: 20%;
   height: 20%;
@@ -237,6 +266,7 @@ body {
 .box {
   width: 32%;
   height: 32%;
+  z-index: 0;
   /*margin: 1%;*/
   margin-top: 1%;
   margin-left: 0.9%;
@@ -252,21 +282,55 @@ body {
 }
 
 .box:hover {
-  /*border: 3px;*/
-  /*border-color: #4E5355;*/
-  -webkit-box-shadow: 0px 33px 70px 18px rgba(0, 0, 0, 1);
-  -moz-box-shadow: 0px 33px 70px 18px rgba(0, 0, 0, 1);
-  box-shadow: 0px 33px 70px 18px rgba(0, 0, 0, 1);
-  transition: all 0.2s linear;
+  cursor: pointer;
+}
+.resultCard {
+  width: 32%;
+  height: 32%;
+  z-index: 10;
+  cursor: pointer;
+  /*margin: 1%;*/
+  margin-top: 1%;
+  margin-left: 0.9%;
+  overflow: hidden;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  position: relative;
+  background-size: cover;
+  float: left;
+  opacity: 0;
+  /* TODO not moving right :/ */
+  background-color: transparent;
+  -webkit-box-shadow: 0px 0px 42px 24px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 42px 24px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 42px 24px rgba(0,0,0,0.75);
+}
+.resultCardMove {
+  /*position: fixed;*/
+  /*pointer-events: all;*/
+  z-index: 15;
+  width: 100%;
+  height: 0;
+  border: 3px solid #23292B;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 10px 10px 0px 0px;
+  border-radius: 10px 10px 0px 0px;
+  background-color: #696968;
+}
+.resultCardStay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /*background-color: rgba(255,0,0,0.2);*/
 }
 
 .over {
   height: 50% !important;
   width: 100%;
+  z-index: 15;
   /*padding-top: 12%;*/
-
   position: absolute;
-
   opacity: 1;
   background-color: rgba(0,0,0,0.7);
 }
@@ -276,9 +340,9 @@ body {
   position: relative;
   top: 37%;
 }
-
-.over.results {
-
+.overText.small {
+  font-size: medium;
+  top: 14%;
 }
 .over.search {
   top: 50%;
@@ -304,13 +368,14 @@ body {
   overflow: hidden;
   height: 33.33%;
   border: 2px solid !important;
-  pointer-events: none !important;
+  /*pointer-events: none !important;*/
   border-radius: 0;
   box-shadow: none;
-  z-index: -10;
+  /*z-index: -10;*/
 }
 
 .box.cluster {
+  z-index: 0;
   pointer-events: none !important;
   position: absolute;
   width: 100%;
@@ -319,7 +384,6 @@ body {
   border: none;
   margin: 0;
 }
-
 .footer {
   bottom: 0;
   color: rgba(0, 0, 0, 0.5);
@@ -327,8 +391,17 @@ body {
 }
 
 .header {
-  margin-top: 12px;
-  height: 30px;
+  display: inline-block;
+  position: relative;
+  background-color: #23292B;
+  margin-top: 2%;
+  height: 35px;
+  width: 90%;
+  border: 6px solid #23292B;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 10px 10px 0px 0px;
+  border-radius: 10px 10px 0px 0px;
+
   text-align: center;
   vertical-align: middle;
 }

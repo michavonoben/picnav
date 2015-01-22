@@ -8,20 +8,16 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.resultPreview = false;
     $scope.currentView = 'CLUSTER';
 
-    $scope.wrapperHeight = 550;
-    $scope.wrapperWidth = 550;
-
-
     /**
      * the following function was taken from:
      * http://www.markcampbell.me/tutorial/2013/10/08/preventing-navigation-in-an-angularjs-project.html
      * @author Mark Campell
      */
-    $scope.$on('$locationChangeStart', function (event) {
-      if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
-        event.preventDefault(); // This prevents the navigation from happening
-      }
-    });
+    //$scope.$on('$locationChangeStart', function (event) {
+    //  if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
+    //    event.preventDefault(); // This prevents the navigation from happening
+    //  }
+    //});
     // end @author Mark Campell
 
     var data = picService.getData();
@@ -190,8 +186,8 @@ angular.module('PicNavigatorApp.controllers', []).
       hiddenContainer.animate({
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%'
+        width: '97%',
+        height: '97%'
       }, {duration: 600, queue: true});
       return deferred.promise;
     };
@@ -213,14 +209,6 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     $scope.stepBack = function (oldData) {
-      //if (!$scope.movingBack) {
-      //  $scope.dataHistory.pop();
-      //  console.log('Removing one');
-      //  console.log($scope.dataHistory);
-      //}
-      //$scope.movingBack = true;
-      //var oldData = $scope.dataHistory.length === 1 ? $scope.dataHistory[0] : $scope.dataHistory.pop();
-      ////var oldData = $scope.dataHistory.pop();
 
       var dataUpdate = function (oldData) {
         var deferred = $q.defer();
@@ -266,18 +254,56 @@ angular.module('PicNavigatorApp.controllers', []).
       var col = Math.floor(index / 3);
       var row = index % 3;
       $scope.preview = true;
+      var wrapper = $('.mycontainer.active');
+      $scope.wrapperHeight = $(wrapper).height();
+      $scope.wrapperWidth = $(wrapper).width();
       // move the hidden container behind the img with the mouse over it
       $('.mycontainer.myhidden')
         .css({
           opacity: 0,
-          top: col * $scope.wrapperHeight / 2.4 + 'px',
-          left: row * $scope.wrapperHeight / 2.4 + 'px',
-          width: $scope.wrapperWidth / 3 + 'px',
-          height: $scope.wrapperHeight / 3 + 'px'
+          top: col * $scope.wrapperHeight / 2.7 + 'px',
+          left: row * $scope.wrapperHeight / 2.7 + 'px',
+          width: $scope.wrapperWidth / 3.8 + 'px',
+          height: $scope.wrapperHeight / 3.8 + 'px'
         });
+
+      var resultCard = $('.resultCard')[index];
+      var resultCardMove = $('.resultCardMove')[index];
+      $(resultCard).addClass("selected");
+      setTimeout(function() {
+        if($(resultCard).hasClass("selected")) {
+          $(resultCard).animate({
+            opacity: 1,
+            top: '-=' + 5 + '%',
+            height: '+=' + 5 + '%'
+          }, {duration: 300, queue: false});
+          $(resultCardMove).animate({
+            height: '+=' + 13 + '%'
+          }, {duration: 300, queue: false});
+        }
+      }, 500);
     };
-    $scope.picBoxMouseLeave = function () {
+
+    $scope.picBoxMouseLeave = function (index) {
+      var resultCards = document.getElementsByClassName('.resultCardMove');
+      //console.log(resultCards);
+      for (var i = 0; i < resultCards.length; i++ ) {
+        //console.log(resultCards[i])
+        resultCards[i].style.width = '0%';
+        resultCards[i].style.backgroundColor = 'red';
+      }
       $scope.preview = false;
+      var resultCard = $('.resultCard')[index];
+      var resultCardMove = $('.resultCardMove')[index];
+      $(resultCard).removeClass("selected");
+      $(resultCard).animate({
+        opacity: 0,
+        top: '+=' + 5 + '%',
+        height: '-=' + 5 + '%'
+      }, {duration: 150, queue: false});
+      $(resultCardMove).animate({
+        height: '-=' + 13 + '%'
+      }, {duration: 150, queue: false});
     };
 
     /**
@@ -285,6 +311,7 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.continueClusterSearch = function (index) {
+      $($('.resultCard')[index]).css("opacity", "0");
       $scope.clusterSearch($scope.clusterIds[index], false, index);
     };
 
@@ -295,6 +322,7 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.goToResults = function (index) {
+      $($('.resultCard')[index]).css("opacity", "0");
       var dataUpdate = function () {
         $scope.preview = false;
         $scope.httpRequest($scope.clusterIds[index], false, false, function () {
@@ -350,18 +378,6 @@ angular.module('PicNavigatorApp.controllers', []).
     };
     $scope.back = function () {
       var oldData = dataService.getPreviousData();
-      //if ($scope.endOfHistory) {
-      //  window.alert('Cannot go back any further');
-      //  return;
-      //}
-      //if($scope.clusterHistory.length === 1 ) {
-      //  oldData = $scope.clusterHistory[0];
-      //  $scope.endOfHistory = true;
-      //} else {
-      //  oldData = $scope.clusterHistory.pop();
-      //  $scope.endOfHistory = false;
-      //}
-
       $scope.stepBack(oldData);
       $('#backBtn').blur();
     };

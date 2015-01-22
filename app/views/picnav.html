@@ -1,128 +1,114 @@
 <body class="body" ng-app="PicNavigatorApp">
 <link href="dist/css/bootstrap-glyphicons.css" rel="stylesheet">
-<title>Picture Navigator</title>
+<!--<title>Picture Navigator</title>-->
 
 <div class="overlay">
   <span class="title"> L O A D I N G </span>
 </div>
-<div class="frame">
+<div class="wrapper">
+  <div class="header" ng-controller="historyController">
+    <button type="submit" class="btn black l" ng-click="newSearch()"><span class="glyphicon glyphicon-search"></span>
+      New
+    </button>
+    <span class="title white">picture navigatør</span>
+    <button id="backBtn" ng-if="!inResultView" type="submit" class="btn black" ng-click="back()"><span
+      class="glyphicon glyphicon-backward"></span> Back
+    </button>
+    <button ng-if="inResultView" id="viewBtn" type="submit" class="btn black" ng-click="toggleView()"><span
+      class="glyphicon glyphicon-th"></span> Cluster
+    </button>
+  </div>
   <div class="wrapper column">
-    <div class="header" ng-controller="historyController">
-      <button type="submit" class="btn black l" ng-click="newSearch()"><span class="glyphicon glyphicon-search"></span>
-        New
-      </button>
-      <span class="title white">picture navigatør</span>
-      <button id="backBtn" ng-if="!inResultView" type="submit" class="btn black" ng-click="back()"><span
-        class="glyphicon glyphicon-backward"></span> Back
-      </button>
-      <button ng-if="inResultView" id="viewBtn" type="submit" class="btn black" ng-click="toggleView()"><span
-        class="glyphicon glyphicon-th"></span> Cluster
-      </button>
+    <div id="conA" class="mycontainer active">
+      <div class="box"
+           ng-repeat="pic in picList"
+           ng-hide="hideBox(pic)"
+
+           ng-controller="picBoxController">
+        <div class="box cluster">
+          <img ng-src="{{pic.srcs.previewSrcs[0]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[1]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[2]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[3]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[4]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[5]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[6]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[7]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[8]}}" class="box mini">
+        </div>
+      </div>
     </div>
-    <div class="wrapper">
-      <div id="conA" class="mycontainer active">
-        <div class="box"
-             ng-repeat="pic in picList"
-             ng-hide="hideBox(pic)"
-             ng-mouseenter="picBoxMouseEnter($index)"
-             ng-mouseleave="picBoxMouseLeave($index)"
-             ng-controller="picBoxController">
-          <div class="over results"
-               ng-if="preview"
-               ng-click="goToResults($index)">
-            <span class="overText">
-              <span class="glyphicon glyphicon-eye-open"></span> Show results</span>
-          </div>
-          <div class="over search"
-               ng-if="preview"
-               ng-click="continueClusterSearch($index)">
-            <span class="overText">
-              <span class="glyphicon glyphicon-th"></span> Search further</span>
-          </div>
-          <div class="box cluster">
-            <img ng-src="{{pic.srcs.previewSrcs[0]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[1]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[2]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[3]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[4]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[5]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[6]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[7]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[8]}}" class="box mini">
-          </div>
+
+    <div id="conB" class="mycontainer myhidden">
+      <div class="box"
+           ng-repeat="pic in picList"
+           ng-hide="hideBox(pic)"
+
+           ng-controller="picBoxController">
+        <div class="box cluster">
+          <img ng-src="{{pic.srcs.previewSrcs[0]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[1]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[2]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[3]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[4]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[5]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[6]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[7]}}" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[8]}}" class="box mini">
         </div>
       </div>
+    </div>
 
-      <div id="conB" class="mycontainer myhidden">
-        <div class="box"
-             ng-repeat="pic in picList"
-             ng-hide="hideBox(pic)"
-             ng-mouseenter="picBoxMouseEnter($index)"
-             ng-mouseleave="picBoxMouseLeave($index)"
-             ng-controller="picBoxController">
-          <div class="over results"
-               ng-if="preview"
-               ng-click="goToResults($index)">
-            <span class="overText">
-              <span class="glyphicon glyphicon-eye-open"></span> Show results</span>
-          </div>
-          <div class="over search"
-               ng-if="preview"
-               ng-click="continueClusterSearch($index)">
-            <span class="overText">
-              <span class="glyphicon glyphicon-th"></span> Search further</span>
-          </div>
-          <div class="box cluster">
-            <img ng-src="{{pic.srcs.previewSrcs[0]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[1]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[2]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[3]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[4]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[5]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[6]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[7]}}" class="box mini">
-            <img ng-src="{{pic.srcs.previewSrcs[8]}}" class="box mini">
-          </div>
+    <!-- result cards-->
+    <div class="mycontainer">
+      <div class="resultCard" ng-repeat="pic in picList"
+           ng-controller="picBoxController"
+           ng-mouseenter="picBoxMouseEnter($index)"
+           ng-mouseleave="picBoxMouseLeave($index)">
+        <div class="resultCardMove" ng-click="goToResults($index)">
+          <span class="overText small"><span class="glyphicon glyphicon-eye-open"></span> Show results</span>
         </div>
+        <div class="resultCardStay" ng-click="continueClusterSearch($index)"></div>
       </div>
+    </div>
 
-      <div id="resultPage" class="mycontainer result" ng-controller="picBoxController">
-        <div id="scrollResults">
-          <div class="picInResults"
-               ng-repeat="pic in resultPics"
-               ng-mouseenter="resultPicMouseEnter(pic)"
-               ng-mouseleave="resultPicMouseLeave()"
-               style="background-image: url({{pic.src}})"></div>
-        </div>
-        <div id="previewResults"
 
-             style="background-image: url({{previewPic.originSrc}})">
-          <div>
-            <div class="bigOver"
-                 ng-mouseenter="resultPreviewMouseEnter()"
-                 ng-mouseleave="resultPreviewMouseLeave()">
-              <div class="over results"
-                   ng-if="resultPreview"
-                   ng-click="picSelected(previewPic.id)">
+    <div id="resultPage" class="mycontainer result" ng-controller="picBoxController">
+      <div id="scrollResults">
+        <div class="picInResults"
+             ng-repeat="pic in resultPics"
+             ng-mouseenter="resultPicMouseEnter(pic)"
+             ng-mouseleave="resultPicMouseLeave()"
+             style="background-image: url({{pic.src}})"></div>
+      </div>
+      <div id="previewResults"
+
+           style="background-image: url({{previewPic.originSrc}})">
+        <div>
+          <div class="bigOver"
+               ng-mouseenter="resultPreviewMouseEnter()"
+               ng-mouseleave="resultPreviewMouseLeave()">
+            <div class="over results"
+                 ng-if="resultPreview"
+                 ng-click="picSelected(previewPic.id)">
                 <span class="overText">
                 <span class="glyphicon glyphicon-eye-open"></span> Go to fotolia</span>
-              </div>
-              <div class="over search"
-                   ng-if="resultPreview"
-                   ng-click="singlePicClicked(previewPic.id)">
+            </div>
+            <div class="over search"
+                 ng-if="resultPreview"
+                 ng-click="singlePicClicked(previewPic.id)">
                 <span class="overText">
                 <span class="glyphicon glyphicon-th"></span> Find more</span>
-              </div>
             </div>
           </div>
-
         </div>
-      </div>
 
+      </div>
     </div>
 
+    <!--</div>-->
+
   </div>
-</div>
 </div>
 <div class="footer">HTW Berlin 2015 - Requests to palm-search.com</div>
 </body>
