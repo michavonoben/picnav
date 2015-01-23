@@ -3,19 +3,18 @@
 <!--<title>Picture Navigator</title>-->
 
 <div class="overlay">
-  <span class="title"> L O A D I N G </span>
+  <span class="title"> loading </span>
 </div>
 <div class="wrapper">
   <div class="header" ng-controller="historyController">
-    <button type="submit" class="btn black l" ng-click="newSearch()"><span class="glyphicon glyphicon-search"></span>
-      New
+    <button title="New search" type="submit" class="btn black l" ng-click="newSearch()"><span class="glyphicon glyphicon-search"></span>
     </button>
     <span class="title white">picture navigatør</span>
-    <button id="backBtn" ng-if="!inResultView" type="submit" class="btn black" ng-click="back()"><span
-      class="glyphicon glyphicon-backward"></span> Back
+    <button title="Go back" id="backBtn" ng-if="!inResultView" type="submit" class="btn black r" ng-click="back()"><span
+      class="glyphicon glyphicon-backward"></span>
     </button>
-    <button ng-if="inResultView" id="viewBtn" type="submit" class="btn black" ng-click="toggleView()"><span
-      class="glyphicon glyphicon-th"></span> Cluster
+    <button title="Back to search view" ng-if="inResultView" id="viewBtn" type="submit" class="btn black r" ng-click="toggleView()"><span
+      class="glyphicon glyphicon-th"></span>
     </button>
   </div>
   <div class="wrapper column">
@@ -30,11 +29,11 @@
           <img ng-src="{{pic.srcs.previewSrcs[1]}}" class="box mini">
           <img ng-src="{{pic.srcs.previewSrcs[2]}}" class="box mini">
           <img ng-src="{{pic.srcs.previewSrcs[3]}}" class="box mini">
-          <img ng-src="{{pic.srcs.previewSrcs[4]}}" class="box mini">
-          <img ng-src="{{pic.srcs.previewSrcs[5]}}" class="box mini">
-          <img ng-src="{{pic.srcs.previewSrcs[6]}}" class="box mini">
-          <img ng-src="{{pic.srcs.previewSrcs[7]}}" class="box mini">
-          <img ng-src="{{pic.srcs.previewSrcs[8]}}" class="box mini">
+          <!--<img ng-src="{{pic.srcs.previewSrcs[4]}}" class="box mini">-->
+          <!--<img ng-src="{{pic.srcs.previewSrcs[5]}}" class="box mini">-->
+          <!--<img ng-src="{{pic.srcs.previewSrcs[6]}}" class="box mini">-->
+          <!--<img ng-src="{{pic.srcs.previewSrcs[7]}}" class="box mini">-->
+          <!--<img ng-src="{{pic.srcs.previewSrcs[8]}}" class="box mini">-->
         </div>
       </div>
     </div>
@@ -50,11 +49,11 @@
           <img ng-src="{{pic.srcs.previewSrcs[1]}}" class="box mini">
           <img ng-src="{{pic.srcs.previewSrcs[2]}}" class="box mini">
           <img ng-src="{{pic.srcs.previewSrcs[3]}}" class="box mini">
-          <img ng-src="{{pic.srcs.previewSrcs[4]}}" class="box mini">
-          <img ng-src="{{pic.srcs.previewSrcs[5]}}" class="box mini">
-          <img ng-src="{{pic.srcs.previewSrcs[6]}}" class="box mini">
-          <img ng-src="{{pic.srcs.previewSrcs[7]}}" class="box mini">
-          <img ng-src="{{pic.srcs.previewSrcs[8]}}" class="box mini">
+          <!--<img ng-src="{{pic.srcs.previewSrcs[4]}}" class="box mini">-->
+          <!--<img ng-src="{{pic.srcs.previewSrcs[5]}}" class="box mini">-->
+          <!--<img ng-src="{{pic.srcs.previewSrcs[6]}}" class="box mini">-->
+          <!--<img ng-src="{{pic.srcs.previewSrcs[7]}}" class="box mini">-->
+          <!--<img ng-src="{{pic.srcs.previewSrcs[8]}}" class="box mini">-->
         </div>
       </div>
     </div>
@@ -65,14 +64,16 @@
            ng-repeat="pic in picList"
            ng-hide="hideBox(pic)"
            ng-controller="picBoxController"
-           ng-mouseenter="picBoxMouseEnter($index)"
-           ng-mouseleave="picBoxMouseLeave($index)">
-
-      <!--<div class="resultCard">-->
+           ng-mouseleave="hideResultCard($index)"
+           ng-click="interestInCluster($index)">
         <div class="resultCardMove" ng-click="goToResults($index)">
-          <span class="overText small"><span class="glyphicon glyphicon-eye-open"></span> Show results</span>
+          <!--<span class="overText small"><span class="glyphicon glyphicon-eye-open"></span> show results</span>-->
+          <span class="overText small">see results</span>
         </div>
-        <div class="resultCardStay" ng-click="continueClusterSearch($index)"></div>
+        <div class="resultCardStay" ng-click="continueClusterSearch($index)">
+          <!--<span class="overText middle"><span class="glyphicon glyphicon-search"></span> find more</span>-->
+          <span class="overText middle">find more</span>
+        </div>
       </div>
     </div>
 
@@ -95,14 +96,15 @@
             <div class="over results"
                  ng-if="resultPreview"
                  ng-click="picSelected(previewPic.id)">
-                <span class="overText">
-                <span class="glyphicon glyphicon-eye-open"></span> Go to fotolia</span>
+                <span class="overText">go to fotolia</span>
+                <!--<span class="glyphicon glyphicon-eye-open"></span> go to fotolia</span>-->
+
             </div>
             <div class="over search"
                  ng-if="resultPreview"
                  ng-click="singlePicClicked(previewPic.id)">
-                <span class="overText">
-                <span class="glyphicon glyphicon-th"></span> Find more</span>
+                <span class="overText">find more</span>
+                <!--<span class="glyphicon glyphicon-th"></span> find more</span>-->
             </div>
           </div>
         </div>
@@ -114,7 +116,9 @@
 
   </div>
 </div>
-<div class="footer">HTW Berlin 2015 - Requests to palm-search.com</div>
+<div class="footer">
+  <span class="title small">htw berlin - requests to palm-search.com</span>
+</div>
 </body>
 
 

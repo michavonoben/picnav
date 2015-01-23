@@ -5,6 +5,7 @@
 body {
   background-color: #5C7178;
   text-align: center;
+  /*margin-bottom: 10%;*/
 }
 
 .searchTitle {
@@ -21,26 +22,38 @@ body {
   width: 32%;
 }
 .btn.black{
-  margin-left: 1%;
-  width: 16%;
+  font: small-caps 1vw Helvetica;
+  width: 8%;
   color: #ffffff;
   background-color: #23292B !important;
   border: none;
 }
+.btn.black.l{
+  float: left;
+}
+.btn.black.r{
+  float: right;
+}
+
 .btn.black:hover {
   background-color: #383838 !important;
 }
 
 .title {
-  font: small-caps 24px Helvetica;
-  letter-spacing: 0.5em;
+  font: small-caps 2vw Helvetica;
+  letter-spacing: 1vw;
   padding-left: 1%;
+}
+.title.small {
+  font: small-caps 13px Helvetica;
+  letter-spacing: 0.2vw;
 }
 .title.white {
   color: #ffffff;
   border: solid 1px #ffffff;
 }
 .instructionText {
+  font-size: 14px;
   color: #f5f5f5;
   margin: 2%;
 }
@@ -68,7 +81,7 @@ body {
 .tftextinput{
   position: absolute;
   width: 54.5%;
-  padding-left: 7.5%;
+  padding-left: 10.5%;
   /* margin: 0; */
   /* padding: 5px 15px; */
   font-family: Arial, Helvetica, sans-serif;
@@ -190,7 +203,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 4px 0;
-  font-size: x-large;
+  font: small-caps 4vw Helvetica;;
   color: #fff;
   display: inline;
   margin: 0;
@@ -204,9 +217,11 @@ body {
   width: 100vmin;
   height: 100vmin;
   position: absolute;
-  top:0;bottom:0;
+  top:0px;bottom:0;
   left:0;right:0;
   margin: auto;
+  margin-top: 0;
+  padding-top: 1vw;
 }
 
 .wrapper.column {
@@ -215,6 +230,7 @@ body {
   position: relative;
   width: 90%;
   height: 90%;
+  top: 0;
   background-color: #23292B;
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px 0px 10px 10px;
@@ -222,8 +238,8 @@ body {
 }
 .mycontainer {
   margin: 1%;
-  width: 97%;
-  height: 97%;
+  width: 98%;
+  height: 98%;
   /*pointer-events: none;*/
 
   position: absolute;
@@ -250,8 +266,8 @@ body {
 .mycontainer.result {
   z-index: -20;
   opacity: 0;
-  width: 97%;
-  height: 97%;
+  width: 98%;
+  height: 98%;
   position: absolute;
   background-color: #23292B;
 }
@@ -303,12 +319,10 @@ body {
   /*position: relative;*/
   background-size: cover;
   float: left;
-  opacity: 1;
-  /* TODO not moving right :/ */
-  background-color: greenyellow;
-  -webkit-box-shadow: 0px 0px 42px 24px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 42px 24px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 42px 24px rgba(0,0,0,0.75);
+  opacity: 0;
+  -webkit-box-shadow: 0px 0px 70px 65px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 70px 65px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 70px 65px rgba(0,0,0,0.75);
 }
 .resultCardMove {
   position: absolute;
@@ -316,7 +330,7 @@ body {
   z-index: 15;
   width: 100%;
   height: 0;
-  border: 3px solid #23292B;
+  /*border: 3px solid #23292B;*/
   -moz-border-radius: 0px;
   -webkit-border-radius: 10px 10px 0px 0px;
   border-radius: 10px 10px 0px 0px;
@@ -326,7 +340,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: rgba(255,0,0,0.2);
+  background-color: rgba(0,0,0,0.6);
 }
 
 .over {
@@ -339,14 +353,18 @@ body {
   background-color: rgba(0,0,0,0.7);
 }
 .overText {
-  font-size: large;
+  font: small-caps 18px Helvetica;;
   color: #ffffff;
   position: relative;
   top: 37%;
 }
 .overText.small {
-  font-size: medium;
-  top: 14%;
+  font-size: 1.8vw;
+  top: 16%;
+}
+.overText.middle {
+  font-size: 1.8vw;
+  top: 51%;
 }
 .over.search {
   top: 50%;
@@ -365,16 +383,17 @@ body {
 }
 
 .box.mini {
-  flex: 33% 1 0;
+  /*flex: 33% 1 0;*/
   padding: 0;
   margin: 0;
-  width: 33.33%;
+  width: 50%;
   overflow: hidden;
-  height: 33.33%;
+  height: 50%;
   border: 2px solid !important;
   /*pointer-events: none !important;*/
   border-radius: 0;
   box-shadow: none;
+  background-color: #696968;
   /*z-index: -10;*/
 }
 
@@ -389,23 +408,24 @@ body {
   margin: 0;
 }
 .footer {
-  bottom: 0;
+  width: 100%;
+  position: fixed;
+  vertical-align: middle;
+  text-align: center;
+  bottom: 5px;
   color: rgba(0, 0, 0, 0.5);
-  font-size: x-small;
 }
 
 .header {
+  padding-top: 1vw;
   display: inline-block;
   position: relative;
   background-color: #23292B;
-  margin-top: 2%;
-  height: 35px;
   width: 90%;
   border: 6px solid #23292B;
   -moz-border-radius: 0px;
   -webkit-border-radius: 10px 10px 0px 0px;
   border-radius: 10px 10px 0px 0px;
-
   text-align: center;
   vertical-align: middle;
 }

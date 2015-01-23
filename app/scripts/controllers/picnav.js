@@ -13,11 +13,11 @@ angular.module('PicNavigatorApp.controllers', []).
      * http://www.markcampbell.me/tutorial/2013/10/08/preventing-navigation-in-an-angularjs-project.html
      * @author Mark Campell
      */
-    //$scope.$on('$locationChangeStart', function (event) {
-    //  if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
-    //    event.preventDefault(); // This prevents the navigation from happening
-    //  }
-    //});
+    $scope.$on('$locationChangeStart', function (event) {
+      if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
+        event.preventDefault(); // This prevents the navigation from happening
+      }
+    });
     // end @author Mark Campell
 
     var data = picService.getData();
@@ -186,8 +186,8 @@ angular.module('PicNavigatorApp.controllers', []).
       hiddenContainer.animate({
         top: 0,
         left: 0,
-        width: '97%',
-        height: '97%'
+        width: '98%',
+        height: '98%'
       }, {duration: 600, queue: true});
       return deferred.promise;
     };
@@ -218,25 +218,24 @@ angular.module('PicNavigatorApp.controllers', []).
         return deferred.promise;
       };
 
-      var backTransition = function () {
-        var deferred = $q.defer();
-        // move hidden container to wrapper mid
-        $('.mycontainer.myhidden')
-          .css({
-            top: $scope.wrapperHeight / 2.4 + 'px',
-            left: $scope.wrapperHeight / 2.4 + 'px',
-            width: $scope.wrapperWidth / 3 + 'px',
-            height: $scope.wrapperHeight / 3 + 'px'
-          });
-        clusterSearchTransition(4, false);
-        return deferred.promise;
-      };
+      //var backTransition = function () {
+      //  var deferred = $q.defer();
+      //  // move hidden container to wrapper mid
+      //  $('.mycontainer.myhidden')
+      //    .css({
+      //      top: $scope.wrapperHeight / 2.4 + 'px',
+      //      left: $scope.wrapperHeight / 2.4 + 'px',
+      //      width: $scope.wrapperWidth / 3 + 'px',
+      //      height: $scope.wrapperHeight / 3 + 'px'
+      //    });
+      //  clusterSearchTransition(4, false);
+      //  return deferred.promise;
+      //};
 
       $scope.overlayScreenOn().then(
         dataUpdate(oldData).
           then(fillContainer().
-            then(backTransition().
-              then($scope.overlayScreenOff()))));
+              then($scope.overlayScreenOff())));
     };
   }).
   controller('picBoxController', function ($scope) {
@@ -250,8 +249,7 @@ angular.module('PicNavigatorApp.controllers', []).
      * the animation when the cluster search continues
      * @param index
      */
-    $scope.picBoxMouseEnter = function (index) {
-      console.log('###');
+    var moveHiddenContainerInPosition = function (index) {
       var col = Math.floor(index / 3);
       var row = index % 3;
       $scope.preview = true;
@@ -264,49 +262,64 @@ angular.module('PicNavigatorApp.controllers', []).
           opacity: 0,
           top: col * $scope.wrapperHeight / 2.7 + 'px',
           left: row * $scope.wrapperHeight / 2.7 + 'px',
-          width: $scope.wrapperWidth / 3.8 + 'px',
-          height: $scope.wrapperHeight / 3.8 + 'px'
+          width: $scope.wrapperWidth / 3.9 + 'px',
+          height: $scope.wrapperHeight / 3.9 + 'px'
         });
-
-      var resultCard = $('.resultCard')[index];
-      var resultCardMove = $('.resultCardMove')[index];
-
-      $(resultCard).addClass("selected");
-      setTimeout(function() {
-        if($(resultCard).hasClass("selected")) {
-          $(resultCard).animate({
-            zIndex: 15,
-            opacity: 1,
-            top: '-=' + 5 + '%',
-            height: '37%'
-          }, {duration: 300, queue: false});
-          $(resultCardMove).animate({
-            height: '+=' + 13 + '%'
-          }, {duration: 300, queue: false});
-          $(resultCard).addClass("transformed");
-        }
-      }, 500);
     };
 
-    $scope.picBoxMouseLeave = function (index) {
+    var showResultCard = function (index) {
+      var resultCard = $('.resultCard')[index];
+      var resultCardMove = $('.resultCardMove')[index];
+      var resultCardStay = $('.resultCardStay')[index];
+      if (!$(resultCard).hasClass("interested")) {
+        $(resultCard).animate({
+          zIndex: 15,
+          opacity: 1,
+          top: '-=' + 5 + '%',
+          height: '37%'
+        }, {duration: 300, queue: false});
+        $(resultCardMove).animate({
+          height: '+=' + 13 + '%'
+        }, {duration: 300, queue: false});
+        $(resultCardStay).animate({
+          opacity: 1
+        }, {duration: 300, queue: false});
+        $(resultCard).addClass("interested");
+      }
+      //setTimeout(function(){
+      //  hideResultCard(index);
+      //}, 1500);
+    };
+
+    $scope.hideResultCard = function (index) {
       $scope.preview = false;
       var resultCard = $('.resultCard')[index];
       var resultCardMove = $('.resultCardMove')[index];
+      var resultCardStay = $('.resultCardStay')[index];
       $(resultCard).removeClass("selected");
-      setTimeout(function() {
-        if ($(resultCard).hasClass("transformed")) {
-          $(resultCard).animate({
-            zIndex: 10,
-            //opacity: 0,
-            top: '+=' + 5 + '%',
-            height: '32%'
-          }, {duration: 150, queue: false});
-          $(resultCardMove).animate({
-            height: 0
-          }, {duration: 150, queue: false});
-          $(resultCard).removeClass("transformed");
-        }
-      }, 200);
+      if ($(resultCard).hasClass("interested")) {
+        $(resultCard).animate({
+          zIndex: 10,
+          opacity: 0,
+          top: '+=' + 5 + '%',
+          height: '32%'
+        }, {duration: 150, queue: false});
+        $(resultCardMove).animate({
+          height: 0
+        }, {duration: 150, queue: false});
+        $(resultCardStay).animate({
+          opacity: 0
+        }, {duration: 150, queue: false});
+        $(resultCard).removeClass("interested");
+      }
+    };
+
+    $scope.interestInCluster = function(index) {
+      moveHiddenContainerInPosition(index);
+      var resultCard = $('.resultCard')[index];
+      if (!$(resultCard).hasClass("interested")) {
+        showResultCard(index);
+      }
     };
 
     /**
@@ -314,8 +327,10 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.continueClusterSearch = function (index) {
-      $($('.resultCard')[index]).css("opacity", "0");
-      $scope.clusterSearch($scope.clusterIds[index], false, index);
+      if($($('.resultCard')[index]).hasClass("interested")) {
+        $($('.resultCard')[index]).css("opacity", "0");
+        $scope.clusterSearch($scope.clusterIds[index], false, index);
+      }
     };
 
     /**
