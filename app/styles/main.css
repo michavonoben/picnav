@@ -280,11 +280,15 @@ body {
   float: left;
   /*transition: white 1.5s;*/
 }
-
+/*.box.grid {*/
+  /*z-index: 2;*/
+  /*background-color: rgba(255, 0,0,0.2);*/
+/*}*/
 .box:hover {
   cursor: pointer;
 }
 .resultCard {
+  position: relative;
   width: 32%;
   height: 32%;
   z-index: 10;
@@ -296,18 +300,18 @@ body {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
-  position: relative;
+  /*position: relative;*/
   background-size: cover;
   float: left;
-  opacity: 0;
+  opacity: 1;
   /* TODO not moving right :/ */
-  background-color: transparent;
+  background-color: greenyellow;
   -webkit-box-shadow: 0px 0px 42px 24px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 0px 42px 24px rgba(0,0,0,0.75);
   box-shadow: 0px 0px 42px 24px rgba(0,0,0,0.75);
 }
 .resultCardMove {
-  /*position: fixed;*/
+  position: absolute;
   /*pointer-events: all;*/
   z-index: 15;
   width: 100%;
@@ -319,10 +323,10 @@ body {
   background-color: #696968;
 }
 .resultCardStay {
-  position: relative;
+  position: absolute;
   width: 100%;
   height: 100%;
-  /*background-color: rgba(255,0,0,0.2);*/
+  background-color: rgba(255,0,0,0.2);
 }
 
 .over {

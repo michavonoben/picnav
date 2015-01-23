@@ -61,10 +61,14 @@
 
     <!-- result cards-->
     <div class="mycontainer">
-      <div class="resultCard" ng-repeat="pic in picList"
+      <div class="resultCard"
+           ng-repeat="pic in picList"
+           ng-hide="hideBox(pic)"
            ng-controller="picBoxController"
            ng-mouseenter="picBoxMouseEnter($index)"
            ng-mouseleave="picBoxMouseLeave($index)">
+
+      <!--<div class="resultCard">-->
         <div class="resultCardMove" ng-click="goToResults($index)">
           <span class="overText small"><span class="glyphicon glyphicon-eye-open"></span> Show results</span>
         </div>

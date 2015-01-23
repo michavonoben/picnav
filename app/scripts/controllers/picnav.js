@@ -251,6 +251,7 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.picBoxMouseEnter = function (index) {
+      console.log('###');
       var col = Math.floor(index / 3);
       var row = index % 3;
       $scope.preview = true;
@@ -269,41 +270,43 @@ angular.module('PicNavigatorApp.controllers', []).
 
       var resultCard = $('.resultCard')[index];
       var resultCardMove = $('.resultCardMove')[index];
+
       $(resultCard).addClass("selected");
       setTimeout(function() {
         if($(resultCard).hasClass("selected")) {
           $(resultCard).animate({
+            zIndex: 15,
             opacity: 1,
             top: '-=' + 5 + '%',
-            height: '+=' + 5 + '%'
+            height: '37%'
           }, {duration: 300, queue: false});
           $(resultCardMove).animate({
             height: '+=' + 13 + '%'
           }, {duration: 300, queue: false});
+          $(resultCard).addClass("transformed");
         }
       }, 500);
     };
 
     $scope.picBoxMouseLeave = function (index) {
-      var resultCards = document.getElementsByClassName('.resultCardMove');
-      //console.log(resultCards);
-      for (var i = 0; i < resultCards.length; i++ ) {
-        //console.log(resultCards[i])
-        resultCards[i].style.width = '0%';
-        resultCards[i].style.backgroundColor = 'red';
-      }
       $scope.preview = false;
       var resultCard = $('.resultCard')[index];
       var resultCardMove = $('.resultCardMove')[index];
       $(resultCard).removeClass("selected");
-      $(resultCard).animate({
-        opacity: 0,
-        top: '+=' + 5 + '%',
-        height: '-=' + 5 + '%'
-      }, {duration: 150, queue: false});
-      $(resultCardMove).animate({
-        height: '-=' + 13 + '%'
-      }, {duration: 150, queue: false});
+      setTimeout(function() {
+        if ($(resultCard).hasClass("transformed")) {
+          $(resultCard).animate({
+            zIndex: 10,
+            //opacity: 0,
+            top: '+=' + 5 + '%',
+            height: '32%'
+          }, {duration: 150, queue: false});
+          $(resultCardMove).animate({
+            height: 0
+          }, {duration: 150, queue: false});
+          $(resultCard).removeClass("transformed");
+        }
+      }, 200);
     };
 
     /**
