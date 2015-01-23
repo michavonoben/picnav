@@ -61,6 +61,7 @@ angular.module('PicNavigatorApp', [
   .factory('dataService', function () {
     var service = {};
     service.dataHistory = [];
+    service.oldLength = 0;
 
     service.getClusterPreviewUrls = function (data) {
       var clusterPreviewUrls = [];
@@ -103,6 +104,7 @@ angular.module('PicNavigatorApp', [
     };
 
     service.addDataToHistory = function (data) {
+      service.oldLength = service.dataHistory.length;
       service.dataHistory.push(data);
     };
 
@@ -110,7 +112,12 @@ angular.module('PicNavigatorApp', [
       if(service.dataHistory.length === 1) {
         return service.dataHistory[0];
       }
+      //else if(service.oldLength === service.dataHistory.length) {
+      //  // first back move, remove currently displayed data
+      //  service.dataHistory.pop();
+      //}
       return service.dataHistory.pop();
+
     };
     return service;
   })

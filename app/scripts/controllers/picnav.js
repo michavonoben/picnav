@@ -396,7 +396,13 @@ angular.module('PicNavigatorApp.controllers', []).
     };
     $scope.back = function () {
       var oldData = dataService.getPreviousData();
+      var backBtn = $('#backBtn');
+      if (typeof oldData === 'undefined') {
+        window.alert('Cannot go back further');
+        $(backBtn).blur();
+        return;
+      }
       $scope.stepBack(oldData);
-      $('#backBtn').blur();
+      $(backBtn).blur();
     };
   });
