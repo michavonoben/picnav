@@ -383,7 +383,7 @@ angular.module('PicNavigatorApp.controllers', [])
   }).
   controller('historyController', function ($scope, dataService) {
     $scope.newSearch = function () {
-      window.location.href = '/';
+      window.location.href = '/imgMap';
     };
     $scope.back = function () {
       var oldData = dataService.getPreviousData();
