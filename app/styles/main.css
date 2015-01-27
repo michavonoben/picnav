@@ -171,15 +171,15 @@ body {
   height: 100%;
 }
 
-#previewResults {
+#previewResult {
   position: relative;
   z-index: -10;
   /* top: 1.8%; */
-  left: 34%;
-  width: 65%;
-  height: 65%;
+  float: left;
+  width: 45%;
+  height: 45%;
   background-repeat: no-repeat;
-  /* background-position: center; */
+  background-position: center;
 }
 
 .overlay {

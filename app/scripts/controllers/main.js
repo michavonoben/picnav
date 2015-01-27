@@ -8,7 +8,7 @@
  * Controller of the picnavApp
  */
 angular.module('PicNavigatorApp')
-  .controller('MainCtrl', function ($scope, $http, $location, picService, httpService) {
+  .controller('MainCtrl', function ($scope, $http, $location, dataService, httpService) {
     // TODO set focus on input field
     //$(document).ready(function () {
     //  console.log('foo');
@@ -18,15 +18,15 @@ angular.module('PicNavigatorApp')
     //});
 
     $scope.search = function () {
-      var fullTermQuery = '';
-      var fullCLusterQuery = '';
+      var fullTermQuery = $scope.query[0].text;
 
-      for (var i = 0; i < $scope.query.length; i++) {
-        fullTermQuery += '&terms=' + $scope.query[i].text;
-        fullCLusterQuery += $scope.query[i].text + '%2C';
+      if ($scope.query.length > 1) {
+        for (var i = 1; i < $scope.query.length; i++) {
+          fullTermQuery += ',' + $scope.query[i].text
+        }
       }
 
-      //http using service
+
       var locationChange = function () {
         $scope.$apply(function () {
           $location.path('/picnav');
@@ -34,14 +34,32 @@ angular.module('PicNavigatorApp')
       };
 
       // 1. terms request for session
-      httpService.makeCorsRequest('http://www.palm-search.com/service/view/image/terms/?' + fullTermQuery,
-        function () {
+      httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/search/term/' + fullTermQuery + '/9',
+        function (data) {
+
+          var clusterEdgeUrls = [];
+          data.positions.forEach(function(pos) {
+            // Receiving Level 1 data, calculate it up to level 4
+            pos.level = 4;
+            var x = Math.round(pos.x/8);
+            var y = Math.round(pos.y/8);
+            var max = 63;
+            x = (x % max === 0 ? max : x % max);
+            y = (y % max === 0 ? max : y % max);
+            // shift negative values
+            pos.x = (x < 0 ? max + x : x);
+            pos.y = (y < 0 ? max + y : y);
+
+            clusterEdgeUrls.push('http://141.45.146.52/netvis/netvis1024/data/l'+ pos.level + '/y' + pos.y+ '/x'+ pos.x + '.jpg');
+            dataService.setClusterEdges(clusterEdgeUrls);
+            locationChange();
+          });
           // 2. cluster request
-          httpService.makeCorsRequest('http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B' + fullCLusterQuery + '%3B%3B',
-            function (data) {
-              picService.setData(data);
-              locationChange();
-            });
+          //httpService.makeCorsRequest('http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B' + fullCLusterQuery + '%3B%3B',
+          //  function (data) {
+          //    picService.setData(data);
+          //    locationChange();
+          //  });
         });
     };
   });
