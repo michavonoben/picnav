@@ -412,8 +412,8 @@ body {
   margin: 0;
 }
 .footer {
+  position: relative;
   width: 100%;
-  position: fixed;
   vertical-align: middle;
   text-align: center;
   bottom: 5px;
