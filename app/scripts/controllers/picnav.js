@@ -37,6 +37,17 @@ angular.module('PicNavigatorApp.controllers', [])
     });
     // end @author Mark Campell
 
+    $scope.indexShift = function (index) {
+      switch (index) {
+        case 0: return 6;
+        case 1: return 7;
+        case 2: return 8;
+        case 6: return 0;
+        case 7: return 1;
+        case 8: return 2;
+        default: return index;
+      }
+    };
 
     var setData = function (callback) {
       $scope.clusterUrls = [];
@@ -54,8 +65,66 @@ angular.module('PicNavigatorApp.controllers', [])
 
     var fillContainer = function () {
       var deferred = $q.defer();
+
+      //$scope.picList[0] = {
+      //  srcs: {
+      //    previewSrcs: $scope.clusterUrls[6].srcs
+      //  },
+      //  id: $scope.clusterUrls[6].id,
+      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+      //};
+      //
+      //$scope.picList[1] = {
+      //  srcs: {
+      //    previewSrcs: $scope.clusterUrls[7].srcs
+      //  },
+      //  id: $scope.clusterUrls[7].id,
+      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+      //};
+      //
+      //$scope.picList[2] = {
+      //  srcs: {
+      //    previewSrcs: $scope.clusterUrls[8].srcs
+      //  },
+      //  id: $scope.clusterUrls[8].id,
+      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+      //};
+      //
+      //for (var i = 3; i < 6; i++) {
+      //  $scope.picList[i] = {
+      //    srcs: {
+      //      previewSrcs: $scope.clusterUrls[i].srcs
+      //    },
+      //    id: $scope.clusterUrls[i].id,
+      //    errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+      //  };
+      //}
+      //
+      //$scope.picList[6] = {
+      //  srcs: {
+      //    previewSrcs: $scope.clusterUrls[0].srcs
+      //  },
+      //  id: $scope.clusterUrls[0].id,
+      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+      //};
+      //
+      //$scope.picList[7] = {
+      //  srcs: {
+      //    previewSrcs: $scope.clusterUrls[1].srcs
+      //  },
+      //  id: $scope.clusterUrls[1].id,
+      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+      //};
+      //
+      //$scope.picList[8] = {
+      //  srcs: {
+      //    previewSrcs: $scope.clusterUrls[2].srcs
+      //  },
+      //  id: $scope.clusterUrls[2].id,
+      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+      //};
       for (var i = 0; i < 9; i++) {
-        $scope.picList[i] = {
+        $scope.picList[$scope.indexShift(i)] = {
           srcs: {
             previewSrcs: $scope.clusterUrls[i].srcs
           },
@@ -63,7 +132,7 @@ angular.module('PicNavigatorApp.controllers', [])
           errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
         };
       }
-      $scope.clusterOfInterest = $scope.picList[0].id;
+      $scope.clusterOfInterest = $scope.picList[6].id;
       if (!$scope.$$phase) {
         // apply changes
         $scope.$apply();
@@ -164,7 +233,11 @@ angular.module('PicNavigatorApp.controllers', [])
         if (referencePic.id.l > 0) {
           urls = dataService.getClusterEdgesForLevel(referencePic.id, true);
         } else {
-          urls = dataService.getClusterEdgesForPositionShift(referencePic.id, index);
+          if (index === 4) {
+            $scope.overlayScreenOff();
+            return;
+          }
+          urls = dataService.getClusterEdgesForPositionShift(referencePic.id, $scope.indexShift(index));
         }
         dataService.setClusterEdges(urls);
         dataService.addDataToHistory(dataService.getClusterEdges());

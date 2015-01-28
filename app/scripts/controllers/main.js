@@ -40,10 +40,10 @@ angular.module('PicNavigatorApp')
           var clusterEdgeUrls = [];
           data.positions.forEach(function(pos) {
             // Receiving Level 1 data, calculate it up to level 4
-            pos.level = 4;
-            var x = Math.round(pos.x/8);
-            var y = Math.round(pos.y/8);
-            var max = 63;
+            pos.level = 2;
+            var x = Math.round(pos.x/2);
+            var y = Math.round(pos.y/2);
+            var max = 255;
             x = (x % max === 0 ? max : x % max);
             y = (y % max === 0 ? max : y % max);
             // shift negative values

@@ -192,7 +192,7 @@ angular.module('PicNavigatorApp', [
         yShift = 4;
       } else if (index === 3) {
         xShift = -4;
-        yShift = -0;
+        yShift = 2;
       } else if (index === 4) {
         xShift = -2;
         yShift = 2;
