@@ -38,18 +38,18 @@ angular.module('PicNavigatorApp', [
     service.clusterEdgeUrls = [];
     service.oldLength = 0;
 
-    var getIdByUrl = function(url) {
-      var l = + url.substring(url.indexOf("l") + 1).split('/')[0];
-      var y = + url.substring(url.indexOf("y") + 1).split('/')[0];
-      var x = + url.substring(url.indexOf("x") + 1).split('.')[0];
-      return {l:l, x:x, y:y};
+    var getIdByUrl = function (url) {
+      var l = +url.substring(url.indexOf("l") + 1).split('/')[0];
+      var y = +url.substring(url.indexOf("y") + 1).split('/')[0];
+      var x = +url.substring(url.indexOf("x") + 1).split('.')[0];
+      return {l: l, x: x, y: y};
     };
 
     var getUrlById = function (id) {
       return 'http://141.45.146.52/netvis/netvis1024/data/l' + id.l + '/y' + id.y + '/x' + id.x + '.jpg';
     };
 
-    var getNeighbourUrl = function(id, pos) {
+    var getNeighbourUrl = function (id, pos) {
       var corL = id.l;
       var x = id.x;
       var y = id.y;
@@ -90,7 +90,6 @@ angular.module('PicNavigatorApp', [
       y = Math.round(y);
 
       return 'http://141.45.146.52/netvis/netvis1024/data/l' + corL + '/y' + y + '/x' + x + '.jpg';
-
 
 
       //for (var a = 0; a < 4; a++) {
@@ -142,37 +141,47 @@ angular.module('PicNavigatorApp', [
         id: id,
         srcs: srcs
       };
-
-      //var srcs = [4];
-
-      //}
       return imageGroup;
     };
 
     service.getClusterEdgesForLevel = function (leftCornerId, twoStepsDown) {
+      //twoStepsDown = false;
+
       var l, x, y, newId;
       if (twoStepsDown) {
         l = leftCornerId.l - 2;
         x = leftCornerId.x * 4;
         y = leftCornerId.y * 4;
-
+        y += 1;
       } else {
         l = leftCornerId.l;
         x = leftCornerId.x;
         y = leftCornerId.y;
       }
-      newId = {l:l, x:x, y:y};
+      newId = {l: l, x: x, y: y};
 
       var urls = [];
+      //urls.forEach(function (url) {
+
       urls[0] = getUrlById(newId);
-      urls[1] = getUrlById({l:l, x:x+2, y:y});
-      urls[2] = getUrlById({l:l, x:x+4, y:y});
-      urls[3] = getUrlById({l:l, x:x, y:y-2});
-      urls[4] = getUrlById({l:l, x:x+2, y:y-2});
-      urls[5] = getUrlById({l:l, x:x+4, y:y-2});
-      urls[6] = getUrlById({l:l, x:x, y:y-4});
-      urls[7] = getUrlById({l:l, x:x+2, y:y-4});
-      urls[8] = getUrlById({l:l, x:x+4, y:y-4});
+      urls[1] = getUrlById({l: l, x: x + 2, y: y});
+      urls[2] = getUrlById({l: l, x: x + 4, y: y});
+      urls[3] = getUrlById({l: l, x: x + 6, y: y});
+
+      urls[4] = getUrlById({l: l, x: x, y: y - 2});
+      urls[5] = getUrlById({l: l, x: x + 2, y: y - 2});
+      urls[6] = getUrlById({l: l, x: x + 4, y: y - 2});
+      urls[7] = getUrlById({l: l, x: x + 6, y: y - 2});
+
+      urls[8] = getUrlById({l: l, x: x, y: y - 4});
+      urls[9] = getUrlById({l: l, x: x + 2, y: y - 4});
+      urls[10] = getUrlById({l: l, x: x + 4, y: y - 4});
+      urls[11] = getUrlById({l: l, x: x + 6, y: y - 4});
+
+      urls[12] = getUrlById({l: l, x: x, y: y - 6});
+      urls[13] = getUrlById({l: l, x: x + 2, y: y - 6});
+      urls[14] = getUrlById({l: l, x: x + 4, y: y - 6});
+      urls[15] = getUrlById({l: l, x: x + 6, y: y - 6});
       return urls;
     };
 
@@ -180,121 +189,37 @@ angular.module('PicNavigatorApp', [
       var xShift; //= (index === 0 ||3 || 6 ? -4 : (index === 1 ||4 ||7 ? -2 : 0));
       var yShift; // = (index <= 2 ? -4 : (index <= 5 ? -2 : 0));
 
-      // todo: improve this
-      if (index === 0) {
-        xShift = -4;
+      // get new left corner pos
+      if (index < 4) {
+        //first row
+        xShift = (-6 + (index*2));
+        yShift = 6;
+      } else if (index < 8) {
+        //second row
+        index -=4;
+        xShift = (-6 + (index*2));
         yShift = 4;
-      } else if (index === 1) {
-        xShift = -2;
-        yShift = 4;
-      } else if (index === 2) {
-        xShift = -0;
-        yShift = 4;
-      } else if (index === 3) {
-        xShift = -4;
+      } else if (index < 12) {
+        //third row
+        index -=8;
+        xShift = (-6 + (index*2));
         yShift = 2;
-      } else if (index === 4) {
-        xShift = -2;
-        yShift = 2;
-      } else if (index === 5) {
-        xShift = 0;
-        yShift = 2;
-      } else if (index === 6) {
-        xShift = -4;
-        yShift = -0;
-      } else if (index === 7) {
-        xShift = -2;
-        yShift = -0;
-      } else if (index === 8) {
-        xShift = -0;
-        yShift = -0;
+      } else if (index < 16) {
+        //third row
+        index -=12;
+        xShift = (-6 + (index*2));
+        yShift = 0;
       }
 
       var leftCornerId = {
         l: id.l,
         x: (id.x + xShift),
-        y: (id.y + yShift)
+        y: ((id.y) + yShift)
       };
       return service.getClusterEdgesForLevel(leftCornerId, false);
     };
 
-    //service.getClusterPreviewUrls = function (referenceClusterSpecs) {
-    //
-    //
-    //  var clusterPreviewUrls = []; // 16
-    //  var corL = referenceClusterSpecs.level;
-    //  var x = referenceClusterSpecs.x;
-    //  var y = referenceClusterSpecs.y;
-    //
-    //  for (var a = 0; a < 4; a++) {
-    //    for (var b = 0; b < 4; b++) {
-    //      for (var c = 0; c < 4; c++) {
-    //        var groupUrl = [];
-    //        groupUrl.push('http://141.45.146.52/netvis/netvis1024/data/l' + corL + '/y' + y + '/x' + x + '.jpg');
-    //        groupUrl.push('http://141.45.146.52/netvis/netvis1024/data/l' + corL + '/y' + (y + 1) + '/x' + x + '.jpg');
-    //        groupUrl.push('http://141.45.146.52/netvis/netvis1024/data/l' + corL + '/y' + y + '/x' + (x + 1) + '.jpg');
-    //        groupUrl.push('http://141.45.146.52/netvis/netvis1024/data/l' + corL + '/y' + (y + 1) + '/x' + (x + 1) + '.jpg');
-    //        y += 2;
-    //        clusterPreviewUrls.push(groupUrl);
-    //      }
-    //      x += 2;
-    //      y = referenceClusterSpecs.y;
-    //    }
-    //  }
-    //  //
-    //  //var clusterPreviewUrls = [];
-    //  //var baseURL = data.baseURL;
-    //  //var x = 0;
-    //  //data.clusterPreviews.forEach(function (cluster) {
-    //  //  var groupUrl = [];
-    //  //  cluster.representatives.forEach(function (reps) {
-    //  //    groupUrl.push(baseURL + reps.url);
-    //  //  });
-    //  //  clusterPreviewUrls.push(groupUrl);
-    //  //  x++;
-    //  //});
-    //  return clusterPreviewUrls;
-    //};
 
-    //service.getClusterIds = function (data) {
-    //  var clusterIds = [];
-    //  data.clusterPreviews.forEach(function (cluster) {
-    //    clusterIds.push(cluster.ID);
-    //  });
-    //  return clusterIds;
-    //};
-    //
-    //// get the bigger sized fotolia result pics
-    //service.getImages = function (urls) {
-    //  var images = [];
-    //  urls.forEach(function(url) {
-    //    var l = + url.substring(url.indexOf("l") + 1).split('/')[0];
-    //    var y = + url.substring(url.indexOf("y") + 1).split('/')[0];
-    //    var x = + url.substring(url.indexOf("x") + 1).split('.')[0];
-    //    images.push({
-    //      src: url,
-    //      id: [l, x, y],
-    //      originSrc: url
-    //    });
-    //  });
-    //  return images;
-    //};
-
-    //service.getImages = function (data) {
-    //  var baseURL = data.baseURL;
-    //  var images = [];
-    //  data.images.forEach(function (img) {
-    //    //local       http://141.45.146.52/jpg160/00/12/74/62/160_F_12746292_T6hzDiFsVMwcMfOUqsP3b18eb5HyTRVm.jpg
-    //    //fotoliaUrl  http://t1.ftcdn.net/jpg/00/18/47/57/400_F_18475763_ORbnj9aujO1GrtO7VgNPzejFZv8mMbwb.jpg
-    //    var originalSrc = 'http://t1.ftcdn.net/jpg/' + img.url.replace('jpg160', 'jpg').replace('160', '400');
-    //    images.push({
-    //      src: baseURL + img.url,
-    //      id: img.imageId,
-    //      originSrc: originalSrc
-    //    });
-    //  });
-    //  return images;
-    //};
 
     service.addDataToHistory = function (data) {
       service.oldLength = service.dataHistory.length;
@@ -302,7 +227,7 @@ angular.module('PicNavigatorApp', [
     };
 
     service.getPreviousData = function () {
-      if(service.dataHistory.length === 1) {
+      if (service.dataHistory.length === 1) {
         return service.dataHistory[0];
       }
       //else if(service.oldLength === service.dataHistory.length) {
@@ -338,7 +263,7 @@ angular.module('PicNavigatorApp', [
       return xhr;
     };
 
-    var handleXLMData = function(data, callback) {
+    var handleXLMData = function (data, callback) {
       callback(JSON.parse(data));
     };
 

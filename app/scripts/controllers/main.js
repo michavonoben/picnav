@@ -11,8 +11,6 @@ angular.module('PicNavigatorApp')
   .controller('MainCtrl', function ($scope, $http, $location, dataService, httpService) {
     // TODO set focus on input field
     //$(document).ready(function () {
-    //  console.log('foo');
-    //  console.log($('#query'));
     //  $('.form').focus();
     //  //$('input').tagsinput('focus');
     //});
@@ -34,7 +32,7 @@ angular.module('PicNavigatorApp')
       };
 
       // 1. terms request for session
-      httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/search/term/' + fullTermQuery + '/9',
+      httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/search/term/' + fullTermQuery + '/16',
         function (data) {
 
           var clusterEdgeUrls = [];
@@ -51,9 +49,10 @@ angular.module('PicNavigatorApp')
             pos.y = (y < 0 ? max + y : y);
 
             clusterEdgeUrls.push('http://141.45.146.52/netvis/netvis1024/data/l'+ pos.level + '/y' + pos.y+ '/x'+ pos.x + '.jpg');
-            dataService.setClusterEdges(clusterEdgeUrls);
-            locationChange();
+
           });
+          dataService.setClusterEdges(clusterEdgeUrls);
+          locationChange();
           // 2. cluster request
           //httpService.makeCorsRequest('http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B' + fullCLusterQuery + '%3B%3B',
           //  function (data) {

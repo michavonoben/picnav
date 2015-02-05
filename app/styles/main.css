@@ -280,8 +280,8 @@ body {
 }
 
 .box {
-  width: 32%;
-  height: 32%;
+  width: 24%;
+  height: 24%;
   z-index: 0;
   /*margin: 1%;*/
   margin-top: 1%;
@@ -305,8 +305,8 @@ body {
 }
 .resultCard {
   position: relative;
-  width: 32%;
-  height: 32%;
+  width: 24%;
+  height: 24%;
   z-index: 10;
   cursor: pointer;
   padding: 0;

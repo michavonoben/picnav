@@ -38,15 +38,13 @@ angular.module('PicNavigatorApp.controllers', [])
     // end @author Mark Campell
 
     $scope.indexShift = function (index) {
-      switch (index) {
-        case 0: return 6;
-        case 1: return 7;
-        case 2: return 8;
-        case 6: return 0;
-        case 7: return 1;
-        case 8: return 2;
-        default: return index;
-      }
+      var shifter = 0;
+      if (index < 4) shifter = 12;
+      else if (index < 8) shifter = 4;
+      else if (index < 12) shifter = -4;
+      else if (index < 16) shifter = -12;
+      index += shifter;
+      return index;
     };
 
     var setData = function (callback) {
@@ -66,64 +64,7 @@ angular.module('PicNavigatorApp.controllers', [])
     var fillContainer = function () {
       var deferred = $q.defer();
 
-      //$scope.picList[0] = {
-      //  srcs: {
-      //    previewSrcs: $scope.clusterUrls[6].srcs
-      //  },
-      //  id: $scope.clusterUrls[6].id,
-      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
-      //};
-      //
-      //$scope.picList[1] = {
-      //  srcs: {
-      //    previewSrcs: $scope.clusterUrls[7].srcs
-      //  },
-      //  id: $scope.clusterUrls[7].id,
-      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
-      //};
-      //
-      //$scope.picList[2] = {
-      //  srcs: {
-      //    previewSrcs: $scope.clusterUrls[8].srcs
-      //  },
-      //  id: $scope.clusterUrls[8].id,
-      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
-      //};
-      //
-      //for (var i = 3; i < 6; i++) {
-      //  $scope.picList[i] = {
-      //    srcs: {
-      //      previewSrcs: $scope.clusterUrls[i].srcs
-      //    },
-      //    id: $scope.clusterUrls[i].id,
-      //    errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
-      //  };
-      //}
-      //
-      //$scope.picList[6] = {
-      //  srcs: {
-      //    previewSrcs: $scope.clusterUrls[0].srcs
-      //  },
-      //  id: $scope.clusterUrls[0].id,
-      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
-      //};
-      //
-      //$scope.picList[7] = {
-      //  srcs: {
-      //    previewSrcs: $scope.clusterUrls[1].srcs
-      //  },
-      //  id: $scope.clusterUrls[1].id,
-      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
-      //};
-      //
-      //$scope.picList[8] = {
-      //  srcs: {
-      //    previewSrcs: $scope.clusterUrls[2].srcs
-      //  },
-      //  id: $scope.clusterUrls[2].id,
-      //  errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
-      //};
-      for (var i = 0; i < 9; i++) {
+      for (var i = 0; i < 16; i++) {
         $scope.picList[$scope.indexShift(i)] = {
           srcs: {
             previewSrcs: $scope.clusterUrls[i].srcs
@@ -233,10 +174,6 @@ angular.module('PicNavigatorApp.controllers', [])
         if (referencePic.id.l > 0) {
           urls = dataService.getClusterEdgesForLevel(referencePic.id, true);
         } else {
-          if (index === 4) {
-            $scope.overlayScreenOff();
-            return;
-          }
           urls = dataService.getClusterEdgesForPositionShift(referencePic.id, $scope.indexShift(index));
         }
         dataService.setClusterEdges(urls);
@@ -318,8 +255,8 @@ angular.module('PicNavigatorApp.controllers', [])
      * @param index
      */
     var moveHiddenContainerInPosition = function (index) {
-      var col = Math.floor(index / 3);
-      var row = index % 3;
+      var col = Math.floor(index / 4);
+      var row = index % 4;
       $scope.preview = true;
       var wrapper = $('.mycontainer.active');
       $scope.wrapperHeight = $(wrapper).height();
@@ -328,10 +265,10 @@ angular.module('PicNavigatorApp.controllers', [])
       $('.mycontainer.myhidden')
         .css({
           opacity: 0,
-          top: col * $scope.wrapperHeight / 2.7 + 'px',
-          left: row * $scope.wrapperHeight / 2.7 + 'px',
-          width: $scope.wrapperWidth / 3.9 + 'px',
-          height: $scope.wrapperHeight / 3.9 + 'px'
+          top: col * $scope.wrapperHeight / 3.8 + 'px',
+          left: row * $scope.wrapperHeight / 3.8 + 'px',
+          width: $scope.wrapperWidth / 5 + 'px',
+          height: $scope.wrapperHeight / 5 + 'px'
         });
     };
 
@@ -344,10 +281,10 @@ angular.module('PicNavigatorApp.controllers', [])
           zIndex: 15,
           opacity: 1,
           top: '-=' + 5 + '%',
-          height: '37%'
+          height: '29%'
         }, {duration: 300, queue: false});
         $(resultCardMove).animate({
-          height: '+=' + 13 + '%'
+          height: '+=' + 17 + '%'
         }, {duration: 300, queue: false});
         $(resultCardStay).animate({
           opacity: 1
@@ -370,7 +307,7 @@ angular.module('PicNavigatorApp.controllers', [])
           zIndex: 10,
           opacity: 0,
           top: '+=' + 5 + '%',
-          height: '32%'
+          height: '24%'
         }, {duration: 150, queue: false});
         $(resultCardMove).animate({
           height: 0
