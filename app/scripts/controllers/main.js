@@ -36,6 +36,10 @@ angular.module('PicNavigatorApp')
         function (data) {
 
           var clusterEdgeUrls = [];
+          if (data.positions.length === 0) {
+            window.alert('Couldn\'t find any results for "' + fullTermQuery + '". \nMaybe a typo?');
+            return;
+          }
           data.positions.forEach(function(pos) {
             // Receiving Level 1 data, calculate it up to level 4
             pos.level = 2;
