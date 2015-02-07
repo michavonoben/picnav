@@ -16,8 +16,7 @@ angular.module('PicNavigatorApp', [
   'ngRoute',
   'ngSanitize',
   'ngTouch',
-  'ngTagsInput',
-  'ngUnderscore'
+  'ngTagsInput'
 ])
   .config(function ($routeProvider) {
     $routeProvider

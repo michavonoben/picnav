@@ -239,7 +239,7 @@ angular.module('PicNavigatorApp.controllers', [])
       fillContainer();
     };
   }).
-  controller('picBoxController', function ($scope, underscore, dataService) {
+  controller('picBoxController', function ($scope, dataService) {
     $scope.preview = false;
     $scope.hideBox = function (pic) {
       return false;
