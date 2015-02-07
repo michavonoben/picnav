@@ -16,7 +16,8 @@ angular.module('PicNavigatorApp', [
   'ngRoute',
   'ngSanitize',
   'ngTouch',
-  'ngTagsInput'
+  'ngTagsInput',
+  'ngUnderscore'
 ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -32,7 +33,7 @@ angular.module('PicNavigatorApp', [
         redirectTo: '/'
       });
   })
-  .factory('dataService', function () {
+  .factory('dataService', function (httpService) {
     var service = {};
     service.dataHistory = [];
     service.clusterEdgeUrls = [];
@@ -45,24 +46,12 @@ angular.module('PicNavigatorApp', [
       return {l: l, x: x, y: y};
     };
 
-    var getUrlById = function (id) {
-      return 'http://141.45.146.52/netvis/netvis1024/data/l' + id.l + '/y' + id.y + '/x' + id.x + '.jpg';
-    };
-
-    var getNeighbourUrl = function (id, pos) {
+    var keepInRange = function (id) {
       var corL = id.l;
       var x = id.x;
       var y = id.y;
       var max;
 
-      if (pos === 1) {
-        x++;
-      } else if (pos === 2) {
-        y--;
-      } else if (pos === 3) {
-        x++;
-        y--;
-      }
       // keep everything within range
       if (corL === 6) {
         // there 16 x 16 positions so 0 to 15
@@ -88,26 +77,48 @@ angular.module('PicNavigatorApp', [
       // round values to absolute positions
       x = Math.round(x);
       y = Math.round(y);
+      var newId = {
+        l:corL,
+        x:x,
+        y:y
+      };
+      return newId;
+    };
 
-      return 'http://141.45.146.52/netvis/netvis1024/data/l' + corL + '/y' + y + '/x' + x + '.jpg';
+    var getUrlById = function (id) {
+      var newId = keepInRange(id);
+      return 'http://141.45.146.52/netvis/netvis1024/data/l' + newId.l + '/y' + newId.y + '/x' + newId.x + '.jpg';
+    };
 
+    var getNeighbourUrl = function (id, pos) {
+      if (pos === 1) {
+        id.x++;
+      } else if (pos === 2) {
+        id.y--;
+      } else if (pos === 3) {
+        id.x++;
+        id.y--;
+      }
+      var newId = keepInRange(id);
+      return 'http://141.45.146.52/netvis/netvis1024/data/l' + newId.l + '/y' + newId.y + '/x' + newId.x + '.jpg';
 
-      //for (var a = 0; a < 4; a++) {
-      //  for (var b = 0; b < 4; b++) {
-      //    for (var c = 0; c < 4; c++) {
-      //      var groupUrl = [];
-      //      groupUrl.push('http://141.45.146.52/netvis/netvis1024/data/l' + corL + '/y' + y + '/x' + x + '.jpg');
-      //      groupUrl.push('http://141.45.146.52/netvis/netvis1024/data/l' + corL + '/y' + (y + 1) + '/x' + x + '.jpg');
-      //      groupUrl.push('http://141.45.146.52/netvis/netvis1024/data/l' + corL + '/y' + y + '/x' + (x + 1) + '.jpg');
-      //      groupUrl.push('http://141.45.146.52/netvis/netvis1024/data/l' + corL + '/y' + (y + 1) + '/x' + (x + 1) + '.jpg');
-      //      y += 2;
-      //      clusterPreviewUrls.push(groupUrl);
-      //    }
-      //    x += 2;
-      //    y = referenceClusterSpecs.y;
-      //  }
-      //}
-
+    };
+    service.getResultsForSrc = function (src, callback) {
+      var id = getIdByUrl(src);
+      var resultPics = [];
+      httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/image/'+id.l+'/'+id.x+'/'+id.y+'/',
+        function (data) {
+          httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/similar/image/'+data.id+'/10',
+            function (data) {
+              data.forEach(function (d) {
+                resultPics.push({
+                  src: d.url,
+                  id: d.id
+                 });
+              });
+             callback(resultPics);
+          })
+        });
     };
 
     service.setClusterEdges = function (urls) {
@@ -145,8 +156,6 @@ angular.module('PicNavigatorApp', [
     };
 
     service.getClusterEdgesForLevel = function (leftCornerId, twoStepsDown) {
-      //twoStepsDown = false;
-
       var l, x, y, newId;
       if (twoStepsDown) {
         l = leftCornerId.l - 2;
@@ -161,7 +170,6 @@ angular.module('PicNavigatorApp', [
       newId = {l: l, x: x, y: y};
 
       var urls = [];
-      //urls.forEach(function (url) {
 
       urls[0] = getUrlById(newId);
       urls[1] = getUrlById({l: l, x: x + 2, y: y});

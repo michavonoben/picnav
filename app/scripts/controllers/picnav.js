@@ -29,7 +29,6 @@ angular.module('PicNavigatorApp.controllers', [])
      * http://www.markcampbell.me/tutorial/2013/10/08/preventing-navigation-in-an-angularjs-project.html
      * @author Mark Campell
      */
-      //todo
     $scope.$on('$locationChangeStart', function (event) {
       if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
         event.preventDefault(); // This prevents the navigation from happening
@@ -61,11 +60,12 @@ angular.module('PicNavigatorApp.controllers', [])
 
     var col, row;
 
-    var fillContainer = function () {
+    var fillContainer = function (initialView) {
       var deferred = $q.defer();
-
       for (var i = 0; i < 16; i++) {
-        $scope.picList[$scope.indexShift(i)] = {
+        // if intialView is true, we show several points of the map at once. don't shift
+        var index = initialView ? i : $scope.indexShift(i);
+        $scope.picList[index] = {
           srcs: {
             previewSrcs: $scope.clusterUrls[i].srcs
           },
@@ -85,7 +85,7 @@ angular.module('PicNavigatorApp.controllers', [])
 
     dataService.addDataToHistory(dataService.getClusterEdges());
     setData();
-    fillContainer();
+    fillContainer(true);
 
     $scope.overlayScreenOn = function () {
       var deferred = $q.defer();
@@ -116,19 +116,13 @@ angular.module('PicNavigatorApp.controllers', [])
     /**
      * toggles the view between cluster-search and resultlist
      */
-    $scope.toggleView = function (index) {
+    $scope.toggleView = function (newResults) {
+      if (newResults) {
+        $scope.resultPics = newResults;
+      }
       var transitionTime = 200;
       if ($scope.currentView === 'CLUSTER') {
         // goto results
-        $scope.resultPics = [];
-        $scope.picList[index].srcs.previewSrcs.forEach(function (src) {
-          $scope.resultPics.push({
-            src: src
-          });
-        });
-        //$scope.resultPics = dataService.getImages($scope.representativeUrls[index]);
-        //$scope.previewPic = $scope.resultPics[0];
-        //$scope.$broadcast('previewChanged', $scope.previewPic);
         $(function () {
           $('#resultPage').animate({
             opacity: 1,
@@ -140,8 +134,6 @@ angular.module('PicNavigatorApp.controllers', [])
           $scope.currentView = 'RESULTS';
           $scope.inResultView = true;
         });
-        // scale the overlays with new loaded image
-        //$scope.scaleResultPicOverlay();
       } else {
         // goto cluster
         $(function () {
@@ -190,8 +182,8 @@ angular.module('PicNavigatorApp.controllers', [])
      * @param index
      * @returns {promise}
      */
-    var clusterSearchTransition = function (index, animation) {
-      var deferred = $q.defer();
+    var clusterSearchTransition = function (index, callback) {
+
       var activeContainer = $('.mycontainer.active');
       var hiddenContainer = $('.mycontainer.myhidden');
       col = Math.floor(index / 3);
@@ -214,7 +206,10 @@ angular.module('PicNavigatorApp.controllers', [])
         width: '98%',
         height: '98%'
       }, {duration: 600, queue: true});
-      return deferred.promise;
+      setTimeout(function () {
+        callback();
+      }, 1000)
+
     };
 
     /**
@@ -227,10 +222,13 @@ angular.module('PicNavigatorApp.controllers', [])
      */
     $scope.clusterSearch = function (index, isSingle) {
       var referencePic = $scope.picList[index];
+      $('body').css( 'pointer-events', 'none' );
       $scope.overlayScreenOn().
         then($scope.calculateNewClusters(referencePic, index, isSingle, true, function () {
-          clusterSearchTransition(5, true).
-            then($scope.overlayScreenOff());
+          clusterSearchTransition(5, function () {
+            $('body').css( 'pointer-events', 'all' );
+            $scope.overlayScreenOff();
+          })
         }));
     };
 
@@ -241,7 +239,7 @@ angular.module('PicNavigatorApp.controllers', [])
       fillContainer();
     };
   }).
-  controller('picBoxController', function ($scope, dataService) {
+  controller('picBoxController', function ($scope, underscore, dataService) {
     $scope.preview = false;
     $scope.hideBox = function (pic) {
       return false;
@@ -272,64 +270,58 @@ angular.module('PicNavigatorApp.controllers', [])
         });
     };
 
-    var showResultCard = function (index) {
-      var resultCard = $('.resultCard')[index];
-      var resultCardMove = $('.resultCardMove')[index];
-      var resultCardStay = $('.resultCardStay')[index];
-      if (!$(resultCard).hasClass("interested")) {
-        $(resultCard).animate({
-          zIndex: 15,
-          opacity: 1,
-          top: '-=' + 5 + '%',
-          height: '29%'
-        }, {duration: 300, queue: false});
-        $(resultCardMove).animate({
-          height: '+=' + 17 + '%'
-        }, {duration: 300, queue: false});
-        $(resultCardStay).animate({
-          opacity: 1
-        }, {duration: 300, queue: false});
-        $(resultCard).addClass("interested");
-      }
-      //setTimeout(function(){
-      //  hideResultCard(index);
-      //}, 1500);
+    var getHoveredCluster = function (index) {
+      var activeContainer = $('.mycontainer.active');
+      var clustersOfInterest = $(activeContainer).find($('.box.cluster'));
+      return $(clustersOfInterest).eq(index);
     };
 
-    $scope.hideResultCard = function (index) {
-      $scope.preview = false;
-      var resultCard = $('.resultCard')[index];
-      var resultCardMove = $('.resultCardMove')[index];
-      var resultCardStay = $('.resultCardStay')[index];
-      $(resultCard).removeClass("selected");
-      if ($(resultCard).hasClass("interested")) {
-        $(resultCard).animate({
-          zIndex: 10,
-          opacity: 0,
-          top: '+=' + 5 + '%',
-          height: '24%'
-        }, {duration: 150, queue: false});
-        $(resultCardMove).animate({
-          height: 0
-        }, {duration: 150, queue: false});
-        $(resultCardStay).animate({
-          opacity: 0
-        }, {duration: 150, queue: false});
-        $(resultCard).removeClass("interested");
-      }
+    var getMiniBox = function (index, i) {
+      return $(getHoveredCluster(index)).find($('.box.mini')).eq(i);
+    };
+
+    $scope.miniBoxEnter = function (index, i) {
+      var e = getMiniBox(index, i);
+      e.addClass('mouseRests');
+      setTimeout(function () {
+        if(e.hasClass('mouseRests')) {
+          $(e).animate({
+            borderWidth: 4 + 'px',
+            borderRadius: 8 + 'px'
+          }, 300);
+        }
+      }, 200);
+    };
+    $scope.miniBoxLeave = function (index, i) {
+      var e = getMiniBox(index, i);
+      e.removeClass('mouseRests');
+      $(e).animate({
+        borderWidth: 0,
+        borderRadius: 0
+      }, 100);
     };
 
     $scope.interestInCluster = function(index) {
-      $scope.clusterOfInterest = $scope.picList[index].id;
-      if (!$scope.$$phase) {
-        // apply changes
-        $scope.$apply();
-      }
       moveHiddenContainerInPosition(index);
-      var resultCard = $('.resultCard')[index];
-      if (!$(resultCard).hasClass("interested")) {
-        showResultCard(index);
-      }
+      var e = getHoveredCluster(index);
+      e.addClass('mouseRests');
+      setTimeout(function () {
+        if(e.hasClass('mouseRests')) {
+          $(e).animate({
+            borderWidth: 4 + 'px',
+            padding: 4 + 'px'
+          }, 300);
+        }
+      }, 200);
+    };
+
+    $scope.lostInterest = function (index) {
+      var e = getHoveredCluster(index);
+      e.removeClass('mouseRests');
+      $(e).animate({
+        borderWidth: 0,
+        padding: 0
+      }, 100);
     };
 
     /**
@@ -337,10 +329,7 @@ angular.module('PicNavigatorApp.controllers', [])
      * @param index
      */
     $scope.continueClusterSearch = function (index) {
-      if($($('.resultCard')[index]).hasClass("interested")) {
-        $($('.resultCard')[index]).css("opacity", "0");
-        $scope.clusterSearch(index, false);
-      }
+      $scope.clusterSearch(index, false);
     };
 
     /**
@@ -349,47 +338,23 @@ angular.module('PicNavigatorApp.controllers', [])
      * updates resultPic list
      * @param index
      */
-    $scope.goToResults = function (index) {
-      $($('.resultCard')[index]).css("opacity", "0");
-      $scope.toggleView(index);
+    $scope.goToResults = function (src) {
+      var srcs = [];
+      dataService.getResultsForSrc(src, function (resultPics) {
+        resultPics.forEach(function (pic) {
+          srcs.push(pic)
+        });
+        $scope.toggleView(srcs);
+      });
+
     };
 
-    //$scope.singlePicClicked = function (id) {
-    //  $scope.overlayScreenOn();
-    //  $scope.calculateNewClusters(id, true, true, function () {
-    //    $scope.overlayScreenOff();
-    //    $scope.toggleView();
-    //  });
-    //};
-    //
-    //$scope.picSelected = function (id) {
-    //  if (window.confirm('Go to original image Url and leave Picture Navigator?')) {
-    //    window.location.href = 'http://www.fotolia.com/id/' + id;
-    //  }
-    //};
-    //
-    //$scope.resultPicMouseEnter = function (pic) {
-    //  $scope.previewPic = pic;
-    //  $scope.preview = true;
-    //};
-    //
-    //$scope.resultPicMouseLeave = function () {
-    //  // scale the overlays with new loaded image
-    //  $scope.scaleResultPicOverlay();
-    //  $scope.preview = false;
-    //};
-    //
-    //$scope.resultPreviewMouseEnter = function () {
-    //  $scope.resultPreview = true;
-    //};
-    //
-    //$scope.resultPreviewMouseLeave = function () {
-    //  $scope.resultPreview = false;
-    //};
-    //
-    //$scope.$on('previewChanged', function (newPic) {
-    //  $scope.previewPic = newPic.targetScope.previewPic;
-    //});
+    $scope.picSelected = function (id) {
+      if (window.confirm('Go to original image Url and leave Picture Navigator?')) {
+        window.location.href = 'http://www.fotolia.com/id/' + id;
+      }
+    };
+
   }).
   controller('historyController', function ($scope, dataService) {
     $scope.newSearch = function () {
