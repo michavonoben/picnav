@@ -3,7 +3,8 @@
 /**
  * @ngdoc overview
  * @name PicNavigatorApp
- * @description
+ * @description Configures all used modules and provides services
+ * @author Micha Gerwig 2015
  * # picnavApp
  *
  * Main module of the application.
@@ -32,36 +33,18 @@ angular.module('PicNavigatorApp', [
         redirectTo: '/'
       });
   })
-  .factory('picService', function () {
+  .factory('dataService', function () {
+    var service = {};
     var data;
-    var items = [];
-    var pics = {};
+    service.dataHistory = [];
 
-    pics.setData = function (d) {
+    service.setData = function (d) {
       data = d;
     };
 
-    pics.getData = function () {
+    service.getData = function () {
       return data;
     };
-
-    pics.addItem = function (item) {
-      items.push(item);
-    };
-    pics.removeItem = function (item) {
-      var index = items.indexOf(item);
-      items.splice(index, 1);
-    };
-    pics.items = function () {
-      return items;
-    };
-
-    return pics;
-  })
-  .factory('dataService', function () {
-    var service = {};
-    service.dataHistory = [];
-    service.oldLength = 0;
 
     service.getClusterPreviewUrls = function (data) {
       if (typeof data === 'undefined') {
@@ -108,20 +91,15 @@ angular.module('PicNavigatorApp', [
     };
 
     service.addDataToHistory = function (data) {
-      service.oldLength = service.dataHistory.length;
       service.dataHistory.push(data);
     };
 
     service.getPreviousData = function () {
       if (service.dataHistory.length === 1) {
+        // end of history
         return service.dataHistory[0];
       }
-      //else if(service.oldLength === service.dataHistory.length) {
-      //  // first back move, remove currently displayed data
-      //  service.dataHistory.pop();
-      //}
       return service.dataHistory.pop();
-
     };
     return service;
   })

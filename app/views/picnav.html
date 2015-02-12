@@ -69,18 +69,18 @@
       <div id="scrollResults">
         <div class="picInResults"
              ng-repeat="pic in resultPics"
-             ng-mouseenter="resultPicMouseEnter(pic)"
-             ng-mouseleave="resultPicMouseLeave()"
+             ng-mouseenter="updatePreviewPic(pic)"
+             ng-mouseleave="scaleResultPicOverlay()"
              style="background-image: url({{pic.src}})">
         </div>
       </div>
       <div id="previewResults" style="background-image: url({{previewPic.originSrc}})">
         <div>
-          <div class="bigOver" ng-mouseenter="resultPreviewMouseEnter()" ng-mouseleave="resultPreviewMouseLeave()">
+          <div class="bigOver" ng-mouseenter="resultPreview = true" ng-mouseleave="resultPreview = false">
             <div class="over results" ng-if="resultPreview" ng-click="picSelected(previewPic.id)">
               <span class="overText">go to fotolia</span>
             </div>
-            <div class="over search" ng-if="resultPreview" ng-click="singlePicClicked(previewPic.id)">
+            <div class="over search" ng-if="resultPreview" ng-click="singlePicSearch(previewPic.id)">
               <span class="overText">find more</span>
             </div>
           </div>

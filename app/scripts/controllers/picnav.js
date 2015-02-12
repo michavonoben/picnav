@@ -1,8 +1,12 @@
 'use strict';
 var $; // so JS lint won't throw error on jQuery
+/**
+ * @description Handles every functionality during search
+ * @author Micha Gerwig 2015
+ */
 
 angular.module('PicNavigatorApp.controllers', []).
-  controller('initialController', function ($scope, $http, $q, picService, dataService, httpService) {
+  controller('initialController', function ($scope, $http, $q, dataService, httpService) {
     $scope.picList = [];
     $scope.previewPic = null;
     $scope.resultPreview = false;
@@ -21,7 +25,7 @@ angular.module('PicNavigatorApp.controllers', []).
      * INNER FUNCTIONS *
      *******************/
 
-    var data = picService.getData();
+    var data = dataService.getData();
     dataService.addDataToHistory(data);
 
     function setData (data, callback) {
@@ -70,6 +74,7 @@ angular.module('PicNavigatorApp.controllers', []).
     /***************************
      * GRAPHIC STUFF FUNCTIONS *
      ***************************/
+
     $scope.overlayScreenOn = function () {
       var deferred = $q.defer();
       $('.overlay').animate({
@@ -217,7 +222,6 @@ angular.module('PicNavigatorApp.controllers', []).
     };
 
     $scope.stepBack = function (oldData) {
-
       var dataUpdate = function (oldData) {
         var deferred = $q.defer();
         $scope.representativeUrls = dataService.getClusterPreviewUrls(oldData);
@@ -232,11 +236,14 @@ angular.module('PicNavigatorApp.controllers', []).
     };
   }).
   controller('picBoxController', function ($scope) {
-    $scope.preview = false;
+
+    /***************************
+     * GRAPHIC STUFF FUNCTIONS *
+     ***************************/
+
     $scope.hideBox = function (pic) {
       return pic.id === undefined;
     };
-
     /**
      * this is necessary so that the hidden container is in the right position for
      * the animation when the cluster search continues
@@ -245,7 +252,7 @@ angular.module('PicNavigatorApp.controllers', []).
     var moveHiddenContainerInPosition = function (index) {
       var col = Math.floor(index / 3);
       var row = index % 3;
-      $scope.preview = true;
+
       var wrapper = $('.mycontainer.active');
       $scope.wrapperHeight = $(wrapper).height();
       $scope.wrapperWidth = $(wrapper).width();
@@ -279,11 +286,10 @@ angular.module('PicNavigatorApp.controllers', []).
         }, {duration: 300, queue: false});
         $(resultCard).addClass("interested");
       }
-
     };
 
     $scope.hideResultCard = function (index) {
-      $scope.preview = false;
+      // needs to be on scope as it is also triggered from html
       var resultCard = $('.resultCard')[index];
       var resultCardMove = $('.resultCardMove')[index];
       var resultCardStay = $('.resultCardStay')[index];
@@ -304,6 +310,10 @@ angular.module('PicNavigatorApp.controllers', []).
         $(resultCard).removeClass("interested");
       }
     };
+
+    /*************************
+     * CALCULATION FUNCTIONS *
+     *************************/
 
     $scope.interestInCluster = function (index) {
       moveHiddenContainerInPosition(index);
@@ -333,18 +343,20 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.goToResults = function (index) {
       $($('.resultCard')[index]).css("opacity", "0");
       var dataUpdate = function () {
-        $scope.preview = false;
         $scope.httpRequest($scope.clusterIds[index], false, false, function () {
           $scope.overlayScreenOff();
           $scope.toggleView();
         });
       };
-
       $scope.overlayScreenOn().
         then(dataUpdate());
     };
 
-    $scope.singlePicClicked = function (id) {
+    /**
+     * searches new Clusters with a single pic id and switches the view
+     * @param id
+     */
+    $scope.singlePicSearch = function (id) {
       $scope.overlayScreenOn();
       $scope.httpRequest(id, true, true, function () {
         $scope.overlayScreenOff();
@@ -358,23 +370,8 @@ angular.module('PicNavigatorApp.controllers', []).
       }
     };
 
-    $scope.resultPicMouseEnter = function (pic) {
+    $scope.updatePreviewPic = function (pic) {
       $scope.previewPic = pic;
-      $scope.preview = true;
-    };
-
-    $scope.resultPicMouseLeave = function () {
-      // scale the overlays with new loaded image
-      $scope.scaleResultPicOverlay();
-      $scope.preview = false;
-    };
-
-    $scope.resultPreviewMouseEnter = function () {
-      $scope.resultPreview = true;
-    };
-
-    $scope.resultPreviewMouseLeave = function () {
-      $scope.resultPreview = false;
     };
 
     $scope.$on('previewChanged', function (newPic) {
