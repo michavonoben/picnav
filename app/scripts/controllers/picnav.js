@@ -90,8 +90,8 @@ angular.module('PicNavigatorApp.controllers', []).
       }, {duration: 200, queue: false});
     };
     $scope.scaleResultPicOverlay = function () {
-      var img = new Image;
-      img.src = $('#previewResults').css('background-image').replace(/url\(|\)$/ig, "");
+      var img = new Image();
+      img.src = $('#previewResults').css('background-image').replace(/url\(|\)$/ig, '');
       var bgImgWidth = img.width + 1;
       var bgImgHeight = img.height + 1;
       $('.bigOver').css({
@@ -192,7 +192,9 @@ angular.module('PicNavigatorApp.controllers', []).
 
     $scope.httpRequest = function (clusterId, isSingle, updateClusters, callback) {
       httpService.makeCorsRequest(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, function (data) {
-        if (!updateClusters) $scope.resultPics = dataService.getImages(data);
+        if (!updateClusters) {
+          $scope.resultPics = dataService.getImages(data);
+        }
         if (updateClusters) {
           httpService.makeCorsRequest(urls.clusterRequest + data.clusterID, function (data) {
             dataService.addDataToHistory(data);
@@ -271,7 +273,7 @@ angular.module('PicNavigatorApp.controllers', []).
       var resultCard = $('.resultCard')[index];
       var resultCardMove = $('.resultCardMove')[index];
       var resultCardStay = $('.resultCardStay')[index];
-      if (!$(resultCard).hasClass("interested")) {
+      if (!$(resultCard).hasClass('interested')) {
         $(resultCard).animate({
           zIndex: 15,
           opacity: 1,
@@ -284,7 +286,7 @@ angular.module('PicNavigatorApp.controllers', []).
         $(resultCardStay).animate({
           opacity: 1
         }, {duration: 300, queue: false});
-        $(resultCard).addClass("interested");
+        $(resultCard).addClass('interested');
       }
     };
 
@@ -293,8 +295,8 @@ angular.module('PicNavigatorApp.controllers', []).
       var resultCard = $('.resultCard')[index];
       var resultCardMove = $('.resultCardMove')[index];
       var resultCardStay = $('.resultCardStay')[index];
-      $(resultCard).removeClass("selected");
-      if ($(resultCard).hasClass("interested")) {
+      $(resultCard).removeClass('selected');
+      if ($(resultCard).hasClass('interested')) {
         $(resultCard).animate({
           zIndex: 10,
           opacity: 0,
@@ -307,7 +309,7 @@ angular.module('PicNavigatorApp.controllers', []).
         $(resultCardStay).animate({
           opacity: 0
         }, {duration: 150, queue: false});
-        $(resultCard).removeClass("interested");
+        $(resultCard).removeClass('interested');
       }
     };
 
@@ -318,7 +320,7 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.interestInCluster = function (index) {
       moveHiddenContainerInPosition(index);
       var resultCard = $('.resultCard')[index];
-      if (!$(resultCard).hasClass("interested")) {
+      if (!$(resultCard).hasClass('interested')) {
         showResultCard(index);
       }
     };
@@ -328,8 +330,8 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.continueClusterSearch = function (index) {
-      if ($($('.resultCard')[index]).hasClass("interested")) {
-        $($('.resultCard')[index]).css("opacity", "0");
+      if ($($('.resultCard')[index]).hasClass('interested')) {
+        $($('.resultCard')[index]).css('opacity', '0');
         $scope.clusterSearch($scope.clusterIds[index], false, index);
       }
     };
@@ -341,7 +343,7 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.goToResults = function (index) {
-      $($('.resultCard')[index]).css("opacity", "0");
+      $($('.resultCard')[index]).css('opacity', '0');
       var dataUpdate = function () {
         $scope.httpRequest($scope.clusterIds[index], false, false, function () {
           $scope.overlayScreenOff();
