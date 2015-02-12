@@ -1,40 +1,33 @@
 <body>
-  <div class="wrapper">
-    <!--<div class="wrapper column">-->
-      <div class="header"> <span class="title white">picture navigatør</span></div>
-    <div class="wrapper column">
-      <div class="searchField">
-        <p class="instructionText">
-        Enter a term. Hit space to add multiple words to your search.
-        </p>
-        <form>
-          <div>
-            <form id="tfnewsearch">
-              <!--<tags-input class="tftextinput" maxlength="120"></tags-input>-->
-              <tags-input class="tftextinput"
-                          id="query" type="text"
-                          ng-model="query"
-                          placeholder="{{query.length < 1 ? 'e.g. beach,  mountain swiss' : ''}}"
-                          add-on-space="true"
-                          add-on-enter="true"
-                          allow-leftover-text="false"
-                          add-on-comma="true" required>
-              </tags-input>
-
-              <input type="submit" ng-disabled="!query" id="search" ng-click="search(query)" value="search" class="tfbutton">
-            </form>
-            <div class="tfclear"></div>
-          </div>
-        </form>
+<div class="wrapper">
+  <div class="header"><span class="title white">picture navigatør</span></div>
+  <div class="wrapper column">
+    <div class="searchField">
+      <div class="instructionText"><span class="title small">enter words and start searching or<br><a href="http://mvo.suhail.uberspace.de/imgMap/#/">try</a> picture navigatør using image map</span>
       </div>
-      <!--</div>-->
-    </div>
-    <div class="footer">
-  <span class="title small"> htw berlin - requests to palm-search.com | try <a href="http://mvo.suhail.uberspace.de/imgMap/#/">netvis navigator</a>
-  </span>
+      <form>
+        <div>
+          <form id="tfnewsearch">
+            <tags-input class="tftextinput"
+                        id="query" type="text"
+                        ng-model="query"
+                        placeholder="e.g. beach, mountain"
+                        add-on-space="true"
+                        add-on-enter="true"
+                        allow-leftover-text="false"
+                        add-on-comma="true" required>
+            </tags-input>
+            <input type="submit" ng-disabled="!query" id="search" ng-click="search(query)" value="search" class="tfbutton">
+          </form>
+          <div class="tfclear"></div>
+        </div>
+      </form>
     </div>
   </div>
-
+  <div class="footer">
+  <span class="title small"> htw berlin - requests to palm-search.com | micha gerwig 2015</span>
+  </div>
+</div>
 </body>
 
 

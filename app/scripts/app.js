@@ -64,6 +64,10 @@ angular.module('PicNavigatorApp', [
     service.oldLength = 0;
 
     service.getClusterPreviewUrls = function (data) {
+      if (typeof data === 'undefined') {
+        console.error('Something went wrong. Didn\'t receive any data');
+        return;
+      }
       var clusterPreviewUrls = [];
       var baseURL = data.baseURL;
       var x = 0;
@@ -109,7 +113,7 @@ angular.module('PicNavigatorApp', [
     };
 
     service.getPreviousData = function () {
-      if(service.dataHistory.length === 1) {
+      if (service.dataHistory.length === 1) {
         return service.dataHistory[0];
       }
       //else if(service.oldLength === service.dataHistory.length) {
@@ -145,7 +149,7 @@ angular.module('PicNavigatorApp', [
       return xhr;
     };
 
-    var handleXLMData = function(data, callback) {
+    var handleXLMData = function (data, callback) {
       callback(JSON.parse(data));
     };
 

@@ -8,28 +8,7 @@ angular.module('PicNavigatorApp.controllers', []).
     $scope.resultPreview = false;
     $scope.currentView = 'CLUSTER';
 
-    /**
-     * the following function was taken from:
-     * http://www.markcampbell.me/tutorial/2013/10/08/preventing-navigation-in-an-angularjs-project.html
-     * @author Mark Campell
-     */
-    $scope.$on('$locationChangeStart', function (event) {
-      if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
-        event.preventDefault(); // This prevents the navigation from happening
-      }
-    });
-    // end @author Mark Campell
-
-    var data = picService.getData();
-    dataService.addDataToHistory(data);
-
-    var setData = function (data, callback) {
-      $scope.representativeUrls = dataService.getClusterPreviewUrls(data);
-      $scope.clusterIds = dataService.getClusterIds(data);
-      if (callback) {
-        callback();
-      }
-    };
+    var col, row;
 
     var urls = {
       clusterRequest: 'http://www.palm-search.com/service/view/cluster/?&clusterId=',
@@ -38,9 +17,23 @@ angular.module('PicNavigatorApp.controllers', []).
       allowCORSHeader: {headers: {'Access-Control-Request-Headers': 'x-requested-with'}}
     };
 
-    var col, row;
+    /*******************
+     * INNER FUNCTIONS *
+     *******************/
 
-    var fillContainer = function () {
+    var data = picService.getData();
+    dataService.addDataToHistory(data);
+
+    function setData (data, callback) {
+      $scope.representativeUrls = dataService.getClusterPreviewUrls(data);
+      $scope.clusterIds = dataService.getClusterIds(data);
+      if (callback) {
+        callback();
+      }
+    }
+
+    function fillContainer() {
+      // This fills the array with pics for the active container
       var deferred = $q.defer();
       for (var i = 0; i < 9; i++) {
         $scope.picList[i] = {
@@ -54,14 +47,29 @@ angular.module('PicNavigatorApp.controllers', []).
         // apply changes
         $scope.$apply();
       }
-
       return deferred.promise;
-    };
+    }
+
+
+    /**
+     * the following function was taken from:
+     * http://www.markcampbell.me/tutorial/2013/10/08/preventing-navigation-in-an-angularjs-project.html
+     * @author Mark Campell
+     */
+    $scope.$on('$locationChangeStart', function (event) {
+      if (!window.confirm('Do you really want to leave Picture Navigator and start a new search? \n If you just want to navigate back, use the BACK button below. \n\n Press CANCEL to stay on Picture Navigator.')) {
+        event.preventDefault(); // This prevents the navigation from happening
+      }
+    });
+    // end @author Mark Campell
 
     // initial filling of picList
     setData(data);
     fillContainer();
 
+    /***************************
+     * GRAPHIC STUFF FUNCTIONS *
+     ***************************/
     $scope.overlayScreenOn = function () {
       var deferred = $q.defer();
       $('.overlay').animate({
@@ -86,12 +94,8 @@ angular.module('PicNavigatorApp.controllers', []).
         height: bgImgHeight
       });
     };
-
-
-    /**
-     * toggles the view between cluster-search and resultlist
-     */
     $scope.toggleView = function () {
+      // toggles the view between cluster-search and result view
       var transitionTime = 200;
       if ($scope.currentView === 'CLUSTER') {
         // goto results
@@ -126,38 +130,12 @@ angular.module('PicNavigatorApp.controllers', []).
       // scale the overlays with new loaded image
       $scope.scaleResultPicOverlay();
     };
-
-    /**
-     * fires a http request to palm-search.com either with a clusterID or a single picID
-     * updates the resultPics list and if desired the clusters as well
-     *
-     * @param clusterId
-     * @param isSingle
-     * @param updateClusters
-     * @param callback
-     */
-
-    $scope.httpRequest = function (clusterId, isSingle, updateClusters, callback) {
-        httpService.makeCorsRequest(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, function(data){
-          if(!updateClusters) $scope.resultPics = dataService.getImages(data);
-          if(updateClusters) {
-            httpService.makeCorsRequest(urls.clusterRequest + data.clusterID, function(data) {
-              dataService.addDataToHistory(data);
-              setData(data, function() {
-                fillContainer();
-              });
-            });
-          }
-          callback();
-        });
-    };
-
     /**
      * exchanges the two cluster containers and animates the transition
      * @param index
      * @returns {promise}
      */
-    var clusterSearchTransition = function (index, animation) {
+    function clusterSearchTransition (index, animation) {
       var deferred = $q.defer();
       var activeContainer = $('.mycontainer.active');
       var hiddenContainer = $('.mycontainer.myhidden');
@@ -190,6 +168,36 @@ angular.module('PicNavigatorApp.controllers', []).
         height: '98%'
       }, {duration: 600, queue: true});
       return deferred.promise;
+    }
+
+
+    /*************************
+     * CALCULATION FUNCTIONS *
+     *************************/
+
+    /**
+     * fires a http request to palm-search.com either with a clusterID or a single picID
+     * updates the resultPics list and if desired the clusters as well
+     *
+     * @param clusterId
+     * @param isSingle
+     * @param updateClusters
+     * @param callback
+     */
+
+    $scope.httpRequest = function (clusterId, isSingle, updateClusters, callback) {
+      httpService.makeCorsRequest(isSingle ? urls.singleRequest + clusterId : urls.subClusterRequest + clusterId, function (data) {
+        if (!updateClusters) $scope.resultPics = dataService.getImages(data);
+        if (updateClusters) {
+          httpService.makeCorsRequest(urls.clusterRequest + data.clusterID, function (data) {
+            dataService.addDataToHistory(data);
+            setData(data, function () {
+              fillContainer();
+            });
+          });
+        }
+        callback();
+      });
     };
 
     /**
@@ -217,25 +225,10 @@ angular.module('PicNavigatorApp.controllers', []).
         $scope.resultPics = dataService.getImages(oldData);
         return deferred.promise;
       };
-
-      //var backTransition = function () {
-      //  var deferred = $q.defer();
-      //  // move hidden container to wrapper mid
-      //  $('.mycontainer.myhidden')
-      //    .css({
-      //      top: $scope.wrapperHeight / 2.4 + 'px',
-      //      left: $scope.wrapperHeight / 2.4 + 'px',
-      //      width: $scope.wrapperWidth / 3 + 'px',
-      //      height: $scope.wrapperHeight / 3 + 'px'
-      //    });
-      //  clusterSearchTransition(4, false);
-      //  return deferred.promise;
-      //};
-
       $scope.overlayScreenOn().then(
         dataUpdate(oldData).
           then(fillContainer().
-              then($scope.overlayScreenOff())));
+            then($scope.overlayScreenOff())));
     };
   }).
   controller('picBoxController', function ($scope) {
@@ -286,9 +279,7 @@ angular.module('PicNavigatorApp.controllers', []).
         }, {duration: 300, queue: false});
         $(resultCard).addClass("interested");
       }
-      //setTimeout(function(){
-      //  hideResultCard(index);
-      //}, 1500);
+
     };
 
     $scope.hideResultCard = function (index) {
@@ -314,7 +305,7 @@ angular.module('PicNavigatorApp.controllers', []).
       }
     };
 
-    $scope.interestInCluster = function(index) {
+    $scope.interestInCluster = function (index) {
       moveHiddenContainerInPosition(index);
       var resultCard = $('.resultCard')[index];
       if (!$(resultCard).hasClass("interested")) {
@@ -327,7 +318,7 @@ angular.module('PicNavigatorApp.controllers', []).
      * @param index
      */
     $scope.continueClusterSearch = function (index) {
-      if($($('.resultCard')[index]).hasClass("interested")) {
+      if ($($('.resultCard')[index]).hasClass("interested")) {
         $($('.resultCard')[index]).css("opacity", "0");
         $scope.clusterSearch($scope.clusterIds[index], false, index);
       }
