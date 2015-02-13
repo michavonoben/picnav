@@ -21,8 +21,8 @@ body {
 .btn {
   width: 32%;
 }
-.btn.black{
-  font: small-caps 1vw Helvetica;
+.btn.black {
+  font: small-caps 2.2vmin Helvetica;
   width: 8%;
   color: #ffffff;
   background-color: #23292B !important;
@@ -40,22 +40,23 @@ body {
 }
 
 .title {
-  font: small-caps 2vw Helvetica;
+  font: small-caps 4vmin Helvetica;
   letter-spacing: 1vw;
   padding-left: 1%;
 }
+
 .title.small {
-  font: small-caps 13px Helvetica;
+  font: small-caps 15px Helvetica;
   letter-spacing: 0.2vw;
 }
+
 .title.white {
   color: #ffffff;
   border: solid 1px #ffffff;
 }
+
 .instructionText {
-  font-size: 14px;
-  color: #f5f5f5;
-  margin: 2%;
+  margin-bottom: 30px;
 }
 
 .navmenu {
@@ -70,25 +71,27 @@ body {
   border-bottom-left-radius: 5px 5px;
   border: 0 !important;
 }
-.tags .tag-item {
-  color: #d3d3d3;
-  background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%) !important;
+
+tags-input .tags .tag-item {
+  background: none;
+  background-color: #232323; !important;
+  color: #d3d3d3 !important;
+  border: none !important;
 }
-#tfnewsearch{
-  float:right;
-  padding:20px;
+
+#tfnewsearch {
+  float: right;
+  padding: 20px;
 }
-.tftextinput{
+
+.tftextinput {
   position: absolute;
   width: 54.5%;
   padding-left: 10.5%;
-  /* margin: 0; */
-  /* padding: 5px 15px; */
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
-  /* border: 1px solid #0076a3; */
-
 }
+
 .tfbutton {
   position: absolute;
   margin-top: 5px;
@@ -96,16 +99,16 @@ body {
   padding: 4px 15px;
   cursor: pointer;
   text-align: center;
-  color: #ffffff;
-  border: solid 1px #333333;
-  background: -webkit-linear-gradient(top, #45484d 0%,#333333 100%);
+  color: #ffffff !important;
+  border: solid 1px #333333 !important;
+  background-color: #232323;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
-
 }
+
 .tfbutton:hover {
   text-decoration: none;
-  background: -webkit-linear-gradient(top, #696968 0%,#484744 100%);
+  background-color: #2b2b2b;
 }
 /* Fixes submit button height problem in Firefox */
 .tfbutton::-moz-focus-inner {
@@ -170,6 +173,7 @@ body {
 }
 #resultImg {
   -webkit-transition: 500ms linear;
+  transition: 500ms linear;
 }
 #resultImg:hover {
   border: 5px solid greenyellow;
@@ -308,12 +312,8 @@ body {
   position: relative;
   background-size: cover;
   float: left;
-  /*transition: white 1.5s;*/
+
 }
-/*.box.grid {*/
-  /*z-index: 2;*/
-  /*background-color: rgba(255, 0,0,0.2);*/
-/*}*/
 .box:hover {
   cursor: pointer;
 }
