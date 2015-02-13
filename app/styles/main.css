@@ -23,7 +23,7 @@ body {
 }
 
 .btn.black {
-  font: small-caps 1vw Helvetica;
+  font: small-caps 2.5vmin Helvetica;
   width: 8%;
   color: #ffffff;
   background-color: #23292B !important;
@@ -43,7 +43,7 @@ body {
 }
 
 .title {
-  font: small-caps 2vw Helvetica;
+  font: small-caps 4vmin Helvetica;
   letter-spacing: 1vw;
   padding-left: 1%;
 }
@@ -59,8 +59,6 @@ body {
 }
 
 .instructionText {
-  padding-left: 11%;
-  padding-right: 11%;
   margin-bottom: 30px;
 }
 
