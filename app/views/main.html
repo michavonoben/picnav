@@ -3,11 +3,12 @@
   <div class="header"><span class="title white">picture navigatør</span></div>
   <div class="wrapper column">
     <div class="searchField">
-      <div class="instructionText"><span class="title small">enter words and start searching or<br><a href="http://mvo.suhail.uberspace.de/">try</a> picture navigatør using auto clustering</span>
+      <div class="instructionText" style="color: #dedede"><span class="title small">enter words and start searching or<br><a
+        href="http://mvo.suhail.uberspace.de/">try</a> picture navigatør using auto clustering</span>
       </div>
       <form>
         <div>
-          <form id="tfnewsearch">
+          <!--<form id="tfnewsearch">-->
             <tags-input class="tftextinput"
                         id="query" type="text"
                         ng-model="query"
@@ -15,10 +16,13 @@
                         add-on-space="true"
                         add-on-enter="true"
                         allow-leftover-text="false"
-                        add-on-comma="true" required>
+                        add-on-comma="true" required autofocus>
             </tags-input>
-            <input type="submit" ng-disabled="!query" id="search" ng-click="search(query)" value="search" class="tfbutton">
-          </form>
+            <div class="searchBarBtn">
+              <input type="submit" ng-disabled="!query" id="search" ng-click="search(query)" value="search"
+                     class="tfbutton">
+            </div>
+          <!--</form>-->
           <div class="tfclear"></div>
         </div>
       </form>

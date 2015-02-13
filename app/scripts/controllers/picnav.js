@@ -1,27 +1,11 @@
 'use strict';
 var $; // so JS lint won't throw error on jQuery
 
-angular.module('PicNavigatorApp.controllers', [])
-  .directive('onErrorSrc', function () {
-    return {
-      link: function (scope, element, attrs) {
-        element.bind('error', function () {
-          if (attrs.src != attrs.onErrorSrc) {
-            attrs.$set('src', attrs.onErrorSrc);
-          }
-        });
-      }
-    }
-  }).
+angular.module('PicNavigatorApp.controllers', []).
   controller('initialController', function ($scope, $http, $q, dataService) {
     $scope.picList = [];
     $scope.resultPics = [];
-    $scope.previewPic = null;
-    $scope.resultPreview = false;
     $scope.currentView = 'CLUSTER';
-    $scope.doubleSteps = true;
-    $scope.clusterOfInterest = null;
-
     $scope.clusterEdgeUrls = [];
 
     /**
@@ -36,31 +20,24 @@ angular.module('PicNavigatorApp.controllers', [])
     });
     // end @author Mark Campell
 
-    $scope.indexShift = function (index) {
-      var shifter = 0;
-      if (index < 4) shifter = 12;
-      else if (index < 8) shifter = 4;
-      else if (index < 12) shifter = -4;
-      else if (index < 16) shifter = -12;
-      index += shifter;
-      return index;
-    };
+    /*******************
+     * INNER FUNCTIONS *
+     *******************/
 
-    var setData = function (callback) {
-      $scope.clusterUrls = [];
+    function setData (callback) {
+      $scope.clusterUrls = []; //empty clusters
       $scope.clusterEdgeUrls = dataService.getClusterEdges();
       $scope.clusterEdgeUrls.forEach(function (edgeUrl) {
+        // for each cluster corner calculate surrounding images
         var clusterGroup = dataService.getImageGroup(edgeUrl);
         $scope.clusterUrls.push(clusterGroup);
       });
       if (callback) {
         callback();
       }
-    };
+    }
 
-    var col, row;
-
-    var fillContainer = function (initialView) {
+    function fillContainer (initialView) {
       var deferred = $q.defer();
       for (var i = 0; i < 16; i++) {
         // if intialView is true, we show several points of the map at once. don't shift
@@ -69,23 +46,19 @@ angular.module('PicNavigatorApp.controllers', [])
           srcs: {
             previewSrcs: $scope.clusterUrls[i].srcs
           },
-          id: $scope.clusterUrls[i].id,
-          errorImg: 'http://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+          id: $scope.clusterUrls[i].id
         };
       }
-      $scope.clusterOfInterest = $scope.picList[6].id;
       if (!$scope.$$phase) {
         // apply changes
         $scope.$apply();
       }
       return deferred.promise;
-    };
+    }
 
-    // initial filling of picList
-
-    dataService.addDataToHistory(dataService.getClusterEdges());
-    setData();
-    fillContainer(true);
+    /*********************
+     * GRAPHIC FUNCTIONS *
+     *********************/
 
     $scope.overlayScreenOn = function () {
       var deferred = $q.defer();
@@ -101,22 +74,8 @@ angular.module('PicNavigatorApp.controllers', [])
         opacity: 0
       }, {duration: 200, queue: false});
     };
-    $scope.scaleResultPicOverlay = function () {
-      var img = new Image;
-      img.src = $('#previewResults').css('background-image').replace(/url\(|\)$/ig, "");
-      var bgImgWidth = img.width + 1;
-      var bgImgHeight = img.height + 1;
-      $('.bigOver').css({
-        width: bgImgWidth,
-        height: bgImgHeight
-      });
-    };
-
-
-    /**
-     * toggles the view between cluster-search and resultlist
-     */
     $scope.toggleView = function (newResults) {
+      //  toggles the view between cluster-search and result list
       if (newResults) {
         $scope.resultPics = newResults;
       }
@@ -151,6 +110,54 @@ angular.module('PicNavigatorApp.controllers', [])
       }
     };
 
+    function clusterSearchTransition (index, callback) {
+      // exchanges the two cluster containers and animates the transition
+      var activeContainer = $('.mycontainer.active');
+      var hiddenContainer = $('.mycontainer.myhidden');
+      activeContainer.css({
+        opacity: 0,
+        zIndex: 5
+      });
+      activeContainer.removeClass('active').addClass('myhidden');
+      hiddenContainer.animate({
+        opacity: 1,
+        zIndex: 10
+      }, {duration: 1000, queue: true});
+      hiddenContainer.removeClass('myhidden').addClass('active');
+      hiddenContainer.animate({
+        top: 0,
+        left: 0,
+        width: '98%',
+        height: '98%'
+      }, {duration: 600, queue: true});
+      setTimeout(function () {
+        callback();
+      }, 1000)
+    }
+
+    /*************************
+     * CALCULATION FUNCTIONS *
+     *************************/
+
+      // save first set to history
+    dataService.addDataToHistory(dataService.getClusterEdges());
+    // initial filling of picList
+    setData();
+    fillContainer(true);
+
+    $scope.indexShift = function (index) {
+      // this is necessary since Image Map has X/Y zero on the left lower corner but
+      // Picture Navigator on the left upper corner. We want to compare them, so we
+      // shift the cluster rows
+      var shifter = 0;
+      if (index < 4) shifter = 12;
+      else if (index < 8) shifter = 4;
+      else if (index < 12) shifter = -4;
+      else if (index < 16) shifter = -12;
+      index += shifter;
+      return index;
+    };
+
     /**
      * fires a http request to palm-search.com either with a clusterID or a single picID
      * updates the resultPics list and if desired the clusters as well
@@ -162,55 +169,22 @@ angular.module('PicNavigatorApp.controllers', [])
      */
 
     $scope.calculateNewClusters = function (referencePic, index, isSingle, updateClusters, callback) {
-        var urls = [];
-        if (referencePic.id.l > 0) {
-          urls = dataService.getClusterEdgesForLevel(referencePic.id, true);
-        } else {
-          urls = dataService.getClusterEdgesForPositionShift(referencePic.id, $scope.indexShift(index));
-        }
-        dataService.setClusterEdges(urls);
-        dataService.addDataToHistory(dataService.getClusterEdges());
-        setData(function() {
-          fillContainer();
-          callback();
-        });
-
-    };
-
-    /**
-     * exchanges the two cluster containers and animates the transition
-     * @param index
-     * @returns {promise}
-     */
-    var clusterSearchTransition = function (index, callback) {
-
-      var activeContainer = $('.mycontainer.active');
-      var hiddenContainer = $('.mycontainer.myhidden');
-      col = Math.floor(index / 3);
-      row = index % 3;
-      activeContainer.css({
-        opacity: 0,
-        zIndex: 5
-      });
-      activeContainer.removeClass('active').addClass('myhidden');
-
-      hiddenContainer.animate({
-        opacity: 1,
-        zIndex: 10
-      }, {duration: 1000, queue: true});
-      hiddenContainer.removeClass('myhidden').addClass('active');
-
-      hiddenContainer.animate({
-        top: 0,
-        left: 0,
-        width: '98%',
-        height: '98%'
-      }, {duration: 600, queue: true});
-      setTimeout(function () {
+      var urls = [];
+      if (referencePic.id.l > 0) {
+        urls = dataService.getClusterEdgesForLevel(referencePic.id, true);
+      } else {
+        urls = dataService.getClusterEdgesForPositionShift(referencePic.id, $scope.indexShift(index));
+      }
+      dataService.setClusterEdges(urls);
+      dataService.addDataToHistory(dataService.getClusterEdges());
+      setData(function () {
+        fillContainer();
         callback();
-      }, 1000)
+      });
 
     };
+
+
 
     /**
      * fires calculateNewClusters with clusterID and triggers animation
@@ -222,11 +196,11 @@ angular.module('PicNavigatorApp.controllers', [])
      */
     $scope.clusterSearch = function (index, isSingle) {
       var referencePic = $scope.picList[index];
-      $('body').css( 'pointer-events', 'none' );
+      $('body').css('pointer-events', 'none');
       $scope.overlayScreenOn().
         then($scope.calculateNewClusters(referencePic, index, isSingle, true, function () {
           clusterSearchTransition(5, function () {
-            $('body').css( 'pointer-events', 'all' );
+            $('body').css('pointer-events', 'all');
             $scope.overlayScreenOff();
           })
         }));
@@ -240,22 +214,14 @@ angular.module('PicNavigatorApp.controllers', [])
     };
   }).
   controller('picBoxController', function ($scope, dataService) {
-    $scope.preview = false;
-    $scope.hideBox = function (pic) {
-      return false;
-      // todo
-      //return pic.id === undefined;
-    };
-
     /**
      * this is necessary so that the hidden container is in the right position for
      * the animation when the cluster search continues
      * @param index
      */
-    var moveHiddenContainerInPosition = function (index) {
+    function moveHiddenContainerInPosition(index) {
       var col = Math.floor(index / 4);
       var row = index % 4;
-      $scope.preview = true;
       var wrapper = $('.mycontainer.active');
       $scope.wrapperHeight = $(wrapper).height();
       $scope.wrapperWidth = $(wrapper).width();
@@ -268,23 +234,23 @@ angular.module('PicNavigatorApp.controllers', [])
           width: $scope.wrapperWidth / 5 + 'px',
           height: $scope.wrapperHeight / 5 + 'px'
         });
-    };
+    }
 
-    var getHoveredCluster = function (index) {
+    function getHoveredCluster (index) {
       var activeContainer = $('.mycontainer.active');
       var clustersOfInterest = $(activeContainer).find($('.box.cluster'));
       return $(clustersOfInterest).eq(index);
-    };
+    }
 
-    var getMiniBox = function (index, i) {
+    function getMiniBox (index, i) {
       return $(getHoveredCluster(index)).find($('.box.mini')).eq(i);
-    };
+    }
 
     $scope.miniBoxEnter = function (index, i) {
       var e = getMiniBox(index, i);
       e.addClass('mouseRests');
       setTimeout(function () {
-        if(e.hasClass('mouseRests')) {
+        if (e.hasClass('mouseRests')) {
           $(e).animate({
             borderWidth: 4 + 'px',
             borderRadius: 8 + 'px'
@@ -301,12 +267,12 @@ angular.module('PicNavigatorApp.controllers', [])
       }, 100);
     };
 
-    $scope.interestInCluster = function(index) {
+    $scope.interestInCluster = function (index) {
       moveHiddenContainerInPosition(index);
       var e = getHoveredCluster(index);
       e.addClass('mouseRests');
       setTimeout(function () {
-        if(e.hasClass('mouseRests')) {
+        if (e.hasClass('mouseRests')) {
           $(e).animate({
             borderWidth: 4 + 'px',
             padding: 4 + 'px'
@@ -333,7 +299,7 @@ angular.module('PicNavigatorApp.controllers', [])
     };
 
     /**
-     * fires a calculateNewClusters to get all 50 result pics for a cluster
+     * gets all 50 result pics for a cluster
      * then switches the view to the result page
      * updates resultPic list
      * @param index
@@ -346,7 +312,6 @@ angular.module('PicNavigatorApp.controllers', [])
         });
         $scope.toggleView(srcs);
       });
-
     };
 
     $scope.picSelected = function (id) {

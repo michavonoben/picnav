@@ -77,9 +77,9 @@ angular.module('PicNavigatorApp', [
       x = Math.round(x);
       y = Math.round(y);
       var newId = {
-        l:corL,
-        x:x,
-        y:y
+        l: corL,
+        x: x,
+        y: y
       };
       return newId;
     };
@@ -105,18 +105,18 @@ angular.module('PicNavigatorApp', [
     service.getResultsForSrc = function (src, callback) {
       var id = getIdByUrl(src);
       var resultPics = [];
-      httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/image/'+id.l+'/'+id.x+'/'+id.y+'/',
+      httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/image/' + id.l + '/' + id.x + '/' + id.y + '/',
         function (data) {
-          httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/similar/image/'+data.id+'/10',
+          httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/similar/image/' + data.id + '/10',
             function (data) {
               data.forEach(function (d) {
                 resultPics.push({
                   src: d.url,
                   id: d.id
-                 });
+                });
               });
-             callback(resultPics);
-          })
+              callback(resultPics);
+            })
         });
     };
 
@@ -199,22 +199,22 @@ angular.module('PicNavigatorApp', [
       // get new left corner pos
       if (index < 4) {
         //first row
-        xShift = (-6 + (index*2));
+        xShift = (-6 + (index * 2));
         yShift = 6;
       } else if (index < 8) {
         //second row
-        index -=4;
-        xShift = (-6 + (index*2));
+        index -= 4;
+        xShift = (-6 + (index * 2));
         yShift = 4;
       } else if (index < 12) {
         //third row
-        index -=8;
-        xShift = (-6 + (index*2));
+        index -= 8;
+        xShift = (-6 + (index * 2));
         yShift = 2;
       } else if (index < 16) {
         //third row
-        index -=12;
-        xShift = (-6 + (index*2));
+        index -= 12;
+        xShift = (-6 + (index * 2));
         yShift = 0;
       }
 
@@ -225,7 +225,6 @@ angular.module('PicNavigatorApp', [
       };
       return service.getClusterEdgesForLevel(leftCornerId, false);
     };
-
 
 
     service.addDataToHistory = function (data) {

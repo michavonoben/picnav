@@ -1,69 +1,68 @@
 <body class="body" ng-app="PicNavigatorApp">
-  <link href="dist/css/bootstrap-glyphicons.css" rel="stylesheet">
-    <div class="overlay">
-      <!--<span class="title"> loading </span>-->
-    </div>
-    <div class="wrapper">
-      <div class="header" ng-controller="historyController">
-        <button title="Go back" id="backBtn" ng-if="!inResultView" type="submit" class="btn black l" ng-click="back()"><span class="glyphicon glyphicon-backward"></span></button>
-        <button title="Back to search view" ng-if="inResultView" id="viewBtn" type="submit" class="btn black l" ng-click="toggleView()"><span class="glyphicon glyphicon-th"></span></button>
-        <span class="title white">picture navigatør</span>
-        <button title="New search" type="submit" class="btn black r" ng-click="newSearch()"><span class="glyphicon glyphicon-search"></span></button>
-      </div>
-      <div class="wrapper column">
+<link href="dist/css/bootstrap-glyphicons.css" rel="stylesheet">
+<div class="overlay"></div>
+<div class="wrapper">
+  <div class="header" ng-controller="historyController">
+    <button title="Go back" id="backBtn" ng-if="!inResultView" type="submit" class="btn black l" ng-click="back()"><span
+      class="glyphicon glyphicon-backward"></span></button>
+    <button title="Back to search view" ng-if="inResultView" id="viewBtn" type="submit" class="btn black l"
+            ng-click="toggleView()"><span class="glyphicon glyphicon-th"></span></button>
+    <span class="title white">picture navigatør</span>
+    <button title="New search" type="submit" class="btn black r" ng-click="newSearch()"><span
+      class="glyphicon glyphicon-search"></span></button>
+  </div>
 
-        <!-- CONTAINER A-->
-        <div id="conA" class="mycontainer active">
-          <div class="box"
-               ng-repeat="pic in picList"
-               ng-hide="hideBox(pic)"
-
-               ng-controller="picBoxController">
-            <div class="box cluster">
-              <img ng-src="{{pic.srcs.previewSrcs[2]}}" ng-click="goToResults(pic.srcs.previewSrcs[2])" ng-mouseenter="miniBoxEnter($index, 0)" ng-mouseleave="miniBoxLeave($index, 0)" class="box mini">
-              <img ng-src="{{pic.srcs.previewSrcs[3]}}" ng-click="goToResults(pic.srcs.previewSrcs[3])" ng-mouseenter="miniBoxEnter($index, 1)" ng-mouseleave="miniBoxLeave($index, 1)" class="box mini">
-              <img ng-src="{{pic.srcs.previewSrcs[0]}}" ng-click="goToResults(pic.srcs.previewSrcs[0])" ng-mouseenter="miniBoxEnter($index, 2)" ng-mouseleave="miniBoxLeave($index, 2)" class="box mini">
-              <img ng-src="{{pic.srcs.previewSrcs[1]}}" ng-click="goToResults(pic.srcs.previewSrcs[1])" ng-mouseenter="miniBoxEnter($index, 3)" ng-mouseleave="miniBoxLeave($index, 3)" class="box mini">
-            </div>
-            <div class="resultCard" ng-click="continueClusterSearch($index)"
-                 ng-mouseenter="interestInCluster($index)"
-                 ng-mouseleave="lostInterest($index)"></div>
-          </div>
+  <div class="wrapper column">
+    <!-- CLUSTER VIEW WITH 2 CONTAINERS -->
+    <div id="conA" class="mycontainer active">
+      <div class="box"
+           ng-repeat="pic in picList"
+           ng-controller="picBoxController">
+        <div class="box cluster">
+          <img ng-src="{{pic.srcs.previewSrcs[2]}}" ng-click="goToResults(pic.srcs.previewSrcs[2])"
+               ng-mouseenter="miniBoxEnter($index, 0)" ng-mouseleave="miniBoxLeave($index, 0)" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[3]}}" ng-click="goToResults(pic.srcs.previewSrcs[3])"
+               ng-mouseenter="miniBoxEnter($index, 1)" ng-mouseleave="miniBoxLeave($index, 1)" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[0]}}" ng-click="goToResults(pic.srcs.previewSrcs[0])"
+               ng-mouseenter="miniBoxEnter($index, 2)" ng-mouseleave="miniBoxLeave($index, 2)" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[1]}}" ng-click="goToResults(pic.srcs.previewSrcs[1])"
+               ng-mouseenter="miniBoxEnter($index, 3)" ng-mouseleave="miniBoxLeave($index, 3)" class="box mini">
         </div>
-        <!-- CONTAINER B-->
-        <div id="conB" class="mycontainer myhidden">
-          <div class="box"
-               ng-repeat="pic in picList"
-               ng-hide="hideBox(pic)"
-
-               ng-controller="picBoxController">
-            <div class="box cluster">
-              <img ng-src="{{pic.srcs.previewSrcs[2]}}"  ng-click="goToResults(pic.srcs.previewSrcs[2])" ng-mouseenter="miniBoxEnter($index, 0)" ng-mouseleave="miniBoxLeave($index, 0)"class="box mini">
-              <img ng-src="{{pic.srcs.previewSrcs[3]}}"  ng-click="goToResults(pic.srcs.previewSrcs[3])" ng-mouseenter="miniBoxEnter($index, 1)" ng-mouseleave="miniBoxLeave($index, 1)"class="box mini">
-              <img ng-src="{{pic.srcs.previewSrcs[0]}}"  ng-click="goToResults(pic.srcs.previewSrcs[0])" ng-mouseenter="miniBoxEnter($index, 2)" ng-mouseleave="miniBoxLeave($index, 2)"class="box mini">
-              <img ng-src="{{pic.srcs.previewSrcs[1]}}"  ng-click="goToResults(pic.srcs.previewSrcs[1])" ng-mouseenter="miniBoxEnter($index, 3)" ng-mouseleave="miniBoxLeave($index, 3)"class="box mini">
-            </div>
-            <div class="resultCard" ng-click="continueClusterSearch($index)"
-                 ng-mouseenter="interestInCluster($index)"
-                 ng-mouseleave="lostInterest($index)"></div>
-          </div>
-        </div>
-
-        <div id="resultPage" class="mycontainer result" ng-controller="picBoxController">
-          <div id="scrollResults"
-               ng-repeat="pic in resultPics">
-            <img id="resultImg" ng-src="{{pic.src}}" ng-click="picSelected(pic.id)">
-          </div>
-        </div>
-
-
-
-      </div>
-      <div class="footer">
-  <span class="title small"> htw berlin - requests to netvis
-  </span>
+        <div class="resultCard" ng-click="continueClusterSearch($index)" ng-mouseenter="interestInCluster($index)"
+             ng-mouseleave="lostInterest($index)"></div>
       </div>
     </div>
+
+    <div id="conB" class="mycontainer myhidden">
+      <div class="box"
+           ng-repeat="pic in picList"
+           ng-controller="picBoxController">
+        <div class="box cluster">
+          <img ng-src="{{pic.srcs.previewSrcs[2]}}" ng-click="goToResults(pic.srcs.previewSrcs[2])"
+               ng-mouseenter="miniBoxEnter($index, 0)" ng-mouseleave="miniBoxLeave($index, 0)" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[3]}}" ng-click="goToResults(pic.srcs.previewSrcs[3])"
+               ng-mouseenter="miniBoxEnter($index, 1)" ng-mouseleave="miniBoxLeave($index, 1)" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[0]}}" ng-click="goToResults(pic.srcs.previewSrcs[0])"
+               ng-mouseenter="miniBoxEnter($index, 2)" ng-mouseleave="miniBoxLeave($index, 2)" class="box mini">
+          <img ng-src="{{pic.srcs.previewSrcs[1]}}" ng-click="goToResults(pic.srcs.previewSrcs[1])"
+               ng-mouseenter="miniBoxEnter($index, 3)" ng-mouseleave="miniBoxLeave($index, 3)" class="box mini">
+        </div>
+        <div class="resultCard" ng-click="continueClusterSearch($index)" ng-mouseenter="interestInCluster($index)"
+             ng-mouseleave="lostInterest($index)"></div>
+      </div>
+    </div>
+
+    <!-- RESULT VIEW WITH SCROLLLIST-->
+    <div id="resultPage" class="mycontainer result" ng-controller="picBoxController">
+      <div id="scrollResults"
+           ng-repeat="pic in resultPics">
+        <img id="resultImg" ng-src="{{pic.src}}" ng-click="picSelected(pic.id)">
+      </div>
+    </div>
+
+  </div>
+  <div class="footer"><span class="title small"> htw berlin - requests to <a href="http://pixolution.de/">pixolution</a></span></div>
+</div>
 </body>
 
 

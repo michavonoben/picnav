@@ -21,6 +21,7 @@ body {
 .btn {
   width: 32%;
 }
+
 .btn.black {
   font: small-caps 2.2vmin Helvetica;
   width: 8%;
@@ -28,10 +29,12 @@ body {
   background-color: #23292B !important;
   border: none;
 }
-.btn.black.l{
+
+.btn.black.l {
   float: left;
 }
-.btn.black.r{
+
+.btn.black.r {
   float: right;
 }
 
@@ -65,6 +68,7 @@ body {
   width: 80%;
   margin: 0 auto;
 }
+
 .tags {
   padding: 0 !important;
   border-top-left-radius: 5px 5px;
@@ -74,7 +78,8 @@ body {
 
 tags-input .tags .tag-item {
   background: none;
-  background-color: #232323; !important;
+  background-color: #232323;
+!important;
   color: #d3d3d3 !important;
   border: none !important;
 }
@@ -110,12 +115,14 @@ tags-input .tags .tag-item {
   text-decoration: none;
   background-color: #2b2b2b;
 }
+
 /* Fixes submit button height problem in Firefox */
 .tfbutton::-moz-focus-inner {
   border: 0;
 }
-.tfclear{
-  clear:both;
+
+.tfclear {
+  clear: both;
 }
 
 .searchField {
@@ -127,11 +134,18 @@ tags-input .tags .tag-item {
   position: absolute;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
+
+.searchBarBtn {
+  position: relative;
+  margin-left: 25%;
+}
+
 .searchBarWrapper {
   position: relative;
 }
+
 .searchBar {
   position: absolute;
   margin: 5%;
@@ -171,18 +185,20 @@ tags-input .tags .tag-item {
   overflow-y: auto;
   padding: 2px;
 }
+
 #resultImg {
   -webkit-transition: 500ms linear;
   transition: 500ms linear;
 }
+
 #resultImg:hover {
   border: 5px solid greenyellow;
   bottom: 40px;
   margin-top: 20px;
   margin-bottom: 20px;
-  -webkit-box-shadow: 0px 0px 15px 8px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 15px 8px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 15px 8px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 0px 0px 15px 8px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 15px 8px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px 8px rgba(0, 0, 0, 0.75);
 }
 
 #previewResult {
@@ -231,8 +247,10 @@ tags-input .tags .tag-item {
   width: 100vmin;
   height: 100vmin;
   position: absolute;
-  top:0px;bottom:0;
-  left:0;right:0;
+  top: 0px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   margin: auto;
   margin-top: 0;
   padding-top: 1vw;
@@ -250,6 +268,7 @@ tags-input .tags .tag-item {
   -webkit-border-radius: 0px 0px 10px 10px;
   border-radius: 0px 0px 10px 10px;
 }
+
 .mycontainer {
   margin: 1%;
   width: 98%;
@@ -285,9 +304,9 @@ tags-input .tags .tag-item {
   height: 98%;
   position: absolute;
   background-color: #23292B;
-  -webkit-box-shadow: inset 0px 0px 68px 2px rgba(0,0,0,0.75);
-  -moz-box-shadow: inset 0px 0px 68px 2px rgba(0,0,0,0.75);
-  box-shadow: inset 0px 0px 68px 2px rgba(0,0,0,0.75);
+  -webkit-box-shadow: inset 0px 0px 68px 2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: inset 0px 0px 68px 2px rgba(0, 0, 0, 0.75);
+  box-shadow: inset 0px 0px 68px 2px rgba(0, 0, 0, 0.75);
 }
 
 .container.preview {
@@ -314,9 +333,11 @@ tags-input .tags .tag-item {
   float: left;
 
 }
+
 .box:hover {
   cursor: pointer;
 }
+
 .resultCard {
   cursor: pointer;
   position: relative;
@@ -336,22 +357,26 @@ tags-input .tags .tag-item {
   /*padding-top: 12%;*/
   position: absolute;
   opacity: 1;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0, 0, 0, 0.7);
 }
+
 .overText {
   font: small-caps 18px Helvetica;;
   color: #ffffff;
   position: relative;
   top: 37%;
 }
+
 .overText.small {
   font-size: 1.8vw;
   top: 16%;
 }
+
 .overText.middle {
   font-size: 1.8vw;
   top: 51%;
 }
+
 .over.search {
   top: 50%;
   /*background-color: rgba(0,0,0,0.4);*/
@@ -359,10 +384,11 @@ tags-input .tags .tag-item {
 
 .over:hover {
   cursor: pointer;
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgba(0, 0, 0, 0.9);
   /*background-color: rgba(2,200,255,0.3);*/
 
 }
+
 .bigOver {
   position: relative;
   vertical-align: middle;
@@ -383,7 +409,8 @@ tags-input .tags .tag-item {
   background-color: #696968;
   z-index: 2;
 }
-.box.mini:hover{
+
+.box.mini:hover {
 
   /*border: 3px solid red !important;*/
 }
@@ -398,6 +425,7 @@ tags-input .tags .tag-item {
   border: 0px solid greenyellow;
   margin: 0;
 }
+
 .footer {
   position: relative;
   width: 100%;
