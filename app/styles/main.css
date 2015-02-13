@@ -49,8 +49,15 @@ body {
 }
 
 .title.small {
-  font: small-caps 15px Helvetica;
+  font: small-caps 2vmin Helvetica;
   letter-spacing: 0.2vw;
+}
+.title.small.bright {
+  font-size: 2.3vmin;
+  color: #dedede
+}
+.title.small.middle {
+  color: #007473
 }
 
 .title.white {
