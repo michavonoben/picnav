@@ -3,12 +3,13 @@
   <div class="header"><span class="title white">picture navigatør</span></div>
   <div class="wrapper column">
     <div class="searchField">
-      <div class="instructionText" style="color: #dedede"><span class="title small">enter words and start searching or<br><a
-        href="http://mvo.suhail.uberspace.de/">try</a> picture navigatør using auto clustering</span>
+      <div class="instructionText">
+        <span class="title small bright">enter words and start searching<br></span>
+        <span class="title small middle" >or <a href="http://mvo.suhail.uberspace.de/">try</a> a version using auto clustering</span>
       </div>
-      <form>
-        <div>
-          <!--<form id="tfnewsearch">-->
+      <div>
+        <form>
+          <div>
             <tags-input class="tftextinput"
                         id="query" type="text"
                         ng-model="query"
@@ -22,14 +23,16 @@
               <input type="submit" ng-disabled="!query" id="search" ng-click="search(query)" value="search"
                      class="tfbutton">
             </div>
-          <!--</form>-->
-          <div class="tfclear"></div>
-        </div>
-      </form>
+            <!--</form>-->
+            <div class="tfclear"></div>
+          </div>
+        </form>
+        <div class="tfclear"></div>
+      </div>
     </div>
   </div>
   <div class="footer">
-    <span class="title small"> htw berlin - requests to palm-search.com | micha gerwig 2015</span>
+    <span class="title small"> htw berlin -  micha gerwig</span>
   </div>
 </div>
 </body>
