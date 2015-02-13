@@ -137,6 +137,11 @@ tags-input .tags .tag-item {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.searchBarBtn {
+  position: relative;
+  margin-left: 25%;
+}
+
 .searchBarWrapper {
   position: relative;
 }

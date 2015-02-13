@@ -6,6 +6,12 @@ var $; // so JS lint won't throw error on jQuery
  */
 
 angular.module('PicNavigatorApp.controllers', []).
+  directive('autofocus', function($timeout) {
+    return function(scope, element) {
+      var input = element.find('input');
+      $timeout(function() { input[0].focus(); }, 100);
+    };
+  }).
   controller('initialController', function ($scope, $http, $q, dataService, httpService) {
     $scope.picList = [];
     $scope.previewPic = null;
