@@ -105,9 +105,9 @@ angular.module('PicNavigatorApp', [
     service.getResultsForSrc = function (src, callback) {
       var id = getIdByUrl(src);
       var resultPics = [];
-      httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/image/' + id.l + '/' + id.x + '/' + id.y + '/',
+      httpService.makeCorsRequest('https://imagemap.visual-computing.com/api/image/' + id.l + '/' + id.x + '/' + id.y + '/',
         function (data) {
-          httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/similar/image/' + data.id + '/10',
+          httpService.makeCorsRequest('https://imagemap.visual-computing.com/api/similar/image/' + data.id + '/10',
             function (data) {
               data.forEach(function (d) {
                 resultPics.push({

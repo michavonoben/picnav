@@ -36,7 +36,7 @@ angular.module('PicNavigatorApp')
       };
 
       // 1. terms request for session last number is blur range
-      httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/search/term/' + fullTermQuery + '/16/3.7',
+      httpService.makeCorsRequest('http://service.visual-computing.com/imagemap/search/term/' + fullTermQuery + '/16/3.7',
         //httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/search/term/' + fullTermQuery + '/16',
         function (data) {
 
