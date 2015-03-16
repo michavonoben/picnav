@@ -21,9 +21,9 @@ angular.module('PicNavigatorApp.controllers', []).
     var col, row;
 
     var urls = {
-      clusterRequest: 'http://www.palm-search.com/service/view/cluster/?&clusterId=',
-      singleRequest: 'http://www.palm-search.com/service/view/image/reference/?&imageId=',
-      subClusterRequest: 'http://www.palm-search.com/service/view/image/subcluster/?&clusterId=',
+      clusterRequest: 'http://palm.visual-computing.com/service/view/cluster/?&clusterId=',
+      singleRequest: 'http://palm.visual-computing.com/service/view/image/reference/?&imageId=',
+      subClusterRequest: 'http://palm.visual-computing.com/service/view/image/subcluster/?&clusterId=',
       allowCORSHeader: {headers: {'Access-Control-Request-Headers': 'x-requested-with'}}
     };
 

@@ -33,11 +33,11 @@ angular.module('PicNavigatorApp')
         });
       };
 
-      // 1. terms request for session
-      httpService.makeCorsRequest('http://www.palm-search.com/service/view/image/terms/?' + fullTermQuery,
+      // 1. terms request for session http://palm.visual-computing.com/service/view/image/terms/?&terms=water
+      httpService.makeCorsRequest('http://palm.visual-computing.com/service/view/image/terms/?' + fullTermQuery,
         function () {
           // 2. cluster request
-          httpService.makeCorsRequest('http://www.palm-search.com/service/view/cluster/?&clusterId=10000%3B30%3B' + fullCLusterQuery + '%3B%3B',
+          httpService.makeCorsRequest('http://palm.visual-computing.com/service/view/cluster/?&clusterId=10000%3B30%3B' + fullCLusterQuery + '%3B%3B',
             function (data) {
               dataService.setData(data);
               locationChange();
