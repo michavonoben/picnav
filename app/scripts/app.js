@@ -39,7 +39,7 @@ angular.module('PicNavigatorApp', [
     service.oldLength = 0;
 
     var getIdByUrl = function (url) {
-      var l = +url.substring(url.indexOf("l") + 1).split('/')[0];
+      var l = +url.substring(url.indexOf("/l") + 2).split('/')[0];
       var y = +url.substring(url.indexOf("y") + 1).split('/')[0];
       var x = +url.substring(url.indexOf("x") + 1).split('.')[0];
       return {l: l, x: x, y: y};
@@ -86,7 +86,7 @@ angular.module('PicNavigatorApp', [
 
     var getUrlById = function (id) {
       var newId = keepInRange(id);
-      return 'http://141.45.146.52/netvis/netvis1024/data/l' + newId.l + '/y' + newId.y + '/x' + newId.x + '.jpg';
+      return 'https://imagemap.visual-computing.com/data/l' + newId.l + '/y' + newId.y + '/x' + newId.x + '.jpg';
     };
 
     var getNeighbourUrl = function (id, pos) {
@@ -99,13 +99,15 @@ angular.module('PicNavigatorApp', [
         id.y--;
       }
       var newId = keepInRange(id);
-      return 'http://141.45.146.52/netvis/netvis1024/data/l' + newId.l + '/y' + newId.y + '/x' + newId.x + '.jpg';
+      return 'https://imagemap.visual-computing.com/data/l' + newId.l + '/y' + newId.y + '/x' + newId.x + '.jpg';
 
     };
     service.getResultsForSrc = function (src, callback) {
       var id = getIdByUrl(src);
       var resultPics = [];
-      httpService.makeCorsRequest('https://imagemap.visual-computing.com/api/image/' + id.l + '/' + id.x + '/' + id.y + '/',
+      //https://imagemap.visual-computing.com/data/l0/y5/x451.jpg
+      // xy vertauscht
+      httpService.makeCorsRequest('https://imagemap.visual-computing.com/data/' + id.l + '/' + id.y + '/' + id.x + '/',
         function (data) {
           httpService.makeCorsRequest('https://imagemap.visual-computing.com/api/similar/image/' + data.id + '/10',
             function (data) {

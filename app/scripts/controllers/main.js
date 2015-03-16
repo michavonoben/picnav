@@ -37,9 +37,7 @@ angular.module('PicNavigatorApp')
 
       // 1. terms request for session last number is blur range
       httpService.makeCorsRequest('http://service.visual-computing.com/imagemap/search/term/' + fullTermQuery + '/16/3.7',
-        //httpService.makeCorsRequest('http://141.45.146.52:8080/ImageMapService/search/term/' + fullTermQuery + '/16',
         function (data) {
-
           var clusterEdgeUrls = [];
           if (data.positions.length === 0) {
             window.alert('Couldn\'t find any results for "' + fullTermQuery + '". \nMaybe a typo?');
@@ -56,8 +54,7 @@ angular.module('PicNavigatorApp')
             // shift negative values
             pos.x = (x < 0 ? max + x : x);
             pos.y = (y < 0 ? max + y : y);
-            clusterEdgeUrls.push('http://141.45.146.52/netvis/netvis1024/data/l' + pos.level + '/y' + pos.y + '/x' + pos.x + '.jpg');
-
+            clusterEdgeUrls.push('https://imagemap.visual-computing.com/data/l' + pos.level + '/y' + pos.y + '/x' + pos.x + '.jpg');
           });
           dataService.setClusterEdges(clusterEdgeUrls);
           locationChange();
