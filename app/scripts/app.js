@@ -107,7 +107,8 @@ angular.module('PicNavigatorApp', [
       var resultPics = [];
       //https://imagemap.visual-computing.com/data/l0/y5/x451.jpg
       // xy vertauscht
-      httpService.makeCorsRequest('https://imagemap.visual-computing.com/data/' + id.l + '/' + id.y + '/' + id.x + '/',
+      //https://imagemap.visual-computing.com/api/image/6/6/6/
+      httpService.makeCorsRequest('https://imagemap.visual-computing.com/api/image/' + id.l + '/' + id.x + '/' + id.y + '/',
         function (data) {
           httpService.makeCorsRequest('https://imagemap.visual-computing.com/api/similar/image/' + data.id + '/10',
             function (data) {
